@@ -1,0 +1,2261 @@
+<!doctype html><html><head><meta charset=utf8><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500&display=swap"><title>Fırsat Radarı · Fon, teşvik ve iş ilanı radarı</title><meta name=description content="Pitch deck ve CV'ni yükle; yapay zekâ sana uyan fon, teşvik ve iş ilanlarını bulsun. Kendi API anahtarınla çalışır, veriler tarayıcıda kalır."><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+
+<nav id="side" aria-label="Ana menü">
+  <button class="logo" type="button" data-go="home">Fırsat Radarı</button>
+  <button class="nv" type="button" data-go="home">Ana sayfa</button>
+  <button class="nv" type="button" data-go="fon">Fon ve teşvik<small>pitch deck'ine göre</small></button>
+  <button class="nv" type="button" data-go="is">İş ilanları<small>CV'ne göre</small></button>
+  <button class="nv" type="button" data-go="profil">Profil ve ayarlar<small>yapay zekâ, yedek</small></button>
+  <span class="sp" aria-hidden="true"><img alt="" src="https://commons.wikimedia.org/wiki/Special:FilePath/Da_Vinci_Vitruve_Luc_Viatour.jpg?width=420" onerror="this.remove()"></span><span id="aichip" class="nv"><i></i><span id="aichip-t"></span></span>
+</nav>
+<section id="landing" aria-label="Ana sayfa" hidden>
+  <blockquote class="hero"><p>Yola çıktığında yol sana görünür olur.</p><footer>Mevlânâ'ya atfedilir</footer></blockquote>
+  <p class="lead">Pitch deck'ini ya da CV'ni yükle; yapay zekâ sana uyan fon, teşvik ve ilanları getirsin.</p>
+  <div class="paths">
+    <button class="path main" type="button" data-go="fon"><h2>Fon ve teşvik</h2><p>Hibe, destek ve çağrılar pitch deck'ine göre değerlendirilir. Hazırlık için ne zaman başlaman gerektiği görünür.</p><b>Fonları bul</b></button>
+    <button class="path" type="button" data-go="is"><h2>İş ilanları</h2><p>İlanlar CV'ne göre Yüksek, Orta ya da Düşük uyumla puanlanır. Başvuru mektubunu yapay zekâ yazar.</p><b>İlanları bul</b></button>
+  </div>
+  <section id="gi" aria-labelledby="gi-h">
+    <div class="top"><div><p class="eyebrow">Günün ilhamı</p><h2 id="gi-h">Yeniden doğuş için fırsatlar</h2></div><span class="date" id="gi-d"></span></div>
+    <p class="kisi" id="gi-k"></p><h3 id="gi-b"></h3><p class="hik" id="gi-h2"></p><p class="ders" id="gi-s"></p>
+    <p class="lab">Önemli eserleri</p><div class="gal" id="gi-w"></div>
+    <p class="note" id="gi-n"></p>
+    <p class="cr">Görseller Wikimedia Commons'tan çağrılır; lisans ve kaynak bilgisi ilgili dosya sayfalarındadır. Hikâyeler kısa özetlerdir; ayrıntı için müze ve ansiklopedi kaynaklarına bak.</p>
+    <div class="nav"><button class="btn red sm" type="button" id="gi-go"></button><button class="btn ghost sm" type="button" id="gi-p">Önceki</button><button class="btn ghost sm" type="button" id="gi-nx">Sonraki</button><span class="no" id="gi-no"></span></div>
+  </section>
+  <ol>
+    <li><b>Anahtarını ekle</b>Profil ve ayarlar'dan kendi API anahtarını gir. Maliyet senin hesabına yazılır.</li>
+    <li><b>Dosyanı yükle</b>Pitch deck (PDF, PPTX) ya da CV (PDF, DOCX, metin). Dosya sunucuya gitmez.</li>
+    <li><b>Tara ve başvur</b>Sağ üstteki tara düğmesi güncel programları ve ilanları web'den getirir.</li>
+  </ol>
+  <p class="fine">Veriler yalnızca bu tarayıcıda saklanır. Yapay zekâ istekleri doğrudan senin anahtarınla sağlayıcıya gider; aracı sunucu yoktur.</p>
+</section>
+<dialog id="aiset" aria-labelledby="ai-h">
+  <h3 id="ai-h">Profil ve ayarlar</h3>
+  <p>Anahtar yalnızca bu tarayıcıda durur. claude.ai Pro aboneliği API anahtarı vermez; anahtarı console.anthropic.com adresinden ayrıca alırsın.</p>
+  <label for="ai-prov">Sağlayıcı</label>
+  <select class="field" id="ai-prov"><option value="anthropic">Anthropic (Claude, web taraması dahil)</option><option value="openai">OpenAI uyumlu (OpenAI, OpenRouter, Ollama…)</option></select>
+  <label for="ai-key">API anahtarı</label><input class="field" id="ai-key" type="password" autocomplete="off" placeholder="sk-...">
+  <label for="ai-model">Model</label><input class="field" id="ai-model" placeholder="claude-sonnet-5-5">
+  <div id="ai-base-w" hidden><label for="ai-base">Adres</label><input class="field" id="ai-base" placeholder="https://openrouter.ai/api/v1"></div>
+  <div class="row"><button class="btn red sm" type="button" id="ai-save">Kaydet ve dene</button><button class="btn ghost sm" type="button" id="ai-export">Yedeği indir</button><button class="btn ghost sm" type="button" id="ai-import">Yedeği yükle</button><button class="btn ghost sm" type="button" id="ai-close">Kapat</button></div>
+  <input type="file" id="ai-file" accept=".json" hidden><p id="aimsg" role="status"></p>
+  <p>Fon ve iş taraması için web araması gerekir; bu özellik şu an yalnızca Anthropic anahtarıyla çalışır.</p>
+</dialog>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Onest:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: güneşin konumuna göre renk değiştiren gökyüzü; solda iki sayfa ayracı (İş ilanları / Fon ve teşvik); her sayfada cam kontrol masası + kart ya da tablo listesi. Tek görünümlü (gökyüzü), yazılar beyaz. */
+:root{
+  --bg:#2d3b6b;
+  --fg:#f5f3ef;
+  --muted:rgba(245,243,239,.68);
+  --faint:rgba(245,243,239,.46);
+  --line:rgba(255,255,255,.16);
+  --panel:rgba(10,14,28,.34);
+  --accent:#d9ccb0;
+  --accent-hi:#eadfc6;
+  --ok:#3ddc97;
+  --warn:#ffb648;
+  --low:#8a8fa3;
+  --tile:rgba(12,16,30,.74);
+  --radius:22px;
+  --gap:18px;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-spring:cubic-bezier(.34,1.45,.64,1);
+  --font:"Onest","Segoe UI",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  --font-display:"Bricolage Grotesque","Onest","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bg);overflow-x:clip}
+html.locked{overflow:hidden}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--fg);font:15px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+::selection{background:rgba(217,204,176,.45)}
+#ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(1100px 680px at 10% -14%,rgba(217,204,176,.16),transparent 62%),
+  radial-gradient(900px 640px at 108% 6%,rgba(80,96,255,.11),transparent 60%),
+  radial-gradient(1000px 700px at 50% 122%,rgba(61,220,151,.07),transparent 60%),var(--bg)}
+
+/* Liquid glass */
+.lg{position:relative;z-index:0}
+.lg-fx,.lg-tint,.lg-shine{position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.lg-fx{z-index:-3;-webkit-backdrop-filter:blur(var(--lg-blur,10px)) saturate(var(--lg-sat,180%));backdrop-filter:blur(var(--lg-blur,10px)) saturate(var(--lg-sat,180%))}
+.lg-tint{z-index:-2;background:var(--lg-tint,linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.04)))}
+.lg-shine{z-index:-1;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.1),inset 1px 0 0 rgba(255,255,255,.12),inset -1px 0 0 rgba(255,255,255,.12),inset 0 0 18px rgba(255,255,255,.05);background:radial-gradient(180px circle at 22% -30%,rgba(255,255,255,.2),rgba(255,255,255,0) 70%)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.lg-tint{background:rgba(22,22,28,.92)}}
+
+/* Ada */
+.island{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:20;width:max-content;max-width:calc(100vw - 24px);display:flex;align-items:center;gap:18px;padding:8px 8px 8px 22px;border-radius:999px;box-shadow:0 18px 50px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.3);--lg-blur:8px;--lg-sat:190%;--lg-tint:linear-gradient(180deg,rgba(30,30,38,.42),rgba(12,12,16,.58))}
+.brand{font:700 18px/1.05 var(--font-display);letter-spacing:-.01em;white-space:nowrap}
+.brand span{display:block;font:500 11.5px/1.2 var(--font);color:var(--faint);letter-spacing:.06em;margin-top:3px}
+.status{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;white-space:nowrap;max-width:36ch;overflow:hidden;text-overflow:ellipsis}
+.dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok)}
+.dot.run{background:var(--warn);box-shadow:0 0 10px var(--warn);animation:pulse 1.2s ease-in-out infinite}
+.dot.err{background:var(--accent-hi);box-shadow:0 0 10px var(--accent-hi)}
+@keyframes pulse{50%{opacity:.35}}
+.btn{appearance:none;border:0;height:42px;padding:0 18px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:700;font-size:14px;white-space:nowrap;text-decoration:none;transition:transform .45s var(--ease-spring),filter .3s,background .3s}
+.btn.red{color:#fff;background:linear-gradient(180deg,var(--accent-hi),#cdbf9f);box-shadow:0 8px 22px rgba(217,204,176,.42),inset 0 1px 0 rgba(255,255,255,.42)}
+.btn.red:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.btn.ghost{background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+.btn.ghost:hover{background:rgba(255,255,255,.16)}
+.btn.sm{height:34px;padding:0 14px;font-size:13px}
+.btn[disabled]{cursor:progress;filter:saturate(.5) brightness(.85)}
+.btn svg{width:17px;height:17px;flex:none}
+.btn.busy svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+:is(.btn,.seg button,.card,.drop,select,input,textarea):focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+
+main{padding:104px 24px 72px;max-width:1500px;margin:0 auto}
+
+/* Kontrol masası */
+.deck{display:grid;gap:var(--gap);grid-template-columns:minmax(0,1fr);margin-bottom:30px}
+@media (min-width:980px){.deck{grid-template-columns:minmax(0,5fr) minmax(0,7fr)}}
+.panel{padding:22px 24px;border-radius:var(--radius);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.08);min-width:0}
+.eyebrow{margin:0 0 12px;font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.cv h2{margin:0 0 6px;font:750 22px/1.2 var(--font-display);letter-spacing:-.01em;text-wrap:balance}
+.cv p{margin:0;color:var(--muted);font-size:14px}
+.drop{display:grid;place-items:center;gap:6px;margin-top:16px;padding:22px 16px;border-radius:18px;border:1.5px dashed rgba(255,255,255,.22);text-align:center;cursor:pointer;color:var(--muted);transition:border-color .3s,background .3s}
+.drop:hover,.drop.over{border-color:var(--accent-hi);background:rgba(217,204,176,.06)}
+.drop b{color:var(--fg);font-size:15px}
+.drop small{font-size:12.5px;color:var(--faint)}
+.cv-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.paste{margin-top:12px;display:grid;gap:8px}
+.paste textarea,.letter textarea{width:100%;min-height:140px;resize:vertical;padding:12px 14px;border-radius:14px;border:0;background:rgba(0,0,0,.3);box-shadow:inset 0 0 0 1px var(--line);font-size:14px;line-height:1.55}
+.prof{display:grid;gap:12px;margin-top:14px}
+.sources{margin:-12px 0 30px;display:grid;gap:12px}
+.srcs{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.src-chip{display:inline-flex;align-items:center;gap:8px;min-height:32px;padding:4px 6px 4px 12px;border-radius:999px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);font-size:13px}
+.src-chip i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--low)}
+.src-chip.ok i{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.src-chip.kismi i{background:var(--warn)}
+.src-chip.erisilemiyor i{background:var(--accent-hi)}
+.src-chip.erisilemiyor a{color:var(--muted)}
+.src-chip a{text-decoration:none;font-weight:650}
+.src-chip a:hover{text-decoration:underline}
+.src-chip small{color:var(--faint);font-size:11.5px}
+.src-chip.stale{opacity:.62}
+.srclast{margin:0;font-size:13px;color:var(--muted);line-height:1.6}
+.srclast b{color:var(--fg);font-weight:650}
+.src-chip button{border:0;background:none;color:var(--faint);cursor:pointer;font-size:16px;line-height:1;padding:2px 6px;border-radius:999px}
+.src-chip button:hover{color:var(--fg);background:rgba(255,255,255,.1)}
+.qbox{display:grid;gap:6px;padding:14px 16px;border-radius:16px;background:rgba(80,96,255,.12);box-shadow:inset 0 0 0 1px rgba(120,135,255,.35)}
+.qbox b{font-size:14px}.qbox p{margin:0;font-size:13.5px;color:var(--muted)}
+.qbox.senden{background:rgba(255,182,72,.12);box-shadow:inset 0 0 0 1px rgba(255,182,72,.4)}
+.qbox.tamam{background:rgba(61,220,151,.12);box-shadow:inset 0 0 0 1px rgba(61,220,151,.4)}
+.pill.q{--lg-tint:linear-gradient(180deg,rgba(80,96,255,.75),rgba(50,60,190,.85))}
+.pill.q.senden{--lg-tint:linear-gradient(180deg,rgba(255,182,72,.85),rgba(190,120,20,.9))}
+.lirow{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:12px 14px;border-radius:16px;background:rgba(10,102,194,.12);box-shadow:inset 0 0 0 1px rgba(10,102,194,.35)}
+.lirow b{font-size:14px}
+.lirow .hint{flex:1 1 220px}
+#import-box{display:grid;gap:8px}
+#import-box textarea{min-height:120px;padding:12px 14px;height:auto;resize:vertical;font-size:13.5px}
+.addsrc{display:grid;gap:8px;grid-template-columns:minmax(0,3fr) minmax(0,3fr) auto;align-items:center}
+@media (max-width:720px){.addsrc{grid-template-columns:1fr}}
+.contact{margin-top:16px;border-radius:16px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line)}
+.contact summary{cursor:pointer;padding:12px 16px;font-weight:700;font-size:14px;display:flex;justify-content:space-between;gap:10px;list-style:none}
+.contact summary::-webkit-details-marker{display:none}
+.contact summary small{font-weight:600;color:var(--faint);font-size:12.5px}
+.cgrid{display:grid;gap:8px;padding:0 16px 16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.cgrid .field{height:40px;font-size:14px}
+.cgrid textarea.field{grid-column:1/-1;height:auto;min-height:70px;padding:10px 14px;resize:vertical}
+.agent{display:grid;gap:10px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,rgba(217,204,176,.16),rgba(80,96,255,.1));box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+.agent ol{margin:0;padding-left:20px;display:grid;gap:4px;font-size:13.5px;color:rgba(245,243,239,.88)}
+.agent details summary{cursor:pointer;font-size:13px;color:var(--muted)}
+.agent textarea{min-height:160px!important;font-size:12.5px!important;margin-top:8px}
+.prof .sum{color:rgba(245,243,239,.9);font-size:14.5px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{padding:4px 11px;border-radius:999px;font-size:12.5px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.tag.role{background:rgba(61,220,151,.13);box-shadow:inset 0 0 0 1px rgba(61,220,151,.3)}
+.progress{margin-top:14px;display:grid;gap:6px;font-size:13px;color:var(--muted)}
+.bar{height:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-hi));transition:width .5s var(--ease-out)}
+
+.filters{display:grid;gap:18px;align-content:start}
+.frow{display:grid;gap:8px}
+.frow label,.frow .lbl{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.loc{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))}
+.field{height:44px;width:100%;padding:0 14px;border-radius:14px;border:0;background:rgba(0,0,0,.3);box-shadow:inset 0 0 0 1px var(--line)}
+select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 19px,calc(100% - 15px) 19px;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+select.field option,select.field optgroup{background:#16161c}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);cursor:pointer}
+.check input{width:17px;height:17px;accent-color:var(--accent)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:2px;padding:4px;border-radius:999px;background:rgba(0,0,0,.28);box-shadow:inset 0 1px 3px rgba(0,0,0,.4),inset 0 -1px 0 rgba(255,255,255,.06);width:max-content;max-width:100%}
+.seg button{appearance:none;border:0;background:none;height:36px;padding:0 16px;border-radius:999px;cursor:pointer;color:var(--muted);font-weight:650;font-size:14px;font-variant-numeric:tabular-nums;transition:color .3s,background .3s}
+.seg button:hover{color:var(--fg)}
+.seg button[aria-pressed="true"]{color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.07));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 8px rgba(0,0,0,.3)}
+.seg .hi[aria-pressed="true"]{background:linear-gradient(180deg,rgba(61,220,151,.55),rgba(30,150,100,.6))}
+.seg .mid[aria-pressed="true"]{background:linear-gradient(180deg,rgba(255,182,72,.55),rgba(190,120,20,.6))}
+.fsplit{display:flex;flex-wrap:wrap;gap:18px 28px}
+.hint{margin:0;color:var(--faint);font-size:12.5px}
+.hrow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.hrow .hint{flex:1 1 260px}
+.step{display:grid;gap:10px;padding:14px 16px;border-radius:16px;background:rgba(61,220,151,.08);box-shadow:inset 0 0 0 1px rgba(61,220,151,.28)}
+.step b{font-size:13px;letter-spacing:.04em}
+.step.hl{animation:glow 1.6s var(--ease-out) 2}
+@keyframes glow{50%{box-shadow:inset 0 0 0 2px var(--ok),0 0 24px rgba(61,220,151,.35)}}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px}
+
+.lede{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;margin:0 4px 20px}
+.lede{align-items:center}
+.lede p{margin:0;color:var(--muted);font-size:14px}
+.listhead{margin:0 4px 18px;font:800 clamp(24px,2.8vw,36px)/1.08 var(--font-display);letter-spacing:-.015em;text-wrap:balance}
+.badge{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 7px;margin-left:4px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.14)}
+.seg button[aria-selected="true"]{color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.07));box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 8px rgba(0,0,0,.3)}
+#f-tab button[data-v="done"][aria-selected="true"] .badge{background:var(--ok);color:#06140d}
+
+.mosaic{list-style:none;margin:0;padding:0;display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr))}
+.tile{position:relative;min-width:0}
+.tile.pre{opacity:0;transform:translateY(22px) scale(.97)}
+.tile.enter{transition:opacity .8s var(--ease-out),transform 1s var(--ease-out);transition-delay:var(--ed,0ms)}
+.tile.is-source{visibility:hidden}
+.card{appearance:none;position:relative;z-index:1;display:flex;flex-direction:column;width:100%;height:100%;padding:0;margin:0;border:0;text-align:left;cursor:pointer;border-radius:var(--radius);overflow:hidden;background:var(--tile);box-shadow:0 12px 34px rgba(0,0,0,.42),0 2px 6px rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.08);transition:box-shadow .6s var(--ease-out),transform .6s var(--ease-out)}
+.visual{position:relative;aspect-ratio:16/10;max-width:100%;overflow:hidden;display:grid;place-items:center;background:#f4f2ee}
+.visual .bgblur{position:absolute;inset:-30px;background:center/cover no-repeat;filter:blur(28px) saturate(1.4) brightness(1.05);opacity:.55}
+.visual img{position:relative;max-width:66%;max-height:62%;object-fit:contain;transition:transform 1.1s var(--ease-out)}
+.visual.text{background:radial-gradient(120% 90% at 20% 0%,rgba(217,204,176,.36),transparent 60%),radial-gradient(120% 90% at 100% 100%,rgba(80,96,255,.3),transparent 60%),#16161c}
+.mono{font:800 clamp(40px,4.4vw,58px)/1 var(--font-display);letter-spacing:-.02em;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.35)}
+.chip{position:absolute;left:12px;bottom:12px;display:inline-flex;flex-direction:column;gap:1px;padding:7px 13px 8px;border-radius:15px;--lg-blur:14px;--lg-sat:175%;--lg-tint:linear-gradient(180deg,rgba(18,18,24,.38),rgba(18,18,24,.6));color:#fff}
+.chip small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.72);font-weight:700}
+.chip b{font:800 15.5px/1.1 var(--font-display);font-variant-numeric:tabular-nums}
+.chip b em{font-style:normal;font-weight:600;font-size:12.5px;color:rgba(255,255,255,.75);margin-left:6px}
+.chip.soon b em{color:#ffd2d4}
+.flags{position:absolute;top:12px;right:12px;left:12px;display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;height:25px;padding:0 10px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.02em;color:#fff;--lg-blur:10px;--lg-tint:linear-gradient(180deg,rgba(18,18,24,.42),rgba(18,18,24,.64))}
+.pill.done{--lg-tint:linear-gradient(180deg,rgba(61,220,151,.78),rgba(30,150,100,.82))}
+.pill.new{--lg-tint:linear-gradient(180deg,var(--accent-hi),#cdbf9f)}
+.meta{display:grid;gap:4px;padding:14px 18px 16px;flex:1;align-content:start}
+.meta h3{margin:0;font:700 16px/1.28 var(--font-display);text-wrap:balance}
+.meta p{margin:0;color:var(--muted);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:6px;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--faint)}
+.fit{display:inline-flex;align-items:center;gap:6px}
+.fit i{width:8px;height:8px;border-radius:50%;background:var(--low)}
+.fit.high i{background:var(--ok)} .fit.mid i{background:var(--warn)}
+@media (hover:hover){
+  .tile:hover .card{transform:translateY(-3px);box-shadow:0 30px 60px rgba(0,0,0,.5),0 8px 18px rgba(0,0,0,.3),inset 0 0 0 1px rgba(255,255,255,.16)}
+  .tile:hover .visual img{transform:scale(1.05)}
+}
+.empty{grid-column:1/-1;padding:44px 28px;border-radius:var(--radius);text-align:center;color:var(--muted);background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line)}
+.empty h2{margin:0 0 8px;color:var(--fg);font:700 20px/1.25 var(--font-display)}
+.empty p{margin:0 auto;max-width:58ch}
+
+/* Detay */
+#stage{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:max(3dvh,12px) 16px}
+.backdrop{position:absolute;inset:0;background:rgba(5,5,8,.55);-webkit-backdrop-filter:blur(24px) saturate(1.3);backdrop-filter:blur(24px) saturate(1.3);opacity:0;transition:opacity .45s var(--ease-out)}
+#stage.on .backdrop{opacity:1}
+.detail{position:relative;z-index:1;width:min(1000px,100%);max-height:94dvh;display:flex;flex-direction:column;border-radius:28px;overflow:hidden;background:#0c0c10;box-shadow:0 50px 130px rgba(0,0,0,.66);transform-origin:0 0;outline:none}
+.detail::after{content:"";position:absolute;inset:0;z-index:6;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 1px 0 rgba(255,255,255,.34)}
+.d-bg{position:absolute;inset:-90px;z-index:0;background:center/cover no-repeat;filter:blur(50px) saturate(1.6) brightness(.6)}
+.d-shade{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(8,8,12,.1),rgba(8,8,12,.6) 40%,rgba(8,8,12,.88))}
+.d-close{position:absolute;top:16px;right:16px;z-index:7;width:42px;height:42px;border:0;border-radius:50%;cursor:pointer;color:#fff;font-size:16px;background:rgba(20,20,26,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.42),inset 0 0 0 1px rgba(255,255,255,.16),0 8px 22px rgba(0,0,0,.35);transition:background .3s,transform .5s var(--ease-spring)}
+.d-close:hover{background:rgba(255,255,255,.22);transform:rotate(90deg)}
+.d-scroll{position:relative;z-index:1;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.d-hero{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:28px;align-items:end;padding:34px 36px 8px}
+.d-img{position:relative;aspect-ratio:1;max-width:100%;border-radius:22px;overflow:hidden;display:grid;place-items:center;background:#f4f2ee;box-shadow:0 20px 50px rgba(0,0,0,.45)}
+.d-img img{max-width:80%;max-height:80%;object-fit:contain}
+.d-img.text{background:radial-gradient(120% 90% at 20% 0%,rgba(217,204,176,.45),transparent 60%),radial-gradient(120% 90% at 100% 100%,rgba(80,96,255,.38),transparent 60%),#16161c}
+.d-org{margin:0 0 6px;color:var(--muted);font-weight:600;font-size:14px}
+.d-title{margin:0;font:800 clamp(24px,3vw,40px)/1.06 var(--font-display);letter-spacing:-.01em;text-wrap:balance}
+.kunye{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.kchip{padding:6px 13px;border-radius:999px;font-size:13px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.13);font-variant-numeric:tabular-nums}
+.d-body{display:grid;gap:18px;padding:22px 36px 34px}
+@media (min-width:860px){.d-body{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:start;column-gap:34px}}
+.why{padding:15px 18px;border-radius:18px;background:linear-gradient(135deg,rgba(61,220,151,.18),rgba(255,255,255,.04) 70%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.why h4,.box h4{margin:0 0 6px;font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.why p{margin:0}
+.syn{margin:0;white-space:pre-line;font-size:15px;line-height:1.7;color:rgba(245,243,239,.9);max-width:70ch}
+.side{display:grid;gap:14px;min-width:0}
+.box{padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);display:grid;gap:10px;min-width:0}
+.box p{margin:0;font-size:13.5px;color:var(--muted)}
+.mailrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mail{font:600 15px/1.3 var(--font);user-select:all;word-break:break-all}
+.letter{display:grid;gap:10px}
+.letter input{height:40px}
+.letter textarea{min-height:220px}
+.letter #letter-brief{min-height:84px}
+.brief{display:grid;gap:8px;padding:14px 16px;border-radius:16px;background:rgba(255,182,72,.07);box-shadow:inset 0 0 0 1px rgba(255,182,72,.26)}
+.brief label.bl{font-size:13px;color:var(--muted)}
+.brief label.bl b{color:var(--fg);letter-spacing:.04em}
+.brow{display:flex;flex-wrap:wrap;gap:8px}
+.src{color:var(--faint);font-size:12.5px;margin:0}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:60;max-width:min(560px,calc(100vw - 32px));padding:13px 20px;border-radius:18px;opacity:0;pointer-events:none;transition:opacity .4s,transform .5s var(--ease-spring);--lg-blur:16px;--lg-tint:linear-gradient(180deg,rgba(30,30,38,.66),rgba(12,12,16,.82));font-size:14px}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:820px){
+  .island{gap:10px;padding-left:16px}
+  .brand span,.status{display:none}
+  .island .btn .t{display:none}
+  .island .btn{padding:0 12px}
+  main{padding:92px 16px 64px}
+  .panel{padding:18px}
+  .d-hero{grid-template-columns:1fr;padding:26px 22px 4px}
+  .d-img{max-width:180px}
+  .d-body{padding:18px 22px 28px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.tile.pre{opacity:1;transform:none}}
+
+/* ---------- Gökyüzü: güneşin konumuna (ve varsa havaya) göre değişen arka plan ---------- */
+@property --sky-a { syntax: '<color>'; inherits: true; initial-value: #121a3a; }
+@property --sky-b { syntax: '<color>'; inherits: true; initial-value: #1d2a55; }
+@property --sky-c { syntax: '<color>'; inherits: true; initial-value: #2b3a6b; }
+:root{transition:--sky-a 4s ease,--sky-b 4s ease,--sky-c 4s ease}
+html,body{background:var(--sky-b)}
+#ambient{background:linear-gradient(180deg,var(--sky-a) 0%,var(--sky-b) 52%,var(--sky-c) 100%)}
+#ambient::after{content:"";position:absolute;inset:0;background:radial-gradient(900px 520px at var(--sun-x,70%) var(--sun-y,8%),var(--sun-glow,rgba(255,220,170,.22)),transparent 70%)}
+#sky-fx{position:fixed;inset:0;z-index:-1;pointer-events:none;width:100%;height:100%}
+.wx{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.wx b{color:var(--fg);font-weight:650}
+
+/* Cam paneller: arka plan ne olursa olsun yazı okunur kalsın */
+.panel{background:var(--panel);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%)}
+.card{background:var(--tile)}
+
+/* ---------- Sayfa ayraçları (sol ray) ---------- */
+.rail{position:fixed;left:14px;top:50%;transform:translateY(-50%);z-index:25;display:flex;flex-direction:column;gap:10px}
+.rail button{appearance:none;border:0;cursor:pointer;writing-mode:vertical-rl;transform:rotate(180deg);padding:20px 11px;border-radius:16px 0 0 16px;font:700 14px/1 var(--font-display);letter-spacing:.06em;color:var(--muted);background:rgba(10,14,26,.38);box-shadow:inset 0 0 0 1px var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:color .3s,background .3s,padding .4s var(--ease-out)}
+.rail button span{display:inline-block;margin-top:8px;padding:2px 0;font-size:11px;color:var(--faint);letter-spacing:.02em;font-weight:600}
+.rail button:hover{color:var(--fg)}
+.rail button[aria-selected="true"]{color:#fff;background:linear-gradient(90deg,rgba(255,255,255,.26),rgba(255,255,255,.1));padding-block:26px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.34),0 10px 30px rgba(0,0,0,.3)}
+.rail button[aria-selected="true"] span{color:rgba(255,255,255,.8)}
+.rail button:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+@media (min-width:900px){main{padding-left:76px}}
+@media (max-width:899px){
+  .rail{position:sticky;top:calc(78px + env(safe-area-inset-top,0px));left:auto;transform:none;flex-direction:row;justify-content:center;margin:0 auto 18px;width:max-content;max-width:100%;padding:4px;border-radius:999px;background:rgba(10,14,26,.42);box-shadow:inset 0 0 0 1px var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  .rail button{writing-mode:horizontal-tb;transform:none;border-radius:999px;padding:10px 16px;box-shadow:none;background:none}
+  .rail button span{display:none}
+  .rail button[aria-selected="true"]{padding-block:10px}
+}
+.sheet{animation:sheetIn .55s var(--ease-out)}
+@keyframes sheetIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+
+/* ---------- Görünüm seçici + tablolar ---------- */
+.lede-r{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px}
+.twrap{overflow-x:auto;border-radius:var(--radius);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;font-variant-numeric:tabular-nums}
+.tbl th{position:sticky;top:0;text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);padding:14px 14px 10px;white-space:nowrap;background:rgba(10,14,26,.55)}
+.tbl td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+.tbl tbody tr{cursor:pointer;transition:background .2s}
+.tbl tbody tr:hover{background:rgba(255,255,255,.06)}
+.tbl td.t-main{min-width:220px}
+.tbl td.t-main b{display:block;font-weight:650;color:var(--fg)}
+.tbl td.t-main a{text-decoration:none}
+.tbl td.t-main a:hover{text-decoration:underline}
+.tbl td small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.tbl td.t-req{min-width:260px;max-width:360px;color:var(--muted)}
+.tbl td.t-req div{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tbl td.t-date{white-space:nowrap}
+.tbl td.t-date em{display:block;font-style:normal;font-size:12px;color:var(--faint)}
+.tbl td.t-date em.soon{color:#ffd0c4}
+.tbl td.t-date em.past{color:var(--faint);text-decoration:line-through}
+#ftable td.t-date{white-space:normal;min-width:140px;max-width:230px}
+.tbl select,.tbl input{height:34px;border-radius:10px;border:0;padding:0 10px;background:rgba(0,0,0,.3);box-shadow:inset 0 0 0 1px var(--line);font-size:13px;min-width:150px}
+.tbl input{min-width:200px;width:100%}
+.tchip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.tchip i{width:7px;height:7px;border-radius:50%;background:var(--low)}
+.tchip.ok i{background:var(--ok)}.tchip.mid i{background:var(--warn)}.tchip.later i{background:#8fb5ff}.tchip.no i{background:var(--accent-hi)}
+.tchip.ok{background:rgba(61,220,151,.14)}.tchip.mid{background:rgba(255,182,72,.14)}.tchip.later{background:rgba(143,181,255,.14)}.tchip.no{background:rgba(217,204,176,.14)}
+
+/* ---------- Fon sayfası ---------- */
+.fsum{display:flex;flex-wrap:wrap;gap:10px;margin:0 4px 18px}
+.fsum .stat{display:grid;gap:2px;padding:12px 16px;border-radius:16px;background:var(--panel);box-shadow:inset 0 0 0 1px var(--line);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);min-width:0}
+.fsum .stat small{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.fsum .stat b{font:750 17px/1.25 var(--font-display)}
+.fsum .stat.next{flex:1 1 280px;background:linear-gradient(135deg,rgba(217,204,176,.28),rgba(10,14,26,.32))}
+.addf{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));margin-top:12px}
+.addf .wide{grid-column:1/-1}
+.plan{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.plan li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05)}
+.plan li input{width:17px;height:17px;margin-top:2px;accent-color:var(--ok)}
+.plan li b{font-size:14px}.plan li small{display:block;color:var(--muted);font-size:12.5px}
+.plan li.done b{text-decoration:line-through;color:var(--muted)}
+.fdl textarea{min-height:90px!important}
+
+/* ---------- Performans: canlı bulanıklık yalnızca küçük, sabit öğelerde (ada, ayraçlar) ---------- */
+.panel,.twrap,.fsum .stat{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(10,14,28,.46)}
+.card .lg-fx,.chip .lg-fx,.pill .lg-fx,.toast .lg-fx{display:none}
+.chip{--lg-tint:linear-gradient(180deg,rgba(14,18,30,.62),rgba(14,18,30,.8))}
+.pill{--lg-tint:linear-gradient(180deg,rgba(14,18,30,.6),rgba(14,18,30,.78))}
+.toast{--lg-tint:linear-gradient(180deg,rgba(20,24,36,.9),rgba(12,14,22,.95))}
+.visual .bgblur{display:none}
+.backdrop{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);background:rgba(5,8,16,.62)}
+.d-bg{filter:blur(28px) brightness(.5)}
+.card{transition:transform .35s var(--ease-out)}
+.tile{contain:layout paint style}
+@media (hover:hover){.tile:hover .card{box-shadow:0 18px 40px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.18)}.tile:hover .visual img{transform:none}}
+
+.rail{display:none!important}
+#side{position:fixed;z-index:30;left:14px;top:14px;bottom:14px;width:208px;display:flex;flex-direction:column;gap:6px;padding:16px 12px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+#side .logo{font:800 19px/1.1 var(--font-display);padding:6px 10px 16px;color:var(--fg);cursor:pointer;background:0;border:0;text-align:left}
+#side button.nv{appearance:none;border:0;background:0;color:var(--fg);opacity:.72;text-align:left;font:600 14px var(--font-body,inherit);padding:11px 12px;border-radius:12px;cursor:pointer}
+#side button.nv small{display:block;font-weight:500;font-size:11px;opacity:.7;margin-top:2px}
+#side button.nv:hover{opacity:1;background:rgba(255,255,255,.08)}
+#side button.nv[aria-current=page]{opacity:1;background:rgba(255,255,255,.17);box-shadow:inset 3px 0 0 var(--accent)}
+#side button:focus-visible,#landing button:focus-visible,#aiset button:focus-visible{outline:2px solid var(--accent-hi);outline-offset:2px}
+#side .sp{flex:1}#aichip{font-size:12px;padding:8px 12px;opacity:.85}#aichip i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--low);margin-right:8px}#aichip.ok i{background:var(--ok)}
+#landing{max-width:980px;margin:0 auto;padding:64px 24px 80px 240px;color:var(--fg)}
+#landing h1{font:800 clamp(34px,5.4vw,60px)/1.04 var(--font-display);letter-spacing:-.02em;margin:0 0 16px;max-width:15ch}
+#landing .lead{font-size:18px;line-height:1.55;max-width:56ch;opacity:.86;margin:0 0 34px}
+#landing .paths{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+#landing .path{appearance:none;text-align:left;color:var(--fg);cursor:pointer;border-radius:22px;padding:26px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);font:inherit}
+#landing .path.main{background:linear-gradient(150deg,rgba(217,204,176,.34),rgba(255,255,255,.08));border-color:rgba(255,140,110,.5)}
+#landing .path h2{font:800 24px var(--font-display);margin:0 0 8px}#landing .path p{margin:0 0 18px;line-height:1.5;opacity:.85}
+#landing .path b{display:inline-block;padding:9px 16px;border-radius:999px;background:var(--accent);color:#fff;font-size:14px}
+#landing .path:not(.main) b{background:rgba(255,255,255,.16)}
+#landing ol{list-style:none;counter-reset:s;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:0;margin:40px 0 0}
+#landing li{counter-increment:s;padding-top:12px;border-top:2px solid rgba(255,255,255,.2);line-height:1.5}
+#landing li:before{content:counter(s);display:block;font:800 22px var(--font-display);color:var(--accent-hi)}
+#landing li b{display:block}#landing .fine{margin-top:34px;font-size:13px;opacity:.7;max-width:70ch;line-height:1.55}
+#aiset{border:1px solid rgba(255,255,255,.22);border-radius:20px;background:#1f2d5c;color:var(--fg);padding:24px;width:min(520px,92vw)}
+#aiset::backdrop{background:rgba(8,12,30,.6)}#aiset h3{margin:0 0 4px;font:800 20px var(--font-display)}#aiset p{margin:0 0 14px;font-size:13px;line-height:1.5;opacity:.8}
+#aiset label{display:block;font-size:12px;font-weight:600;margin:12px 0 5px}#aiset .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}#aiset .field{width:100%;box-sizing:border-box}
+#aimsg{min-height:18px;font-size:13px;margin-top:10px}
+@media(min-width:900px){main{padding-left:240px!important}.island{left:calc(50% + 114px)}}
+@media(max-width:899px){#side{top:auto;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));width:auto;flex-direction:row;padding:6px;border-radius:18px}
+#side .logo,#side .sp,#side small,#aichip span{display:none}#side button.nv{flex:1;text-align:center;padding:10px 4px;font-size:12px}#aichip{padding:0 6px}
+#landing{padding:40px 18px 110px}#landing .paths,#landing ol{grid-template-columns:1fr}main{padding-bottom:110px!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+
+/* —— Japon sadeliği: sakin cam, koyu pastel zemin, kırmızı yok —— */
+:root{--accent:#d9ccb0;--accent-hi:#eadfc6;--serif:"Cormorant Garamond","Noto Serif",Georgia,serif;--glass:rgba(255,255,255,.055);--hair:rgba(255,255,255,.14)}
+::selection{background:rgba(217,204,176,.4)}
+#ambient{background:radial-gradient(1100px 680px at 10% -14%,rgba(170,160,255,.14),transparent 62%),radial-gradient(900px 640px at 108% 6%,rgba(110,160,255,.10),transparent 60%),var(--bg)!important}
+.btn.red{color:#1d2436;background:#eee8d9;box-shadow:0 6px 20px rgba(0,0,0,.22);transition:background .2s,transform .2s}
+.btn.red:hover{background:#f6f1e4;filter:none}
+.dot.err,.src-chip.erisilemiyor i{background:#cf9a82;box-shadow:none}
+.drop:hover,.drop.over{background:rgba(255,255,255,.06)}
+.bar i{background:var(--accent)}
+#side{background:var(--glass);border-color:var(--hair)}
+#side .logo{font-family:var(--serif);font-weight:600;font-size:23px;letter-spacing:.01em}
+#side .sp{position:relative;overflow:hidden;border-radius:14px;margin:6px 0}
+#side .sp img{position:absolute;left:0;bottom:0;width:100%;filter:invert(1) grayscale(1);opacity:.3;-webkit-mask-image:linear-gradient(to top,#000 40%,transparent);mask-image:linear-gradient(to top,#000 40%,transparent)}
+#landing{max-width:1120px}
+#landing .hero{margin:0 0 34px;padding:20px 0 0 22px;border-left:1px solid var(--hair)}
+#landing .hero p{font:italic 400 clamp(36px,5.2vw,62px)/1.12 var(--serif);letter-spacing:-.005em;margin:0 0 14px;max-width:17ch;text-wrap:balance}
+#landing .hero footer{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.62}
+#landing .lead{font-size:16px;max-width:58ch;margin:0 0 26px;opacity:.78}
+#landing .path{background:var(--glass);border-color:var(--hair);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#landing .path.main{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28)}
+#landing .path h2{font-family:var(--serif);font-weight:600;font-size:28px}
+#landing .path b{background:#eee8d9;color:#1d2436;font-weight:700}#landing .path:not(.main) b{background:transparent;color:var(--fg);border:1px solid rgba(255,255,255,.35)}
+#landing li:before{color:var(--accent);font-family:var(--serif)}
+#gi{margin-top:36px;padding:34px 36px 30px;border-radius:26px;background:var(--glass);border:1px solid var(--hair);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+#gi .top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--hair)}
+#gi .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.66;margin:0 0 6px}
+#gi h2{font:italic 500 clamp(28px,3.6vw,42px)/1.1 var(--serif);margin:0}#gi .date{font-size:13px;opacity:.62}
+#gi .kisi{font:600 15px var(--font);letter-spacing:.04em;margin:26px 0 4px;opacity:.78}
+#gi h3{font:600 clamp(26px,3vw,36px)/1.15 var(--serif);margin:0 0 14px}
+#gi .hik{font-size:17px;line-height:1.7;max-width:66ch;margin:0 0 16px}
+#gi .ders{font:italic 500 21px/1.45 var(--serif);max-width:60ch;margin:0 0 26px;padding-left:16px;border-left:1px solid var(--accent)}
+#gi .lab{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.62;margin:0 0 12px}
+#gi .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:0}
+#gi figure{margin:0}#gi .fr{position:relative;aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.18);border:1px solid var(--hair);display:grid;place-items:center;padding:14px;text-align:center}
+#gi .fr:after{content:attr(data-t);font:italic 500 20px/1.2 var(--serif);opacity:.8}
+#gi .fr img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+#gi figcaption{display:flex;justify-content:space-between;gap:10px;margin-top:9px;font-size:13px}#gi figcaption span{opacity:.6;white-space:nowrap}
+#gi .note,#gi .cr{font-size:12px;opacity:.55;margin:14px 0 0;line-height:1.5}
+#gi .nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid var(--hair)}#gi .no{margin-left:auto;font-size:12px;opacity:.6}
+#artfoot{position:relative;height:150px;margin:40px 0 0 240px;overflow:hidden;pointer-events:none;-webkit-mask-image:linear-gradient(to top,#000 15%,transparent);mask-image:linear-gradient(to top,#000 15%,transparent)}
+#artfoot img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;filter:grayscale(1) contrast(.9);opacity:.2}
+@media(max-width:899px){#gi{padding:24px 20px}#gi .gal{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}#gi .fr:after{font-size:14px}#gi figcaption{flex-direction:column;gap:0}#artfoot{margin-left:0;height:90px}}
+</style>
+
+<div id="ambient"></div>
+<canvas id="sky-fx" aria-hidden="true"></canvas>
+
+<header class="island lg">
+  <span class="lg-fx"></span><span class="lg-tint"></span><span class="lg-shine"></span>
+  <div class="brand">Fırsat Radarı<span id="brand-sub">CV'NE GÖRE İŞ İLANLARI</span></div>
+  <p class="wx" id="wx"></p>
+  <p class="status" id="status"><i class="dot" id="dot"></i><span id="status-text">İlanlar yükleniyor…</span></p>
+  <button class="btn red" id="refresh" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+    <span class="t">İlanları tara</span>
+  </button>
+</header>
+
+<main>
+  <nav class="rail" id="rail" role="tablist" aria-label="Sayfalar">
+    <button type="button" role="tab" id="tab-is" data-sheet="is" aria-selected="true">İş ilanları<span>CV'ne göre</span></button>
+    <button type="button" role="tab" id="tab-fon" data-sheet="fon" aria-selected="false">Fon ve teşvik<span>pitch deck'ine göre</span></button>
+  </nav>
+  <section class="sheet" id="sheet-is" data-sheet="is" aria-label="İş ilanları">
+  <section class="deck" aria-label="CV ve filtreler">
+    <div class="panel cv" id="cv-panel">
+      <p class="eyebrow">1 · Özgeçmiş</p>
+      <div id="cv-body">
+        <h2>CV'ni yükle, ilanlar sana göre sıralansın</h2>
+        <p>Yapay zekâ CV'ndeki eğitim, deneyim ve becerileri çıkarır; her ilanı Yüksek, Orta veya Düşük uyum olarak puanlar ve nedenini yazar.</p>
+      </div>
+      <label class="drop" id="drop" for="cv-file" tabindex="0">
+        <b>PDF, Word (.docx) ya da metin dosyası seç</b>
+        <small>veya dosyayı buraya sürükle</small>
+      </label>
+      <input type="file" id="cv-file" accept=".pdf,.docx,.txt,.md,application/pdf,text/plain" hidden>
+      <div class="cv-actions">
+        <button class="btn ghost sm" type="button" id="paste-toggle">Metni yapıştır</button>
+        <button class="btn ghost sm" type="button" id="rescore" hidden>Yeniden puanla</button>
+      </div>
+      <div class="paste" id="paste" hidden>
+        <textarea id="cv-text" placeholder="CV metnini buraya yapıştır…"></textarea>
+        <button class="btn red sm" type="button" id="paste-go">CV'yi analiz et</button>
+      </div>
+      <div class="progress" id="progress" hidden><span id="progress-text">CV okunuyor…</span><div class="bar"><i id="progress-bar"></i></div></div>
+      <div class="prof" id="prof" hidden></div>
+      <details class="contact" id="contact">
+        <summary>Başvuru bilgilerim <small id="contact-state"></small></summary>
+        <div class="cgrid">
+          <input class="field" id="c-ad" placeholder="Ad Soyad" autocomplete="name">
+          <input class="field" id="c-eposta" placeholder="E-posta" autocomplete="email">
+          <input class="field" id="c-tel" placeholder="Telefon" autocomplete="tel">
+          <input class="field" id="c-sehir" placeholder="Yaşadığın şehir">
+          <input class="field" id="c-linkedin" placeholder="LinkedIn profil adresi">
+          <input class="field" id="c-cvdosya" placeholder="CV dosyasının adı">
+          <textarea class="field" id="c-not" placeholder="Formlarda sık sorulanlar: maaş beklentisi, ne zaman başlayabileceğin, askerlik, ehliyet, referanslar…"></textarea>
+        </div>
+      </details>
+    </div>
+
+    <div class="panel filters" id="filters">
+      <p class="eyebrow" style="margin:0">2 · Ne görmek istiyorsun?</p>
+      <div class="frow">
+        <span class="lbl">Konum</span>
+        <div class="loc">
+          <select class="field" id="f-country" aria-label="Ülke"></select>
+          <input class="field" id="f-city" list="city-list" placeholder="Şehir ya da bölge (boş: tümü)" aria-label="Şehir ya da bölge">
+          <datalist id="city-list"></datalist>
+        </div>
+        <label class="check" for="f-remote"><input type="checkbox" id="f-remote" checked> Uzaktan / hibrit / esnek ilanları da göster</label>
+      </div>
+      <div class="fsplit">
+        <div class="frow">
+          <span class="lbl" id="l-days">Yayın tarihi</span>
+          <div class="seg" role="group" aria-labelledby="l-days" id="f-days">
+            <button type="button" data-v="5">Son 5 gün</button><button type="button" data-v="10">10</button><button type="button" data-v="15">15</button><button type="button" data-v="30">30</button>
+          </div>
+        </div>
+        <div class="frow">
+          <span class="lbl" id="l-fit">CV uyumu</span>
+          <div class="seg" role="group" aria-labelledby="l-fit" id="f-fit">
+            <button type="button" class="hi" data-v="high">Yüksek</button><button type="button" class="mid" data-v="mid">Orta ve üstü</button><button type="button" data-v="all">Hepsi</button>
+          </div>
+        </div>
+        <div class="frow">
+          <span class="lbl" id="l-sec">Kurum türü</span>
+          <div class="seg" role="group" aria-labelledby="l-sec" id="f-sec">
+            <button type="button" data-v="all">Hepsi</button><button type="button" data-v="STK">STK</button><button type="button" data-v="Özel">Özel</button><button type="button" data-v="Kamu">Kamu</button>
+          </div>
+        </div>
+      </div>
+      <div class="hrow">
+        <p class="hint" id="src-hint"></p>
+        <button class="btn ghost sm" type="button" id="live">Bu konumda canlı ara</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel sources" id="sources" aria-label="Taranan siteler">
+    <div class="hrow"><p class="eyebrow" style="margin:0">3 · Taranan siteler</p><span class="hint" id="src-sum" style="flex:0 1 auto"></span></div>
+    <p class="srclast" id="src-last"></p>
+    <ul class="srcs" id="src-list"></ul>
+    <form class="addsrc" id="src-form">
+      <input class="field" id="src-url" placeholder="Eksik bir site mi var? Adresini yaz (ör. impactpool.org)" aria-label="Eklenecek site adresi">
+      <input class="field" id="src-note" placeholder="Not (isteğe bağlı): ör. sadece STK ilanları, İstanbul filtresi" aria-label="Site notu">
+      <button class="btn red sm" type="submit">Site ekle</button>
+    </form>
+    <p class="hint" id="src-help"></p>
+  </section>
+
+  <div class="lede">
+    <div class="seg" role="tablist" aria-label="Başvuru durumu" id="f-tab">
+      <button type="button" role="tab" data-v="todo">Başvurulmayanlar <span class="badge" id="n-todo">0</span></button>
+      <button type="button" role="tab" data-v="done">Başvurulanlar <span class="badge" id="n-done">0</span></button>
+    </div>
+    <div class="lede-r"><p id="count"></p>
+      <div class="seg" role="group" aria-label="Görünüm" id="f-view"><button type="button" data-v="cards">Kart</button><button type="button" data-v="table">Tablo</button></div></div>
+  </div>
+  <h1 class="listhead" id="heading">İlanlar</h1>
+  <ul class="mosaic" id="grid" aria-live="polite"></ul>
+  <div class="twrap" id="jt-wrap" hidden><table class="tbl" id="jtable"></table></div>
+  </section>
+
+  <section class="sheet" id="sheet-fon" data-sheet="fon" aria-label="Fon ve teşvik" hidden>
+    <section class="deck" aria-label="Girişim ve filtreler">
+      <div class="panel cv">
+        <p class="eyebrow">1 · Girişimin</p>
+        <div id="st-body">
+          <h2>Pitch deck'ini yükle, programlar sana göre değerlendirilsin</h2>
+          <p>Yapay zekâ sunumundan aşamanı, şirket durumunu, ekibini ve ihtiyacını çıkarır; her programı Uygun, Ortakla, Sonra ya da Uygun değil diye işaretler ve nedenini yazar.</p>
+        </div>
+        <label class="drop" id="st-drop" for="st-file" tabindex="0">
+          <b>Pitch deck seç: PDF, PowerPoint (.pptx) ya da Word</b>
+          <small>veya dosyayı buraya sürükle</small>
+        </label>
+        <input type="file" id="st-file" accept=".pdf,.pptx,.docx,.txt,.md" hidden>
+        <div class="cv-actions">
+          <button class="btn ghost sm" type="button" id="st-paste-toggle">Metni yapıştır</button>
+          <button class="btn ghost sm" type="button" id="st-rescore">Programları yeniden değerlendir</button>
+        </div>
+        <div class="paste" id="st-paste" hidden>
+          <textarea id="st-text" placeholder="Girişimini anlatan metni ya da sunumun metnini yapıştır…"></textarea>
+          <button class="btn red sm" type="button" id="st-go">Girişimi analiz et</button>
+        </div>
+        <div class="progress" id="st-progress" hidden><span id="st-progress-text">Sunum okunuyor…</span><div class="bar"><i id="st-progress-bar"></i></div></div>
+        <div class="prof" id="st-prof" hidden></div>
+      </div>
+
+      <div class="panel filters">
+        <p class="eyebrow" style="margin:0">2 · Hangi programları görmek istiyorsun?</p>
+        <div class="fsplit">
+          <div class="frow">
+            <span class="lbl" id="l-fd">Durum</span>
+            <div class="seg" role="group" aria-labelledby="l-fd" id="ff-durum">
+              <button type="button" data-v="aktif">Aktif</button><button type="button" data-v="hepsi">Hepsi</button><button type="button" data-v="bitti">Kapanan / biten</button>
+            </div>
+          </div>
+          <div class="frow">
+            <span class="lbl" id="l-fk">Kapsam</span>
+            <div class="seg" role="group" aria-labelledby="l-fk" id="ff-kapsam">
+              <button type="button" data-v="all">Hepsi</button><button type="button" data-v="Türkiye">Türkiye</button><button type="button" data-v="AB">AB</button><button type="button" data-v="Küresel">Küresel</button>
+            </div>
+          </div>
+        </div>
+        <div class="loc">
+          <select class="field" id="ff-tur" aria-label="Destek türü"></select>
+          <input class="field" id="ff-q" placeholder="Program ya da kurum ara" aria-label="Program ara">
+        </div>
+        <label class="check" for="ff-uygun"><input type="checkbox" id="ff-uygun"> Yalnızca bana uygun olanlar (Uygun ve Ortakla)</label>
+        <details class="contact" id="addf-box">
+          <summary>Listeye program ekle <small>adını ve bağlantısını yaz</small></summary>
+          <form class="addf" id="addf" style="padding:0 16px 16px">
+            <input class="field wide" id="af-ad" placeholder="Program adı (ör. TÜBİTAK 1512)" required aria-label="Program adı">
+            <input class="field wide" id="af-url" placeholder="Program sayfası (https://…)" aria-label="Program sayfası">
+            <input class="field" id="af-son" type="date" aria-label="Son başvuru tarihi">
+            <select class="field" id="af-tur" aria-label="Destek türü"></select>
+            <select class="field" id="af-kapsam" aria-label="Kapsam"><option>Türkiye</option><option>AB</option><option>Küresel</option></select>
+            <input class="field" id="af-destek" placeholder="Destek miktarı" aria-label="Destek miktarı">
+            <input class="field wide" id="af-gerek" placeholder="Bildiğin şartlar (aşama, şirket, ortaklık…)" aria-label="Şartlar">
+            <button class="btn red sm" type="submit">Programı ekle</button>
+          </form>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel sources" id="f-sources" aria-label="Taranan fon kaynakları">
+      <div class="hrow"><p class="eyebrow" style="margin:0">3 · Taranan kaynaklar</p><span class="hint" id="fsrc-sum" style="flex:0 1 auto"></span></div>
+      <p class="srclast" id="fsrc-last"></p>
+      <ul class="srcs" id="fsrc-list"></ul>
+      <form class="addsrc" id="fsrc-form">
+        <input class="field" id="fsrc-url" placeholder="Takip edilecek bir kaynak mı var? Adresini yaz (ör. istka.org.tr/duyurular)" aria-label="Eklenecek fon kaynağı">
+        <input class="field" id="fsrc-note" placeholder="Not (isteğe bağlı): ör. LinkedIn gönderileri, yalnızca girişim çağrıları" aria-label="Kaynak notu">
+        <button class="btn red sm" type="submit">Kaynak ekle</button>
+      </form>
+      <p class="hint" id="fsrc-help"></p>
+    </section>
+
+    <div class="fsum" id="fsum"></div>
+    <div class="lede">
+      <h1 class="listhead" id="f-heading" style="margin:0">Fon ve teşvik programları</h1>
+      <p id="f-count"></p>
+    </div>
+    <div class="twrap"><table class="tbl" id="ftable"></table></div>
+    <p class="hint" style="margin:14px 4px 0">Tarihler programların resmi sayfalarından alındı; "tahmini" yazanlar önceki yılın takvimine göre. Başvurmadan önce program sayfasından doğrula.</p>
+  </section>
+</main>
+<div id="artfoot" aria-hidden="true"><img alt="" loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg?width=1600" onerror="this.parentNode.style.display='none'"></div>
+
+<div id="stage" hidden>
+  <div class="backdrop" data-close></div>
+  <article class="detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="d-title" tabindex="-1"></article>
+</div>
+<div class="toast lg" id="toast" role="status"><span class="lg-fx"></span><span class="lg-tint"></span><span class="lg-shine"></span><span id="toast-text"></span></div>
+
+
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const CFG = 'radar-ai', DBK = 'radar-db';
+  const cfg = () => { try { return JSON.parse(localStorage.getItem(CFG) || '{}'); } catch (e) { return {}; } };
+  const hasRuntime = typeof claude !== 'undefined' && claude && typeof claude.use === 'function';
+  const chip = () => { const c = cfg(), ok = hasRuntime || !!c.key; $('#aichip').classList.toggle('ok', ok); $('#aichip-t').textContent = hasRuntime ? 'claude.ai hesabın' : ok ? 'Anahtar hazır' : 'Anahtar yok'; };
+  /* ---------- Yapay zekâ: sağlayıcı katmanı ---------- */
+  const need = () => { const e = new Error('Önce Profil ve ayarlar bölümünden API anahtarını ekle.'); e.code = 'no_key'; setTimeout(openSet, 50); return e; };
+  async function llm(prompt, opts = {}) {
+    const c = cfg(); if (!c.key) throw need();
+    if (c.provider === 'openai') {
+      const r = await fetch((c.base || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + c.key }, body: JSON.stringify({ model: c.model, messages: [{ role: 'user', content: prompt }] }) });
+      const d = await r.json(); if (!r.ok) throw new Error(d?.error?.message || 'İstek başarısız (' + r.status + ')');
+      return d.choices?.[0]?.message?.content || '';
+    }
+    const body = { model: c.model || 'claude-sonnet-5-5', max_tokens: opts.web ? 8000 : 6000, messages: [{ role: 'user', content: prompt }] };
+    if (opts.web) body.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }];
+    const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': c.key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify(body) });
+    const d = await r.json(); if (!r.ok) throw new Error(d?.error?.message || 'İstek başarısız (' + r.status + ')');
+    return (d.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
+  }
+  const parse = t => { const m = String(t).match(/[\[{][\s\S]*[\]}]/); if (!m) throw new Error('Yanıt okunamadı'); return JSON.parse(m[0]); };
+  /* ---------- Yerel veritabanı (claude.ai db yerine localStorage) ---------- */
+  const store = (() => { try { return JSON.parse(localStorage.getItem(DBK) || '{}'); } catch (e) { return {}; } })();
+  const subs = [];
+  const flush = () => { try { localStorage.setItem(DBK, JSON.stringify(store)); } catch (e) {} };
+  const fire = () => subs.forEach(s => s.run());
+  const snapDoc = p => ({ exists: p in store, data: () => store[p] });
+  const db = {
+    doc: p => ({
+      set: async v => { store[p] = JSON.parse(JSON.stringify(v)); flush(); fire(); },
+      update: async v => { store[p] = { ...(store[p] || {}), ...v }; flush(); fire(); },
+      delete: async () => { delete store[p]; flush(); fire(); },
+      get: async () => snapDoc(p),
+      onSnapshot: cb => { const s = { run: () => cb(snapDoc(p)) }; subs.push(s); setTimeout(s.run, 0); return () => subs.splice(subs.indexOf(s), 1); }
+    }),
+    collection: n => ({ onSnapshot: cb => { const s = { run: () => cb({ docs: Object.keys(store).filter(k => k.startsWith(n + '/')).map(k => ({ id: k.slice(n.length + 1), data: () => store[k] })) }) }; subs.push(s); setTimeout(s.run, 0); return () => subs.splice(subs.indexOf(s), 1); } })
+  };
+  /* ---------- Web taraması (Indeed bağlayıcısı yerine) ---------- */
+  const mcp = { callTool: async (server, tool, a) => {
+    if (cfg().provider === 'openai') { const e = new Error('Web taraması için Anthropic anahtarı gerekir.'); e.code = 'not_granted'; throw e; }
+    if (tool === 'get_job_details') return { content: [{ type: 'text', text: '' }] };
+    const where = a.location === 'remote' ? 'uzaktan çalışma' : a.location;
+    const t = await llm(`Bugün ${new Date().toISOString().slice(0, 10)}. Web araması yap ve "${a.search}" için ${where} konumunda yayında olan güncel iş ilanlarını bul. LinkedIn, Indeed, Kariyer.net, Glassdoor, ReliefWeb, Impactpool, Devex ve kurumların kariyer sayfalarına bak. En çok 10 gerçek ilan ver; adres uydurma. Her ilanı tam şu biçimde yaz, başka metin ekleme:\n**Job Title:** başlık\n**Job Id:** kısa kimlik\n**Company:** kurum\n**Location:** şehir, ülke\n**Posted on:** YYYY-MM-DD\n**View Job URL:** tam adres\n`, { web: true });
+    return { content: [{ type: 'text', text: t }] };
+  } };
+  /* ---------- Fon taraması ---------- */
+  async function scanFunds(btn) {
+    let st = null; try { st = db && store['data/users/local/girisim']; } catch (e) {}
+    const prof = st?.profil ? JSON.stringify(st.profil) : '';
+    if (!prof) return alert('Önce pitch deck\'ini yükle.');
+    const tur = [...document.querySelectorAll('#af-tur option')].map(o => o.value).join(' | ') || 'Hibe | Teşvik | Hızlandırıcı';
+    btn.disabled = true; const old = btn.querySelector('.t')?.textContent;
+    if (btn.querySelector('.t')) btn.querySelector('.t').textContent = 'Taranıyor…';
+    try {
+      const t = await llm(`Bugün ${new Date().toISOString().slice(0, 10)}. Girişim profili: ${prof}\nWeb araması yap; bu girişime uyan, şu an açık ya da yaklaşan hibe, teşvik, hızlandırıcı ve çağrıları bul (TÜBİTAK, KOSGEB, Kalkınma Ajansları, Horizon Europe/EIC, Erasmus+, LIFE, UNDP, bulut ve girişim kredileri, vakıflar dahil). En çok 12 gerçek program ver, adres uydurma. YALNIZCA JSON dizisi döndür: [{"ad":"","url":"","kurum":"","tur":"${tur}","kapsam":"Türkiye|AB|Küresel","sonBasvuru":"YYYY-MM-DD ya da boş","tarihNot":"","destek":"","gereklilikler":""}]`, { web: true });
+      const list = parse(t); let n = 0;
+      for (const f of list) { if (!f.ad || !f.url) continue; const id = ('f-' + f.ad.toLowerCase().replace(/[^a-z0-9]+/g, '-')).slice(0, 100); if (store['fonlar/' + id]) continue; await db.doc('fonlar/' + id).set({ ...f, hazirlikGun: 21, eklendi: new Date().toISOString() }); n++; }
+      alert(n + ' yeni program eklendi.');
+    } catch (e) { alert(e.message); } finally { btn.disabled = false; if (btn.querySelector('.t') && old) btn.querySelector('.t').textContent = old; }
+  }
+  if (!hasRuntime) {
+    window.claude = { use: async n => n === 'db' ? db : n === 'mcp' ? mcp : n === 'user' ? { isOwner: async () => true, id: async () => 'local' } : n === 'sample' ? { json: async (p, o) => parse(await llm(p, o)), text: async (p, o) => llm(p, o) } : null };
+    $('#refresh').addEventListener('click', e => {
+      const b = e.currentTarget; if (!cfg().key) { e.stopImmediatePropagation(); return openSet(); }
+      if (location.hash === '#fon') { e.stopImmediatePropagation(); scanFunds(b); }
+      else { e.stopImmediatePropagation(); $('#live').click(); }
+    }, true);
+  }
+  /* ---------- Menü, landing, ayarlar ---------- */
+  const dlg = $('#aiset'), prov = $('#ai-prov');
+  const syncProv = () => { $('#ai-base-w').hidden = prov.value !== 'openai'; };
+  function openSet() { const c = cfg(); prov.value = c.provider || 'anthropic'; $('#ai-key').value = c.key || ''; $('#ai-model').value = c.model || ''; $('#ai-base').value = c.base || ''; syncProv(); $('#aimsg').textContent = hasRuntime ? 'claude.ai içinde açık: yapay zekâ hesabından çalışır, anahtar gerekmez.' : ''; if (!dlg.open) dlg.showModal(); }
+  prov.addEventListener('change', syncProv);
+  $('#ai-close').onclick = () => dlg.close();
+  $('#ai-save').onclick = async () => {
+    const c = { provider: prov.value, key: $('#ai-key').value.trim(), model: $('#ai-model').value.trim() || (prov.value === 'anthropic' ? 'claude-sonnet-5-5' : 'gpt-4o-mini'), base: $('#ai-base').value.trim() };
+    localStorage.setItem(CFG, JSON.stringify(c)); chip(); $('#aimsg').textContent = 'Deneniyor…';
+    try { await llm('Yalnızca "tamam" yaz.'); $('#aimsg').textContent = 'Bağlantı çalışıyor.'; } catch (e) { $('#aimsg').textContent = 'Hata: ' + e.message; }
+  };
+  $('#ai-export').onclick = () => { const o = {}; Object.keys(localStorage).filter(k => k.startsWith('radar-') && k !== CFG).forEach(k => o[k] = localStorage.getItem(k)); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(o)], { type: 'application/json' })); a.download = 'firsat-radari-yedek.json'; a.click(); };
+  $('#ai-import').onclick = () => $('#ai-file').click();
+  $('#ai-file').onchange = async e => { try { const o = JSON.parse(await e.target.files[0].text()); Object.entries(o).forEach(([k, v]) => k.startsWith('radar-') && k !== CFG && localStorage.setItem(k, v)); location.reload(); } catch (x) { $('#aimsg').textContent = 'Yedek dosyası okunamadı.'; } };
+  const start = location.hash, land = $('#landing'), main = $('main'), head = $('header.island');
+  function go(v) {
+    if (v === 'profil') return openSet();
+    const home = v === 'home'; land.hidden = !home; main.hidden = home; head.hidden = home;
+    document.querySelectorAll('#side .nv[data-go]').forEach(b => b.removeAttribute('aria-current'));
+    document.querySelector(`#side .nv[data-go="${v}"]`)?.setAttribute('aria-current', 'page');
+    if (!home) { const t = $('#tab-' + v); if (t && t.getAttribute('aria-selected') !== 'true') t.click(); }
+    try { history.replaceState(null, '', '#' + v); } catch (e) {} scrollTo(0, 0);
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) go(b.dataset.go); });
+  chip(); go(start === '#fon' ? 'fon' : start === '#is' ? 'is' : 'home');
+  if (start === '#fon' || start === '#is') requestAnimationFrame(() => go(start.slice(1)));
+})();
+</script>
+<script>
+(() => {
+  document.documentElement.lang = 'tr';
+  const TR_MONTHS = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  /* Ülkeler: n = görünen ad (ilanlarda "country" alanı), c = ISO kodu (Indeed), a = başka yazılışlar, cities = "Görünen|takma ad|..." */
+  const COUNTRIES = [
+    { n: 'Türkiye', c: 'TR', a: ['Turkey', 'Türkei', 'Turkiye', 'Turquie'], cities: ['İstanbul|Istanbul','Ankara','İzmir|Izmir','Bursa','Antalya','Adana','Gaziantep','Hatay|Antakya','Şanlıurfa','Kahramanmaraş','Adıyaman','Mersin','Diyarbakır','Kocaeli','Eskişehir','Trabzon','Van','Malatya','Konya','Samsun'] },
+    { n: 'Almanya', c: 'DE', a: ['Germany','Deutschland'], cities: ['Berlin','Hamburg','Münih|München|Munich','Köln|Cologne','Frankfurt','Stuttgart','Düsseldorf','Bonn','Leipzig'] },
+    { n: 'Avusturya', c: 'AT', a: ['Austria','Österreich'], cities: ['Viyana|Wien|Vienna','Graz','Linz','Salzburg','Innsbruck'] },
+    { n: 'Belçika', c: 'BE', a: ['Belgium','Belgique','België'], cities: ['Brüksel|Brussels|Bruxelles|Brussel','Anvers|Antwerp|Antwerpen','Gent|Ghent','Liège|Liege'] },
+    { n: 'Birleşik Krallık', c: 'GB', a: ['United Kingdom','UK','England','İngiltere','Great Britain'], cities: ['Londra|London','Manchester','Birmingham','Edinburgh','Bristol','Glasgow'] },
+    { n: 'Çekya', c: 'CZ', a: ['Czech Republic','Czechia','Česko'], cities: ['Prag|Praha|Prague','Brno'] },
+    { n: 'Danimarka', c: 'DK', a: ['Denmark','Danmark'], cities: ['Kopenhag|København|Copenhagen','Aarhus'] },
+    { n: 'Finlandiya', c: 'FI', a: ['Finland','Suomi'], cities: ['Helsinki','Tampere','Espoo'] },
+    { n: 'Fransa', c: 'FR', a: ['France'], cities: ['Paris','Lyon','Marsilya|Marseille','Strazburg|Strasbourg','Bordeaux','Toulouse','Lille'] },
+    { n: 'Hollanda', c: 'NL', a: ['Netherlands','Nederland','The Netherlands'], cities: ['Amsterdam','Rotterdam','Lahey|Den Haag|The Hague','Utrecht','Eindhoven'] },
+    { n: 'İrlanda', c: 'IE', a: ['Ireland'], cities: ['Dublin','Cork','Galway'] },
+    { n: 'İspanya', c: 'ES', a: ['Spain','España'], cities: ['Madrid','Barselona|Barcelona','Valensiya|Valencia','Sevilla|Seville','Bilbao'] },
+    { n: 'İsveç', c: 'SE', a: ['Sweden','Sverige'], cities: ['Stockholm','Göteborg|Gothenburg','Malmö|Malmo','Uppsala'] },
+    { n: 'İsviçre', c: 'CH', a: ['Switzerland','Schweiz','Suisse'], cities: ['Cenevre|Genève|Geneva|Geneve','Zürih|Zürich|Zurich','Bern','Basel','Lozan|Lausanne'] },
+    { n: 'İtalya', c: 'IT', a: ['Italy','Italia'], cities: ['Roma|Rome','Milano|Milan','Torino|Turin','Bologna','Floransa|Firenze|Florence','Napoli|Naples'] },
+    { n: 'Lüksemburg', c: 'LU', a: ['Luxembourg'], cities: ['Lüksemburg|Luxembourg'] },
+    { n: 'Macaristan', c: 'HU', a: ['Hungary','Magyarország'], cities: ['Budapeşte|Budapest'] },
+    { n: 'Norveç', c: 'NO', a: ['Norway','Norge'], cities: ['Oslo','Bergen','Trondheim'] },
+    { n: 'Polonya', c: 'PL', a: ['Poland','Polska'], cities: ['Varşova|Warszawa|Warsaw','Krakov|Kraków|Krakow','Wrocław|Wroclaw','Gdańsk|Gdansk'] },
+    { n: 'Portekiz', c: 'PT', a: ['Portugal'], cities: ['Lizbon|Lisboa|Lisbon','Porto'] },
+    { n: 'Romanya', c: 'RO', a: ['Romania','România'], cities: ['Bükreş|București|Bucharest','Cluj-Napoca'] },
+    { n: 'Yunanistan', c: 'GR', a: ['Greece','Ελλάδα'], cities: ['Atina|Athens','Selanik|Thessaloniki'] }
+  ];
+  const DEFAULT_ROLES = ['Proje Koordinatörü','Program Uzmanı','İklim Uyum Uzmanı','Sürdürülebilirlik Uzmanı','Kentsel Tasarımcı','İletişim Uzmanı','Araştırma Asistanı','Proje Asistanı'];
+  const OWNER_PROFILE = 'Kentsel Tasarım yüksek lisansı (YTÜ), Şehir ve Bölge Planlama lisansı (KTÜ); iklim uyumu, doğa temelli çözümler, ENVI-met/GIS ve kentsel araştırma; kurucusu olduğu Narch; 3 yıl öğrenci kulübü kuruculuğu ve yöneticiliği (etkinlik, gönüllü ve eğitim organizasyonu); 5+ yıl satış, pazarlama, iletişim, içerik ve grafik tasarım; AB fonlu STK çalışmalarına ve insan haklarına ilgi.';
+  const REMOTE_RX = /uzaktan|remote|esnek|hibrit|hybrid|çevrim ?içi|online|homeoffice|home office/i;
+  const $ = s => document.querySelector(s);
+  const grid = $('#grid');
+  const glass = '<span class="lg-fx"></span><span class="lg-tint"></span><span class="lg-shine"></span>';
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const lower = s => String(s || '').toLocaleLowerCase('tr');
+  const norm = s => lower(s).replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const slug = s => norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+  let sharedJobs = [], personalJobs = [], jobs = [];
+  let meta = {}, fMeta = {}, db = null, sample = null, user = null, mcp = null, uid = null, owner = false;
+  let profile = null;          // {cvText, profil, updatedAt}
+  let scores = {};             // {jobId: {u, n}}
+  let applied = {};            // {jobId: iso | null}
+  let scoring = false, live = false;
+  let prefs = { country: 'Türkiye', city: 'İstanbul', remote: true, days: '30', fit: 'all', sec: 'all', tab: 'todo', view: 'cards', sheet: 'fon' };
+  try { Object.assign(prefs, JSON.parse(localStorage.getItem('radar-prefs') || '{}')); } catch (e) {}
+  const savePrefs = () => { try { localStorage.setItem('radar-prefs', JSON.stringify(prefs)); } catch (e) {} };
+
+  /* ---------- Kişisel kayıt: önce claude.ai veritabanındaki kendi alanın, olmazsa bu tarayıcı ---------- */
+  const LS = 'radar-me-';
+  const lsGet = k => { try { return JSON.parse(localStorage.getItem(LS + k) || 'null'); } catch (e) { return null; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(LS + k, JSON.stringify(v)); } catch (e) {} };
+  let personalDbOk = null;     // null: denenmedi, true/false: sonuç
+  async function psave(k, v) {
+    lsSet(k, v);
+    if (!db || !uid || personalDbOk === false) return false;
+    try { await db.doc(`data/users/${uid}/${k}`).set(v); personalDbOk = true; return true; }
+    catch (e) { personalDbOk = false; return false; }
+  }
+  profile = lsGet('profil');
+  scores = lsGet('puanlar')?.map || {};
+  applied = lsGet('basvurular')?.map || {};
+  personalJobs = (lsGet('ilanlarim')?.jobs || []).map(j => ({ ...j, personal: true }));
+
+  const day = iso => { const [y,m,d] = String(iso||'').slice(0,10).split('-').map(Number); return y ? new Date(y, m-1, d) : null; };
+  const today = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
+  const isoOf = v => { const d = v instanceof Date ? v : new Date(v); if (isNaN(d)) return ''; return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+  const daysLeft = iso => { const d = day(iso); return d ? Math.round((d - today()) / 864e5) : null; };
+  const age = iso => { const d = day(iso); return d ? Math.round((today() - d) / 864e5) : null; };
+  const fmt = iso => { const d = day(iso); return d ? `${d.getDate()} ${TR_MONTHS[d.getMonth()]}` : '—'; };
+  const fmtLong = iso => { const d = day(iso); return d ? `${d.getDate()} ${TR_MONTHS[d.getMonth()]} ${d.getFullYear()}` : 'belirtilmemiş'; };
+  const initials = org => String(org||'?').replace(/\(.*?\)/g,'').split(/\s+/).filter(w => w.length > 2 && !/^(ve|için|ile|the|and)$/i.test(w)).slice(0,3).map(w => w[0].toLocaleUpperCase('tr')).join('') || '?';
+  const leftLabel = n => n == null ? '' : n < 0 ? 'süresi doldu' : n === 0 ? 'bugün son' : `${n} gün kaldı`;
+  const ageLabel = n => n == null ? '' : n <= 0 ? 'bugün' : n === 1 ? 'dün' : `${n} gün önce`;
+
+  /* ---------- Konum ---------- */
+  const ALIAS = new Map();
+  COUNTRIES.forEach(c => [c.n, c.c, ...(c.a || [])].forEach(x => ALIAS.set(norm(x), c.n)));
+  const EUROPE = new Set(COUNTRIES.filter(c => c.c !== 'TR').map(c => c.n));
+  const countryInfo = name => COUNTRIES.find(c => c.n === name) || null;
+  const countryOf = j => { const v = String(j.country || '').trim(); return v ? (ALIAS.get(norm(v)) || v) : 'Türkiye'; };
+  const isRemote = j => REMOTE_RX.test(j.city || '') || REMOTE_RX.test(j.title || '');
+  const placeLabel = () => prefs.city.trim() || (prefs.country === 'all' ? 'Tüm ülkeler' : prefs.country === 'EU' ? 'Avrupa' : prefs.country);
+  function countryOk(j) {
+    if (prefs.country === 'all') return true;
+    const c = countryOf(j);
+    if (prefs.country === 'EU') return EUROPE.has(c);
+    return c === prefs.country;
+  }
+  function cityAliases() {
+    const t = norm(prefs.city).trim(); if (!t) return null;
+    const pool = countryInfo(prefs.country)?.cities || COUNTRIES.flatMap(c => c.cities);
+    const hit = pool.find(e => e.split('|').some(a => norm(a) === t));
+    return hit ? hit.split('|').map(norm) : [t];
+  }
+
+  /* Uyum: önce bu kişinin CV puanı, yoksa (sahip için) tarama sırasında verilen puan */
+  const fitOf = j => scores[j.id]?.u || (owner ? j.uyum : null) || null;
+  const whyOf = j => scores[j.id]?.n || (owner ? j.neden : '') || '';
+  const tried = {};
+  let queue = {};
+  const Q_LABEL = { bekliyor: 'Başvuru sırada', calisiyor: 'Claude başvuruyor', senden: 'Senden bekleniyor', tamam: 'Başvuruldu', hata: 'Başvuru takıldı' };
+  const isApplied = j => queue[j.id]?.durum === 'tamam' || ((j.id in applied) ? !!applied[j.id] : (owner && !!j.basvuruldu));
+
+  function matches(j) {
+    const n = daysLeft(j.deadline); if (n != null && n < 0) return false;
+    const a = age(j.published); if (a == null || a > Number(prefs.days)) return false;
+    if (!countryOk(j)) return false;
+    const al = cityAliases();
+    if (al && !al.some(x => norm(j.city).includes(x)) && !(prefs.remote && isRemote(j))) return false;
+    if (prefs.sec !== 'all' && (j.sector || 'STK') !== prefs.sec) return false;
+    const f = fitOf(j);
+    if (prefs.fit === 'high' && f !== 'Yüksek') return false;
+    if (prefs.fit === 'mid' && f !== 'Yüksek' && f !== 'Orta') return false;
+    return true;
+  }
+  const rank = { 'Yüksek': 0, 'Orta': 1, 'Düşük': 2 };
+
+  function mergeJobs() {
+    const ids = new Set(sharedJobs.map(j => j.id));
+    jobs = [...sharedJobs, ...personalJobs.filter(j => !ids.has(j.id))];
+  }
+
+  function chip(j) {
+    const n = daysLeft(j.deadline);
+    if (!j.deadline) return `<span class="chip lg">${glass}<small>Yayın</small><b>${esc(fmt(j.published))}<em>${esc(ageLabel(age(j.published)))}</em></b></span>`;
+    return `<span class="chip lg${n != null && n <= 5 ? ' soon' : ''}">${glass}<small>Son başvuru</small><b>${esc(fmt(j.deadline))}<em>${esc(leftLabel(n))}</em></b></span>`;
+  }
+  function fitHTML(f, j) {
+    const cls = f === 'Yüksek' ? ' high' : f === 'Orta' ? ' mid' : '';
+    return `<span class="fit${cls}"><i></i>${f ? 'Uyum: ' + esc(f) : (profile ? ((tried[j?.id] || 0) >= 2 ? 'Uyum: belirlenemedi' : 'Puanlanıyor…') : 'Uyum: CV bekleniyor')}</span>`;
+  }
+  function tileHTML(j, i) {
+    const isNew = meta.oncekiGuncelleme && j.addedAt && j.addedAt > meta.oncekiGuncelleme;
+    const vis = j.image
+      ? `<div class="visual"><img src="${j.image}" alt="${esc(j.org)} logosu" loading="lazy">`
+      : `<div class="visual text"><span class="mono">${esc(initials(j.org))}</span>`;
+    const q = queue[j.id];
+    const flags = (q && q.durum !== 'tamam' ? `<span class="pill q ${esc(q.durum)} lg">${glass}${esc(Q_LABEL[q.durum] || q.durum)}</span>` : '') + (isApplied(j) ? `<span class="pill done lg">${glass}✓ Başvuruldu</span>` : '') + (isNew ? `<span class="pill new lg">${glass}Yeni</span>` : '') + (j.personal ? `<span class="pill lg">${glass}Sana özel</span>` : '');
+    const where = [j.city, countryOf(j) !== 'Türkiye' ? countryOf(j) : ''].filter(Boolean).join(', ');
+    return `<li class="tile${animatedOnce ? '' : ' pre'}" data-id="${esc(j.id)}" style="--ed:${Math.min(i,10)*60}ms">
+      <button class="card" type="button" aria-haspopup="dialog" aria-label="${esc(j.title)}, ${esc(j.org)}: detayı aç">
+        ${vis}${chip(j)}<div class="flags">${flags}</div></div>
+        <div class="meta"><h3>${esc(j.title)}</h3><p>${esc(j.org)}</p>
+          <div class="mrow">${fitHTML(fitOf(j), j)}<span>📍 ${esc(where || '—')}</span><span>${esc(j.source || '')}</span></div></div>
+      </button></li>`;
+  }
+  let animatedOnce = false;
+  const animateIn = () => { if (animatedOnce) return; requestAnimationFrame(() => requestAnimationFrame(() => { grid.querySelectorAll('.tile.pre').forEach(t => { t.classList.add('enter'); t.classList.remove('pre'); }); if (jobs.length) animatedOnce = true; })); };
+
+  function renderCards() {
+    const todo = jobs.filter(j => !isApplied(j) && matches(j)).sort((a,b) => (rank[fitOf(a)] ?? 3) - (rank[fitOf(b)] ?? 3) || (b.published||'').localeCompare(a.published||''));
+    const done = jobs.filter(isApplied).sort((a,b) => String(applied[b.id] || b.published || '').localeCompare(String(applied[a.id] || a.published || '')));
+    $('#n-todo').textContent = todo.length; $('#n-done').textContent = done.length;
+    document.querySelectorAll('#f-tab button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === prefs.tab)));
+    if (prefs.tab === 'done') {
+      $('#heading').textContent = 'Başvurduğun ilanlar';
+      $('#count').textContent = `${done.length} başvuru · konum, tarih ve uyum filtreleri bu sekmede uygulanmaz`;
+      grid.innerHTML = done.length ? done.map(tileHTML).join('') : `<li class="empty"><h2>Henüz başvuru işaretlemedin</h2><p>Bir ilanın detayında "Başvurdum olarak işaretle"ye bastığında ilan buraya taşınır.</p></li>`;
+      animateIn(); return;
+    }
+    $('#heading').textContent = `${placeLabel()} · son ${prefs.days} gün`;
+    $('#count').textContent = `${todo.length} ilan gösteriliyor`;
+    if (!todo.length) {
+      const needCv = prefs.fit !== 'all' && !profile && !owner;
+      const other = prefs.country !== 'Türkiye';
+      grid.innerHTML = `<li class="empty"><h2>${jobs.length ? 'Bu filtrelere uyan ilan yok' : 'Henüz ilan yok'}</h2><p>${needCv ? 'Uyum filtresi CV puanına göre çalışır. CV\'ni yükle ya da uyum filtresini "Hepsi" yap.' : other ? 'Bu konum için henüz ilan toplanmadı. "Bu konumda canlı ara" ile Indeed\'de hemen arayabilirsin; şehir alanını boş bırakırsan bütün ülkede aranır.' : 'Gün aralığını genişlet, şehir alanını boşalt ya da uyum filtresini "Hepsi" yap. "Bu konumda canlı ara" ile Indeed\'de de arayabilirsin.'}</p></li>`;
+      return;
+    }
+    grid.innerHTML = todo.map(tileHTML).join('');
+    animateIn();
+  }
+
+  /* ---------- Filtre kontrolleri ---------- */
+  function syncControls() {
+    for (const [id, key] of [['#f-days','days'],['#f-fit','fit'],['#f-sec','sec']])
+      document.querySelectorAll(id + ' button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === prefs[key])));
+    $('#f-city').value = prefs.city; $('#f-remote').checked = !!prefs.remote;
+    fillCountries();
+  }
+  function fillCountries() {
+    const open = jobs.filter(j => { const n = daysLeft(j.deadline); return n == null || n >= 0; });
+    const cnt = {}; open.forEach(j => { const c = countryOf(j); cnt[c] = (cnt[c] || 0) + 1; });
+    const lbl = c => cnt[c] ? `${c} (${cnt[c]})` : c;
+    const opt = c => `<option value="${esc(c)}">${esc(lbl(c))}</option>`;
+    const known = new Set(COUNTRIES.map(c => c.n));
+    const extra = Object.keys(cnt).filter(c => !known.has(c)).sort((a,b) => a.localeCompare(b,'tr'));
+    const eu = [...EUROPE].sort((a,b) => a.localeCompare(b,'tr'));
+    const euCount = eu.reduce((s, c) => s + (cnt[c] || 0), 0);
+    const sel = $('#f-country');
+    sel.innerHTML = opt('Türkiye')
+      + `<optgroup label="Avrupa"><option value="EU">Tüm Avrupa${euCount ? ` (${euCount})` : ''}</option>${eu.map(opt).join('')}</optgroup>`
+      + (extra.length ? `<optgroup label="Diğer">${extra.map(opt).join('')}</optgroup>` : '')
+      + `<option value="all">Tüm ülkeler (${open.length})</option>`;
+    sel.value = prefs.country;
+    if (sel.value !== prefs.country) { prefs.country = 'Türkiye'; sel.value = 'Türkiye'; }
+    const cities = countryInfo(prefs.country)?.cities || [];
+    $('#city-list').innerHTML = cities.map(c => `<option value="${esc(c.split('|')[0])}">`).join('') + '<option value="Uzaktan">';
+    $('#f-city').placeholder = countryInfo(prefs.country) ? `Şehir (boş: bütün ${prefs.country})` : 'Şehir ya da bölge (boş: tümü)';
+  }
+  for (const [id, key] of [['#f-days','days'],['#f-fit','fit'],['#f-sec','sec']])
+    $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; prefs[key] = b.dataset.v; savePrefs(); syncControls(); render(); });
+  $('#f-tab').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; prefs.tab = b.dataset.v; savePrefs(); render(); });
+  $('#f-country').addEventListener('change', e => { prefs.country = e.target.value; prefs.city = ''; savePrefs(); syncControls(); render(); paintSky(); });
+  $('#f-city').addEventListener('input', e => { prefs.city = e.target.value; savePrefs(); render(); clearTimeout(window.__skyT); window.__skyT = setTimeout(paintSky, 600); });
+  $('#f-remote').addEventListener('change', e => { prefs.remote = e.target.checked; savePrefs(); render(); });
+
+  /* Toast */
+  let tt;
+  function toast(msg, ms) { $('#toast-text').textContent = msg; $('#toast').classList.add('on'); clearTimeout(tt); tt = setTimeout(() => $('#toast').classList.remove('on'), ms || 7000); }
+  const busy = (btn, on) => { if (!btn) return; btn.disabled = on; btn.classList.toggle('busy', on); };
+
+  /* Durum */
+  const runOf = m => { const since = m.istendi || m.sonGuncelleme; return m.durum === 'calisiyor' && !(since && Date.now() - new Date(since) > 45 * 60e3); };
+  const fmtTime = iso => { const d = new Date(iso); return isNaN(d) ? '' : `${d.getDate()} ${TR_MONTHS[d.getMonth()]} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
+  function renderStatus() {
+    const fonSheet = prefs.sheet === 'fon';
+    const m = fonSheet ? fMeta : meta;
+    const run = runOf(m);
+    $('#dot').className = 'dot' + (run || (live && !fonSheet) ? ' run' : m.durum === 'hata' ? ' err' : '');
+    const lock = owner && run;
+    $('#refresh').disabled = lock; $('#refresh').classList.toggle('busy', lock);
+    const t = $('#status-text');
+    if (live && !fonSheet) t.textContent = 'Indeed\'de canlı aranıyor…';
+    else if (run) t.textContent = fonSheet ? 'Claude fon ve teşvik kaynaklarını tarıyor…' : 'Claude ilan sitelerini tarıyor…';
+    else if (m.durum === 'hata') t.textContent = m.mesaj || 'Son tarama tamamlanamadı.';
+    else if (m.sonGuncelleme) t.textContent = `Son ${fonSheet ? 'fon ' : ''}taraması ${fmtTime(m.sonGuncelleme)}` + (m.mesaj ? ` · ${m.mesaj}` : '');
+    else t.textContent = fonSheet ? 'Fon kaynakları henüz taranmadı' : jobs.length ? `${jobs.length} ilan` : 'Henüz tarama yapılmadı';
+    $('#status').title = t.textContent;
+    renderSources(); if (typeof renderFSources === 'function') renderFSources();
+  }
+  function renderRole() {
+    $('#refresh .t').textContent = prefs.sheet === 'fon' ? (owner ? 'Fonları tara' : 'Yeniden değerlendir') : owner ? 'İlanları tara' : 'Canlı ara';
+    $('#src-hint').textContent = owner
+      ? '"İlanları tara" seçtiğin ülke ve şehir için aşağıdaki sitelerin hepsinde Claude taraması başlatır. "Bu konumda canlı ara" Indeed\'de hemen arar.'
+      : '"Canlı ara" seçtiğin ülke ve şehirde Indeed\'de arar ve sonuçları CV\'ne göre puanlar. claude.ai hesabında Indeed bağlayıcısı bağlı olmalı; bulduğun ilanları yalnızca sen görürsün.';
+  }
+
+  /* ---------- CV: okuma ---------- */
+  const loadScript = src => new Promise((res, rej) => { if (document.querySelector(`script[src="${src}"]`)) return res(); const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Kütüphane yüklenemedi')); document.head.appendChild(s); });
+  async function pdfText(buf) {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');
+    const lib = window.pdfjsLib;
+    lib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const doc = await lib.getDocument({ data: buf }).promise;
+    let out = '';
+    for (let p = 1; p <= Math.min(doc.numPages, 8); p++) { const c = await (await doc.getPage(p)).getTextContent(); out += c.items.map(i => i.str + (i.hasEOL ? '\n' : ' ')).join('') + '\n'; }
+    return out;
+  }
+  async function docxText(buf) {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
+    return (await window.mammoth.extractRawText({ arrayBuffer: buf })).value;
+  }
+  async function readFile(f) {
+    const name = f.name.toLowerCase();
+    if (name.endsWith('.pdf') || f.type === 'application/pdf') return pdfText(await f.arrayBuffer());
+    if (name.endsWith('.docx')) return docxText(await f.arrayBuffer());
+    return f.text();
+  }
+  function progress(text, pct) { $('#progress').hidden = text == null; if (text != null) { $('#progress-text').textContent = text; $('#progress-bar').style.width = (pct ?? 0) + '%'; } }
+
+  async function analyze(text) {
+    text = String(text || '').replace(/\s+\n/g, '\n').trim();
+    if (text.length < 200) { toast('CV metni çok kısa okundu. Taranmış (görsel) bir PDF olabilir; metni "Metni yapıştır" ile ekle.'); return; }
+    if (!sample) { toast('Yapay zekâ analizi bu görünümde kullanılamıyor. claude.ai\'da oturum açıp sayfayı orada aç.'); return; }
+    progress('CV analiz ediliyor…', 15);
+    try {
+      const p = await sample.json(
+`Aşağıdaki özgeçmişi (CV) analiz et. Kişinin iş arama profilini çıkar. YALNIZCA şu biçimde tek bir JSON nesnesi döndür:
+{"ad":"Ad Soyad","ozet":"2 cümlelik Türkçe profil özeti","egitim":["..."],"deneyimYili":5,"beceriler":["en önemli 12 beceri"],"hedefRoller":["uygun 8 iş unvanı (Türkçe)"],"alanlar":["iklim","kentsel planlama", "..."],"diller":["Türkçe (anadil)","İngilizce (B2)"],"eksikler":["sahip OLMADIĞI ve sık aranan şartlar, ör. mühendislik lisansı, Arapça"]}
+
+CV:
+"""${text.slice(0, 24000)}"""`, { modelTier: 'default' });
+      if (!p || !Array.isArray(p.beceriler)) throw { message: 'Profil çıkarılamadı' };
+      profile = { cvText: text.slice(0, 20000), profil: p, updatedAt: new Date().toISOString() };
+      scores = {};
+      const saved = await psave('profil', profile);
+      await psave('puanlar', { map: {}, profilTarihi: profile.updatedAt });
+      renderProfile(); render();
+      if (!saved) toast('CV profilin bu tarayıcıda saklandı (hesabına kaydedilemedi). Başka cihazda tekrar yüklemen gerekir.');
+      await scoreJobs(true);
+    } catch (e) {
+      progress(null);
+      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi. İzin verirsen CV\'n analiz edilir.' : e?.code === 'rate_limited' ? 'Çok sık istek gönderildi. Bir dakika sonra tekrar dene.' : 'CV analiz edilemedi: ' + (e?.message || 'bilinmeyen hata'));
+    }
+  }
+
+  function renderProfile() {
+    const box = $('#prof');
+    $('#rescore').hidden = !profile;
+    if (!profile) {
+      box.hidden = true;
+      $('#cv-body').innerHTML = owner
+        ? `<h2>Uyumlar Claude taramasında senin profiline göre verildi</h2><p>CV dosyanı yüklersen yapay zekâ her ilanı yeniden puanlar ve başvuru mektubu taslaklarını CV'ne göre yazar.</p>`
+        : `<h2>CV'ni yükle, ilanlar sana göre sıralansın</h2><p>Yapay zekâ CV'ndeki eğitim, deneyim ve becerileri çıkarır; her ilanı Yüksek, Orta veya Düşük uyum olarak puanlar ve nedenini yazar. CV'n yalnızca sana görünür.</p>`;
+      return;
+    }
+    const p = profile.profil || {};
+    $('#cv-body').innerHTML = `<h2>${esc(p.ad || 'Profilin hazır')}</h2><p>CV ${esc(fmtLong(profile.updatedAt))} tarihinde analiz edildi. Yeni bir dosya seçerek güncelleyebilirsin.</p>`;
+    box.hidden = false;
+    box.innerHTML = `<p class="sum">${esc(p.ozet || '')}</p>
+      <div><p class="eyebrow" style="margin:0 0 6px">Hedef roller</p><div class="tags">${(p.hedefRoller||[]).slice(0,8).map(r => `<span class="tag role">${esc(r)}</span>`).join('')}</div></div>
+      <div><p class="eyebrow" style="margin:0 0 6px">Beceriler</p><div class="tags">${(p.beceriler||[]).slice(0,12).map(r => `<span class="tag">${esc(r)}</span>`).join('')}</div></div>`;
+  }
+
+  /* ---------- Puanlama ---------- */
+  let scoreTimer = null, scorePending = false;
+  function scheduleScore() { if (!profile || !sample) return; clearTimeout(scoreTimer); scoreTimer = setTimeout(() => scoreJobs(false), 1200); }
+  async function scoreJobs(force) {
+    if (!profile || !sample) return;
+    if (scoring) { scorePending = true; return; }
+    if (force) for (const k in tried) delete tried[k];
+    const open = jobs.filter(j => { const n = daysLeft(j.deadline); return (n == null || n >= 0) && (force || (!scores[j.id] && (tried[j.id] || 0) < 2)); });
+    if (!open.length) { progress(null); return; }
+    scoring = true;
+    const p = profile.profil;
+    const B = 6;
+    try {
+      for (let i = 0; i < open.length; i += B) {
+        const batch = open.slice(i, i + B);
+        batch.forEach(j => { tried[j.id] = (tried[j.id] || 0) + 1; });
+        progress(`İlanlar CV'ne göre puanlanıyor… ${Math.min(i + B, open.length)}/${open.length}`, 20 + 80 * (i / open.length));
+        const res = await sample.json(
+`Bir iş arayanın profili ve iş ilanları aşağıda. Her ilan için adayın uyumunu değerlendir:
+"Yüksek" = aday ilanın ana şartlarını karşılıyor ve deneyimi doğrudan örtüşüyor; "Orta" = alan yakın, bazı şartlar eksik ama başvurmaya değer; "Düşük" = alakasız ya da adayda olmayan zorunlu bir şart var (ör. belirli bir lisans, dil, yıllarca sektör deneyimi).
+Bilgi eksikse ilandaki başlık, kurum ve özet üzerinden en olası değeri seç; hiçbir ilanı atlama, her ilan için mutlaka bir satır döndür ve id'yi aynen yaz. "neden" alanında hangi deneyiminin örtüştüğünü ve varsa eksik şartı somut olarak belirt.
+YALNIZCA şu biçimde bir JSON dizisi döndür: [{"id":"...","uyum":"Yüksek|Orta|Düşük","neden":"Türkçe, en çok 2 kısa cümle, adaya 'sen' diye hitap et"}]
+
+PROFİL: ${JSON.stringify(p)}${profile.cvText ? `\n\nCV METNİNDEN: ${profile.cvText.slice(0, 3000)}` : ''}
+
+İLANLAR:
+${batch.map(j => JSON.stringify({ id: j.id, baslik: j.title, kurum: j.org, sehir: j.city, ulke: countryOf(j), ozet: String(j.summary || '').slice(0, 1500) })).join('\n')}`, { modelTier: 'default' });
+        if (Array.isArray(res)) for (const r of res) if (r && r.id && rank[r.uyum] != null) scores[r.id] = { u: r.uyum, n: String(r.neden || '').slice(0, 400) };
+        await psave('puanlar', { map: scores, profilTarihi: profile.updatedAt });
+        render();
+      }
+      progress('Puanlama bitti', 100); setTimeout(() => progress(null), 1600);
+      if (jobs.some(j => !scores[j.id] && (tried[j.id] || 0) < 2)) scorePending = true;
+    } catch (e) {
+      progress(null);
+      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi; ilanlar puanlanmadı.' : 'Puanlama yarıda kaldı. "Yeniden puanla" ile tekrar deneyebilirsin.');
+    } finally { scoring = false; render(); if (scorePending) { scorePending = false; scheduleScore(); } }
+  }
+
+  /* CV girişleri */
+  const fileIn = $('#cv-file'), drop = $('#drop');
+  async function takeFile(f) {
+    if (!f) return;
+    progress('CV okunuyor…', 6);
+    try { await analyze(await readFile(f)); } catch (e) { progress(null); toast('Dosya okunamadı. PDF, .docx ya da .txt seç veya metni yapıştır.'); }
+  }
+  fileIn.addEventListener('change', () => takeFile(fileIn.files[0]));
+  drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); takeFile(e.dataTransfer.files[0]); });
+  $('#paste-toggle').addEventListener('click', () => { $('#paste').hidden = !$('#paste').hidden; if (!$('#paste').hidden) $('#cv-text').focus(); });
+  $('#paste-go').addEventListener('click', () => analyze($('#cv-text').value));
+  $('#rescore').addEventListener('click', () => scoreJobs(true));
+
+  /* ---------- Canlı arama (Indeed, bakanın kendi bağlayıcısıyla) ---------- */
+  const textOf = r => {
+    const p = r?.payload;
+    if (typeof p === 'string') return p;
+    if (p && typeof p.result === 'string') return p.result;
+    return (r?.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
+  };
+  function parseIndeed(md) {
+    return String(md || '').split(/\*\*Job Title:\*\*/).slice(1).map(b => {
+      const f = k => ((b.match(new RegExp('\\*\\*' + k + ':\\*\\*\\s*([^\\n]+)')) || [])[1] || '').trim();
+      return { title: b.split('\n')[0].trim(), jid: f('Job Id'), org: f('Company'), city: f('Location'), posted: f('Posted on'), url: f('View Job URL') };
+    }).filter(x => x.title && x.url);
+  }
+  const MCP_MSG = {
+    server_not_connected: 'Indeed bağlayıcısı hesabında bağlı değil. claude.ai → Ayarlar → Bağlayıcılar\'dan Indeed\'i ekleyip tekrar dene.',
+    needs_reauth: 'Indeed bağlantının süresi dolmuş. claude.ai → Ayarlar → Bağlayıcılar\'dan yeniden bağla.',
+    not_in_manifest: 'Bu sayfanın Indeed\'e erişimine izin verilmedi.',
+    not_granted: 'Bu görünümde bağlayıcılara erişilemiyor.',
+    blocked_by_policy: 'Kurum ayarların Indeed erişimini engelliyor.',
+    selection_required: 'Birden fazla Indeed bağlantın var; açılan pencereden birini seç ve tekrar dene.'
+  };
+  async function liveSearch(btn) {
+    if (live) return;
+    const C = countryInfo(prefs.country);
+    if (!C) { toast('Canlı arama için listeden tek bir ülke seç (ör. Almanya), istersen şehir de yaz.'); return; }
+    if (!sample) { toast('Canlı arama için sayfayı claude.ai\'da oturum açıkken aç.'); return; }
+    mcp = mcp || await claude.use('mcp');
+    if (!mcp) { toast(MCP_MSG.not_granted + ' Sayfayı claude.ai\'da aç.'); return; }
+    live = true; busy(btn, true); renderStatus();
+    try {
+      const p = profile?.profil;
+      const roles = (p?.hedefRoller?.length ? p.hedefRoller : DEFAULT_ROLES).slice(0, 8);
+      let kws = roles.slice(0, 4);
+      if (C.c !== 'TR') {
+        progress('Arama kelimeleri hazırlanıyor…', 4);
+        const r = await sample.json(`Bir iş arayanın hedef rolleri: ${JSON.stringify(roles)}. ${C.a?.[0] || C.n} için Indeed'de aranacak en iyi 4 kısa arama ifadesini üret (İngilizce ya da o ülkenin dilinde, 1-3 kelime). YALNIZCA {"kelimeler":["..."]} döndür.`, { modelTier: 'quick' });
+        if (Array.isArray(r?.kelimeler) && r.kelimeler.length) kws = r.kelimeler.map(String).slice(0, 4);
+      }
+      const city = prefs.city.trim();
+      const loc = city && !/^uzaktan$/i.test(city) ? city : (C.a?.[0] || C.n);
+      const searches = kws.map(k => ({ search: k, location: loc }));
+      if (prefs.remote) searches.push({ search: kws[0], location: 'remote' });
+      const found = new Map(), known = new Set(jobs.map(j => j.id));
+      for (let i = 0; i < searches.length; i++) {
+        progress(`Indeed: "${searches[i].search}" · ${searches[i].location} (${i + 1}/${searches.length})`, 8 + 30 * i / searches.length);
+        try {
+          const r = await mcp.callTool('Indeed', 'search_jobs', { ...searches[i], country_code: C.c }, { cache: false });
+          for (const x of parseIndeed(textOf(r))) {
+            const id = ('in-' + slug(`${x.org}-${x.title}`)).slice(0, 120);
+            if (id.length > 4 && !found.has(id) && !known.has(id)) found.set(id, { ...x, id, remote: searches[i].location === 'remote' });
+          }
+        } catch (e) { if (MCP_MSG[e?.code]) throw e; }
+      }
+      const fresh = [...found.values()].filter(x => { const a = age(isoOf(x.posted)); return a == null || a <= Math.max(30, Number(prefs.days)); }).slice(0, 12);
+      if (!fresh.length) { progress(null); toast(`Indeed'de ${placeLabel()} için yeni ilan bulunamadı. Şehri boşaltıp bütün ülkede deneyebilirsin.`); return; }
+      for (let i = 0; i < fresh.length; i++) {
+        progress(`İlan ayrıntıları okunuyor… ${i + 1}/${fresh.length}`, 40 + 30 * i / fresh.length);
+        try { fresh[i].desc = textOf(await mcp.callTool('Indeed', 'get_job_details', { job_id: fresh[i].jid }, { cache: false })).slice(0, 6000); } catch (e) { fresh[i].desc = ''; }
+      }
+      const who = p ? JSON.stringify({ ozet: p.ozet, hedefRoller: p.hedefRoller, beceriler: p.beceriler, diller: p.diller, eksikler: p.eksikler }) : (owner ? OWNER_PROFILE : '');
+      const out = [];
+      for (let i = 0; i < fresh.length; i += 4) {
+        const b = fresh.slice(i, i + 4);
+        progress(`İlanlar özetleniyor${who ? ' ve CV\'ne göre puanlanıyor' : ''}… ${Math.min(i + 4, fresh.length)}/${fresh.length}`, 70 + 28 * i / fresh.length);
+        const res = await sample.json(
+`Bugün ${isoOf(new Date())}. Aşağıdaki iş ilanlarını Türkçe özetle${who ? ' ve adayın uyumunu puanla' : ''}. YALNIZCA şu biçimde bir JSON dizisi döndür:
+[{"id":"...","sektor":"STK|Özel|Kamu","sonBasvuru":"YYYY-AA-GG ya da boş","eposta":"ilanda başvuru e-postası varsa o, yoksa boş","ozet":"Türkçe, en çok 900 karakter: görevler, aranan nitelikler (dil, deneyim, diploma), başvuru yolu","uyum":"Yüksek|Orta|Düşük","neden":"..."}]
+Sektör: dernek, vakıf, NGO, uluslararası kuruluş, BM = STK; bakanlık, belediye, kamu kurumu, devlet üniversitesi = Kamu; diğerleri Özel.
+${who ? `Uyum: "Yüksek" = ana şartları karşılıyor; "Orta" = yakın alan, bazı şartlar eksik ama başvurmaya değer; "Düşük" = alakasız ya da adayda olmayan zorunlu bir şart (dil, diploma, yıllarca deneyim). neden: Türkçe, en çok 2 kısa cümle, adaya "sen" diye hitap et.
+ADAY: ${who}` : 'Aday profili yok: uyum ve neden alanlarını boş bırak.'}
+
+İLANLAR:
+${b.map(x => JSON.stringify({ id: x.id, baslik: x.title, kurum: x.org, konum: x.city, tarih: x.posted, aciklama: (x.desc || '').slice(0, 3500) })).join('\n')}`, { modelTier: 'default' });
+        const byId = new Map((Array.isArray(res) ? res : []).filter(r => r && r.id).map(r => [r.id, r]));
+        for (const x of b) {
+          const r = byId.get(x.id) || {};
+          const uyum = rank[r.uyum] != null ? r.uyum : '';
+          if (uyum === 'Düşük') continue;
+          out.push({
+            id: x.id, source: 'Indeed', title: x.title, org: x.org || '—',
+            city: x.remote ? `${x.city || ''} (uzaktan)`.trim() : (x.city || ''), country: C.n,
+            sector: ['STK','Özel','Kamu'].includes(r.sektor) ? r.sektor : 'Özel',
+            published: isoOf(x.posted) || isoOf(new Date()),
+            deadline: /^\d{4}-\d{2}-\d{2}$/.test(r.sonBasvuru || '') ? r.sonBasvuru : '',
+            url: x.url, applyEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(r.eposta || '').trim()) ? String(r.eposta).trim() : '', applyLink: x.url, image: '',
+            summary: String(r.ozet || x.desc || '').slice(0, 1500), addedAt: new Date().toISOString(),
+            uyum, neden: String(r.neden || '').slice(0, 400), basvuruldu: false
+          });
+          if (uyum) scores[x.id] = { u: uyum, n: String(r.neden || '').slice(0, 400) };
+        }
+      }
+      if (!out.length) { progress(null); toast('Bulunan ilanlar CV\'ne uymadığı için eklenmedi.'); return; }
+      progress('Kaydediliyor…', 99);
+      let sharedOk = 0;
+      if (owner && db) for (const j of out) { try { await db.doc('ilanlar/' + j.id).set(j); sharedOk++; } catch (e) { break; } }
+      if (sharedOk < out.length) {
+        const rest = out.slice(sharedOk).map(j => ({ ...j, personal: true }));
+        const ids = new Set(rest.map(j => j.id));
+        personalJobs = [...rest, ...personalJobs.filter(j => !ids.has(j.id))].slice(0, 60);
+        await psave('ilanlarim', { jobs: personalJobs.map(({ personal, ...j }) => j) });
+      }
+      if (Object.keys(scores).length) await psave('puanlar', { map: scores, profilTarihi: profile?.updatedAt || '' });
+      mergeJobs(); fillCountries(); render();
+      progress(null);
+      const shown = out.filter(j => matches(j)).length;
+      toast(`${out.length} yeni ilan eklendi (Indeed · ${placeLabel()}).` + (shown < out.length ? ` ${out.length - shown} tanesi şu anki filtrelerin dışında (ör. yakın şehirler); görmek için şehir alanını boşalt.` : ''), 9000);
+    } catch (e) {
+      progress(null);
+      toast(MCP_MSG[e?.code] || (e?.code === 'rate_limited' ? 'Çok sık istek gönderildi. Bir dakika sonra tekrar dene.' : e?.code === 'cancelled' ? 'Arama durduruldu.' : 'Canlı arama tamamlanamadı: ' + (e?.message || 'bilinmeyen hata')));
+    } finally { live = false; busy(btn, false); renderStatus(); }
+  }
+  $('#live').addEventListener('click', e => liveSearch(e.currentTarget));
+
+  /* ---------- Detay ---------- */
+  const stage = $('#stage'), detail = $('#detail');
+  let openId = null, lastFocus = null;
+  function detailHTML(j) {
+    const n = daysLeft(j.deadline), f = fitOf(j), why = whyOf(j);
+    const imgBlock = j.image ? `<div class="d-img"><img src="${j.image}" alt="${esc(j.org)} logosu"></div>` : `<div class="d-img text"><span class="mono">${esc(initials(j.org))}</span></div>`;
+    const mail = j.applyEmail ? `<div class="mailrow"><span class="mail">${esc(j.applyEmail)}</span><button class="btn ghost sm" type="button" data-copy="${esc(j.applyEmail)}">Kopyala</button></div>` : `<p>Başvuru ilan sayfasındaki form ya da buton üzerinden yapılıyor.</p>`;
+    const where = [j.city, countryOf(j)].filter(Boolean).join(', ');
+    return `${j.image ? `<div class="d-bg" style="background-image:url('${j.image}')"></div>` : ''}<div class="d-shade"></div>
+      <button class="d-close" type="button" data-close aria-label="Kapat">✕</button>
+      <div class="d-scroll">
+        <div class="d-hero">${imgBlock}
+          <div style="min-width:0"><p class="d-org">${esc(j.org)}</p><h2 class="d-title" id="d-title">${esc(j.title)}</h2>
+            <div class="kunye"><span class="kchip">📍 ${esc(where || '—')}</span><span class="kchip">Yayın: ${esc(fmtLong(j.published))}</span><span class="kchip">Son başvuru: ${esc(fmtLong(j.deadline))}${n != null && n >= 0 ? ` · ${esc(leftLabel(n))}` : ''}</span><span class="kchip">CV uyumu: ${esc(f || '—')}</span>${j.sector ? `<span class="kchip">${esc(j.sector)}</span>` : ''}</div>
+          </div></div>
+        <div class="d-body">
+          <div style="display:grid;gap:18px;min-width:0">
+            <div id="qstatus">${qStatusHTML(j)}</div>
+            ${why ? `<div class="why"><h4>Neden sana uygun</h4><p>${esc(why)}</p></div>` : ''}
+            <p class="syn">${esc(j.summary || '')}</p>
+            <div class="box letter" id="letter-box">
+              <h4>Başvuru asistanı</h4>
+              <p>"Başvur"a bastığında CV'ne ve bu ilana göre ön yazı ile e-posta konusu hazırlanır. Metni kendin düzeltebilir ya da brifing yazıp yeniden düzenletebilirsin; hazır olunca "Gönder" adımından ${j.applyEmail ? 'e-posta taslağını' : 'ilanın başvuru sayfasını'} açarsın.</p>
+              <div class="brow"><button class="btn red sm" type="button" data-apply>Başvur</button><button class="btn ghost sm" type="button" data-letter>Sadece ön yazı hazırla</button></div>
+              <div id="letter-out" hidden style="display:grid;gap:10px">
+                <input class="field" id="letter-subject" aria-label="E-posta konusu">
+                <textarea class="field" id="letter-body" aria-label="Ön yazı"></textarea>
+                <div class="brief">
+                  <label class="bl" for="letter-brief"><b>Brifing</b> · ön yazıda neyi değiştireyim?</label>
+                  <textarea class="field" id="letter-brief" placeholder="ör. Daha kısa yaz · Narch deneyimimi öne çıkar · ENVI-met çalışmamdan bahset · İngilizce olsun · ikinci paragraf fazla resmi"></textarea>
+                  <div class="brow"><button class="btn red sm" type="button" data-revise>Brifinge göre düzenle</button><button class="btn ghost sm" type="button" data-rewrite>Baştan yaz</button><button class="btn ghost sm" type="button" data-undo hidden>↶ Önceki sürüm</button></div>
+                  <label class="check" for="brief-keep"><input type="checkbox" id="brief-keep"> Bu brifingi sonraki ön yazılarda da uygula</label>
+                </div>
+                <div class="step" id="send-step">
+                  <b>Gönder</b>
+                  <div class="brow">
+                    ${owner ? `<button class="btn red sm" type="button" data-queue>✦ Claude'a başvurt</button>` : ''}
+                    <a class="btn ${owner ? 'ghost' : 'red'} sm" href="${esc(j.applyLink || j.url)}" target="_blank" rel="noopener" data-agent>Chrome'daki Claude ile ↗</a>
+                    ${j.applyEmail ? `<a class="btn ghost sm" id="mailto" href="#" target="_blank" rel="noopener" data-sent>E-postayla gönder ↗</a>` : ''}
+                    <a class="btn ghost sm" href="${esc(j.applyLink || j.url)}" target="_blank" rel="noopener" data-sent>Kendim başvururum ↗</a>
+                    <button class="btn ghost sm" type="button" data-copy-letter>Metni kopyala</button>
+                  </div>
+                  <p class="src">"Claude ile başvur" ilan sayfasını açar ve Chrome'daki Claude'a verilecek hazır görevi panoya kopyalar. Formlarda adın ve iletişim bilgilerin kullanılsın diye "Başvuru bilgilerim"i bir kez doldur.</p>
+                  <div class="agent" id="agent-box" hidden>
+                    <b id="agent-copied">Görev panoya kopyalandı.</b>
+                    <ol>
+                      <li>Yeni açılan ilan sekmesinde Chrome'daki Claude panelini aç.</li>
+                      <li>Görevi yapıştır (⌘V / Ctrl+V) ve gönder. Claude formu senin bilgilerinle doldurmaya başlar.</li>
+                      <li>Giriş, CV yükleme ya da CAPTCHA gibi bir yerde durup sana yazar; o adımı yapıp "devam" yaz.</li>
+                      <li>Göndermeden önce özet gösterip onayını ister. Bitince buraya dönüp "Evet, başvurdum"a bas.</li>
+                    </ol>
+                    <details id="agent-details"><summary>Görevi göster / yeniden kopyala</summary><textarea class="field" id="agent-task" readonly aria-label="Claude'a verilecek görev"></textarea><div class="brow" style="margin-top:8px"><button class="btn ghost sm" type="button" data-copy-task>Görevi kopyala</button></div></details>
+                  </div>
+                  <div class="confirm" id="confirm" hidden><span>Başvuruyu gönderdin mi?</span><button class="btn red sm" type="button" data-confirm>Evet, başvurdum</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="side">
+            <div class="box"><h4>Başvuru adresi</h4>${mail}</div>
+            <a class="btn red" href="${esc(j.url)}" target="_blank" rel="noopener" style="height:48px">İlanın tamamını aç ↗</a>
+            <button class="btn ghost" type="button" data-applied>${isApplied(j) ? '✓ Başvuruldu · geri al' : 'Başvurdum olarak işaretle'}</button>
+            <p class="src">Kaynak: ${esc(j.source || '')}${j.personal ? ' · bu ilanı yalnızca sen görüyorsun' : ''}</p>
+          </aside>
+        </div>
+      </div>`;
+  }
+  function openDetail(id) {
+    const j = jobs.find(x => x.id === id); if (!j) return;
+    const tile = grid.querySelector(`.tile[data-id="${CSS.escape(id)}"]`);
+    lastFocus = document.activeElement; openId = id;
+    detail.innerHTML = detailHTML(j);
+    letterFor = null; versions = [];
+    { const bp = briefPref(); if (bp.keep) { $('#letter-brief').value = bp.text || ''; $('#brief-keep').checked = true; } }
+    stage.hidden = false; document.documentElement.classList.add('locked');
+    const from = tile ? tile.querySelector('.card').getBoundingClientRect() : null;
+    const to = detail.getBoundingClientRect();
+    if (from && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      tile.classList.add('is-source');
+      detail.animate([{ transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`, borderRadius: '40px', opacity: .6 }, { transform: 'none', borderRadius: '28px', opacity: 1 }], { duration: 600, easing: 'cubic-bezier(.16,1,.3,1)' });
+    }
+    requestAnimationFrame(() => stage.classList.add('on'));
+    detail.focus({ preventScroll: true });
+  }
+  function closeDetail(after) {
+    if (!openId) { after?.(); return; }
+    const tile = grid.querySelector(`.tile[data-id="${CSS.escape(openId)}"]`);
+    const from = detail.getBoundingClientRect(); const to = tile ? tile.querySelector('.card').getBoundingClientRect() : null;
+    stage.classList.remove('on');
+    const done = () => { stage.hidden = true; document.documentElement.classList.remove('locked'); tile && tile.classList.remove('is-source'); openId = null; lastFocus?.focus?.(); after?.(); };
+    if (to && !matchMedia('(prefers-reduced-motion: reduce)').matches) detail.animate([{ transform: 'none', opacity: 1 }, { transform: `translate(${to.left - from.left}px, ${to.top - from.top}px) scale(${to.width / from.width}, ${to.height / from.height})`, opacity: .4 }], { duration: 400, easing: 'cubic-bezier(.16,1,.3,1)' }).onfinish = done;
+    else done();
+  }
+  async function copy(text, btn, label) {
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {}
+    if (btn) { btn.textContent = ok ? 'Kopyalandı' : 'Seçip kopyala'; setTimeout(() => btn.textContent = label, 2200); }
+    return ok;
+  }
+  const letterText = () => `${$('#letter-subject')?.value || ''}\n\n${$('#letter-body')?.value || ''}`;
+  let letterFor = null, versions = [];
+  const briefPref = () => lsGet('brifing') || { text: '', keep: false };
+  function updMail() {
+    const j = jobs.find(x => x.id === openId); const m = $('#mailto');
+    if (j && m) m.href = `mailto:${encodeURIComponent(j.applyEmail)}?subject=${encodeURIComponent($('#letter-subject').value)}&body=${encodeURIComponent($('#letter-body').value)}`;
+  }
+  function setLetter(konu, metin) { $('#letter-subject').value = konu; $('#letter-body').value = metin; updMail(); }
+  async function writeLetter(j, btn, mode = 'new') {
+    if (!sample) { toast('Başvuru asistanı bu görünümde kullanılamıyor.'); return false; }
+    const p = profile?.profil;
+    const who = p ? JSON.stringify(p) : (owner ? OWNER_PROFILE : null);
+    if (!who) { toast('Önce CV\'ni yükle; ön yazı CV\'ne göre hazırlanıyor.'); return false; }
+    const brief = ($('#letter-brief')?.value || '').trim();
+    const keep = !!$('#brief-keep')?.checked;
+    if (mode === 'revise' && !brief) { toast('Önce brifing kutusuna neyin değişmesini istediğini yaz.'); $('#letter-brief')?.focus(); return false; }
+    lsSet('brifing', { text: keep ? brief : '', keep });
+    const useBrief = mode !== 'new' || keep ? brief : '';
+    const cur = { konu: $('#letter-subject')?.value || '', metin: $('#letter-body')?.value || '' };
+    const ilan = JSON.stringify({ baslik: j.title, kurum: j.org, sehir: j.city, ulke: countryOf(j), aciklama: String(j.summary || '').slice(0, 2500) });
+    const prompt = mode === 'revise'
+? `Aşağıdaki başvuru ön yazısını adayın BRİFİNG'ine göre düzenle. Brifingin istediği değişiklikleri eksiksiz uygula; brifingin dokunmadığı kısımları mümkün olduğunca koru (adayın elle yaptığı düzeltmeler dahil). Brifing dil değişikliği istemiyorsa metnin dilini koru. Uydurma deneyim, sayı, kurum ya da referans EKLEME; yalnızca ADAY bilgisinde ve mevcut metinde olanı kullan. Brifing konu satırını da etkiliyorsa onu da güncelle.
+YALNIZCA {"konu":"...","metin":"..."} biçiminde JSON döndür.
+
+BRİFİNG: ${brief}
+
+MEVCUT KONU: ${cur.konu}
+MEVCUT METİN:
+<<<
+${cur.metin}
+>>>
+
+ADAY: ${who}
+
+İLAN: ${ilan}`
+: `Aşağıdaki aday için bu iş ilanına başvuru e-postası/ön yazısı yaz. İlan Türkiye dışındaysa ya da ilan metni İngilizceyse İngilizce, değilse Türkçe yaz. 180-260 kelime, samimi ama profesyonel; ilandaki 2-3 somut şartı adayın gerçek deneyimiyle eşleştir; uydurma deneyim, sayı ya da referans EKLEME; CV'nin ekte olduğunu belirt; aday adını imza olarak kullan (bilinmiyorsa [Ad Soyad]).${useBrief ? `
+ADAYIN TALİMATI (bunlara mutlaka uy; dil ya da uzunluk belirtiyorsa yukarıdakilerin yerine geçer): ${useBrief}` : ''}
+YALNIZCA {"konu":"...","metin":"..."} biçiminde JSON döndür.
+
+ADAY: ${who}
+
+İLAN: ${ilan}`;
+    const label = btn.textContent;
+    btn.disabled = true; btn.textContent = mode === 'revise' ? 'Düzenleniyor…' : 'Hazırlanıyor…';
+    try {
+      const r = await sample.json(prompt, { modelTier: 'default' });
+      const out = $('#letter-out'); if (!out || openId !== j.id) return false;
+      if (!r?.metin) throw { message: 'boş yanıt' };
+      if (cur.metin.trim()) { versions.push(cur); $('[data-undo]').hidden = false; }
+      out.hidden = false;
+      setLetter(r.konu || cur.konu || `Başvuru: ${j.title}`, r.metin);
+      letterFor = j.id;
+      if (mode !== 'new') toast(mode === 'revise' ? 'Ön yazı brifingine göre düzenlendi. Beğenmezsen "Önceki sürüm"e dönebilirsin.' : 'Ön yazı baştan yazıldı.');
+      return true;
+    } catch (e) {
+      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi.' : 'Ön yazı hazırlanamadı. Biraz sonra tekrar dene.');
+      return false;
+    } finally { btn.disabled = false; btn.textContent = label; }
+  }
+  function undoLetter() {
+    const v = versions.pop(); if (!v) return;
+    setLetter(v.konu, v.metin);
+    $('[data-undo]').hidden = !versions.length;
+    toast('Önceki sürüme dönüldü.');
+  }
+  async function quickApply(j, btn) {
+    if (letterFor !== j.id && !(await writeLetter(j, btn))) return;
+    const step = $('#send-step');
+    if (step) { step.classList.remove('hl'); void step.offsetWidth; step.classList.add('hl'); }
+    $('#letter-body')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    btn.textContent = 'Ön yazı hazır';
+    toast('Ön yazı hazır. İstersen brifing yazıp düzenlet; hazır olunca "' + (j.applyEmail ? 'E-postayla gönder' : 'İlanda başvur') + '"e bas, metin panoya kopyalanır.', 9000);
+  }
+  /* ---------- Taranan siteler ---------- */
+  let sources = [];
+  let mySources = lsGet('kaynaklarim')?.list || [];
+  const SRC_LABEL = { ok: 'çalışıyor', kismi: 'kısmen çalışıyor', erisilemiyor: 'şu an erişilemiyor', bekliyor: 'ilk taramayı bekliyor' };
+  const SRC_ORDER = { ok: 0, kismi: 1, bekliyor: 2, erisilemiyor: 3 };
+  const allSources = () => [...sources, ...mySources.filter(m => !sources.some(s => s.url === m.url)).map(m => ({ ...m, mine: true }))]
+    .sort((a, b) => (SRC_ORDER[a.durum] ?? 2) - (SRC_ORDER[b.durum] ?? 2) || String(a.ad).localeCompare(String(b.ad), 'tr'));
+  /* Son taramada hangi siteler kontrol edildi: sonKontrol, taramanın başladığı andan (istendi) sonra mı? */
+  function lastRunWindow(m) {
+    if (!m.sonGuncelleme) return null;
+    const end = new Date(m.sonGuncelleme).getTime();
+    const st = m.istendi ? new Date(m.istendi).getTime() : NaN;
+    const start = !isNaN(st) && st <= end + 6e4 ? st - 10 * 6e4 : end - 3 * 36e5;
+    return { start, end: end + 10 * 6e4 };
+  }
+  function srcHTML(all, m, canDel) {
+    const w = lastRunWindow(m);
+    return all.map(s => {
+      const sk = s.sonKontrol ? new Date(s.sonKontrol).getTime() : NaN;
+      const inRun = w && !isNaN(sk) && sk >= w.start && sk <= w.end;
+      const tip = [SRC_LABEL[s.durum] || s.durum, s.not, s.sonKontrol ? 'son kontrol: ' + fmtTime(s.sonKontrol) : 'henüz kontrol edilmedi'].filter(Boolean).join(' · ');
+      return `<li class="src-chip ${esc(s.durum || 'bekliyor')}${w && !inRun ? ' stale' : ''}" title="${esc(tip)}"><i></i><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.ad)}</a>${s.sonKontrol ? `<small>${esc(fmtTime(s.sonKontrol))}</small>` : ''}${s.tur === 'eklenen' || s.mine ? '<small>eklendi</small>' : ''}${canDel(s) ? `<button type="button" data-del-src="${esc(s.id || s.url)}" aria-label="${esc(s.ad)} kaldır">×</button>` : ''}</li>`;
+    }).join('');
+  }
+  function srcLastText(all, m, what) {
+    const w = lastRunWindow(m);
+    if (runOf(m)) return `<b>Tarama sürüyor…</b> Bittiğinde hangi ${what} bakıldığı burada yazacak.`;
+    if (!w) return `Henüz tarama yapılmadı. Taramadan sonra hangi ${what} bakıldığı burada yazar.`;
+    const inRun = all.filter(s => { const sk = s.sonKontrol ? new Date(s.sonKontrol).getTime() : NaN; return !isNaN(sk) && sk >= w.start && sk <= w.end; });
+    const ok = inRun.filter(s => s.durum === 'ok' || s.durum === 'kismi'), bad = inRun.filter(s => s.durum === 'erisilemiyor');
+    const skipped = all.filter(s => !inRun.includes(s));
+    const names = l => l.map(s => esc(s.ad)).join(', ');
+    return `<b>Son tarama · ${esc(fmtTime(m.sonGuncelleme))}</b><br>`
+      + (ok.length ? `Tarandı (${ok.length}): ${names(ok)}` : 'Hiçbir siteye erişilemedi')
+      + (bad.length ? `<br>Erişilemedi (${bad.length}): ${names(bad)}` : '')
+      + (skipped.length ? `<br>Bu taramada bakılmadı (${skipped.length}): ${names(skipped)}` : '');
+  }
+  function renderSources() {
+    const all = allSources();
+    $('#src-list').innerHTML = srcHTML(all, meta, s => s.mine || (owner && s.tur === 'eklenen')) || '<li class="hint">Henüz kaynak listesi yok.</li>';
+    $('#src-last').innerHTML = srcLastText(all, meta, 'sitelere');
+    const c = k => all.filter(s => s.durum === k).length;
+    $('#src-sum').textContent = `${all.length} site · ${c('ok') + c('kismi')} çalışıyor${c('erisilemiyor') ? ` · ${c('erisilemiyor')} erişilemiyor` : ''}${c('bekliyor') ? ` · ${c('bekliyor')} bekliyor` : ''}`;
+    $('#src-help').textContent = owner
+      ? 'Eklediğin siteler bir sonraki "İlanları tara"da Claude\'a iletilir. Yeşil: tarandı, sarı: kısmen, kırmızı: erişilemedi; soluk görünenlere son taramada bakılmadı. Bir sitenin üstüne gelince notunu ve son kontrol saatini görürsün.'
+      : 'Önerdiğin siteler bu tarayıcıda saklanır. Claude taramasını sayfa sahibi başlattığı için onlara da iletmek istersen sahibine haber ver.';
+  }
+  $('#src-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    let raw = $('#src-url').value.trim(); if (!raw) return;
+    if (!/^https?:\/\//i.test(raw)) raw = 'https://' + raw;
+    let u; try { u = new URL(raw); } catch (err) { toast('Bu bir site adresine benzemiyor. Ör. https://www.impactpool.org'); return; }
+    const host = u.hostname.replace(/^www\./, '');
+    const id = ('k-' + slug(host + (u.pathname.length > 1 ? u.pathname : ''))).slice(0, 100);
+    const item = { ad: host, url: u.href, tur: 'eklenen', durum: 'bekliyor', not: $('#src-note').value.trim().slice(0, 200), eklendi: new Date().toISOString() };
+    if (allSources().some(s => s.url === item.url || s.id === id)) { toast('Bu site zaten listede.'); return; }
+    let shared = false;
+    if (owner && db) { try { await db.doc('kaynaklar/' + id).set(item); shared = true; } catch (err) {} }
+    if (!shared) { mySources = [...mySources, { ...item, id }]; await psave('kaynaklarim', { list: mySources }); renderSources(); }
+    $('#src-url').value = ''; $('#src-note').value = '';
+    toast(shared ? `${host} eklendi. Bir sonraki "İlanları tara"da Claude bu siteye de bakacak.` : `${host} öneri olarak bu tarayıcıya kaydedildi.`);
+  });
+  $('#src-list').addEventListener('click', async e => {
+    const b = e.target.closest('[data-del-src]'); if (!b) return;
+    const key = b.dataset.delSrc;
+    const mine = mySources.find(m => m.id === key || m.url === key);
+    if (mine) { mySources = mySources.filter(m => m !== mine); await psave('kaynaklarim', { list: mySources }); renderSources(); return; }
+    if (owner && db) { try { await db.doc('kaynaklar/' + key).delete(); } catch (err) { toast('Site kaldırılamadı.'); } }
+  });
+  renderSources();
+  /* ---------- Başvuru kuyruğu: masaüstündeki Claude sırayla başvurur ---------- */
+  function qStatusHTML(j) {
+    const q = queue[j.id]; if (!q) return '';
+    const when = q.guncellendi || q.istendi; const t = when ? new Date(when) : null;
+    const tm = t ? ` · ${t.getDate()} ${TR_MONTHS[t.getMonth()]} ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}` : '';
+    const msg = q.mesaj || (q.durum === 'bekliyor' ? 'Claude masaüstü uygulamasında "Radar başvurularını yap" dediğinde sıradaki başvurular başlar.' : '');
+    return `<div class="qbox ${esc(q.durum)}"><b>${esc(Q_LABEL[q.durum] || q.durum)}${esc(tm)}</b>${msg ? `<p>${esc(msg)}</p>` : ''}${q.durum === 'bekliyor' || q.durum === 'hata' ? `<div class="brow"><button class="btn ghost sm" type="button" data-unqueue>Sıradan çıkar</button></div>` : ''}</div>`;
+  }
+  async function enqueue(j, btn) {
+    if (!db || !owner) { toast('Başvuru sırası yalnızca sayfa sahibine açık.'); return; }
+    if (letterFor !== j.id && !(await writeLetter(j, btn))) return;
+    const doc = { jobId: j.id, title: j.title, org: j.org, url: j.url || '', applyLink: j.applyLink || j.url || '', applyEmail: j.applyEmail || '',
+      source: j.source || '', konu: $('#letter-subject').value, metin: $('#letter-body').value,
+      durum: 'bekliyor', mesaj: '', istendi: new Date().toISOString(), guncellendi: new Date().toISOString() };
+    try {
+      await db.doc('basvuruKuyrugu/' + j.id).set(doc);
+      queue[j.id] = doc; $('#qstatus').innerHTML = qStatusHTML(j); render();
+      toast('Başvuru sıraya eklendi. Claude masaüstü uygulamasında (Cowork) "Radar başvurularını yap" yaz; Claude ilanı açıp formu doldurur, takıldığı yerde sana sorar. Durumu burada canlı görürsün.', 11000);
+    } catch (e) { toast('Sıraya eklenemedi; sayfayı yenileyip tekrar dene.'); }
+  }
+  async function unqueue(j) {
+    try { await db.doc('basvuruKuyrugu/' + j.id).delete(); delete queue[j.id]; $('#qstatus').innerHTML = ''; render(); toast('Başvuru sıradan çıkarıldı.'); }
+    catch (e) { toast('Sıradan çıkarılamadı.'); }
+  }
+  /* ---------- Claude ile başvur: Chrome'daki Claude'a verilecek hazır görev ---------- */
+  const CFIELDS = [['ad','Ad Soyad'],['eposta','E-posta'],['tel','Telefon'],['sehir','Yaşadığın şehir'],['linkedin','LinkedIn profil adresi'],['cvdosya','CV dosyasının adı (ör. Mikail_CV_TR.pdf)']];
+  let contact = lsGet('iletisim') || {};
+  let contactTimer = null;
+  function renderContact() {
+    for (const [k] of CFIELDS) { const el = $('#c-' + k); if (el && document.activeElement !== el) el.value = contact[k] || ''; }
+    const n = $('#c-not'); if (n && document.activeElement !== n) n.value = contact.not || '';
+    const filled = CFIELDS.filter(([k]) => contact[k]).length;
+    $('#contact-state').textContent = filled >= 3 ? `${filled}/${CFIELDS.length} dolu` : 'Claude ile başvuru için doldur';
+  }
+  $('#contact').addEventListener('input', e => {
+    const k = (e.target.id || '').replace(/^c-/, ''); if (!k) return;
+    contact[k] = e.target.value; renderContact();
+    clearTimeout(contactTimer); contactTimer = setTimeout(() => psave('iletisim', contact), 700);
+  });
+  renderContact();
+
+  function agentTask(j) {
+    const p = profile?.profil;
+    const me = CFIELDS.filter(([k]) => contact[k]).map(([k, l]) => `- ${l}: ${contact[k]}`).join('\n') || '- (Kişisel bilgiler girilmemiş; formda ad, e-posta, telefon gibi alanlar için bana sor.)';
+    const cv = p
+      ? [p.ad && `Ad: ${p.ad}`, p.ozet && `Özet: ${p.ozet}`, p.egitim?.length && `Eğitim: ${p.egitim.join('; ')}`, p.deneyimYili != null && `Deneyim: ${p.deneyimYili} yıl`, p.beceriler?.length && `Beceriler: ${p.beceriler.join(', ')}`, p.diller?.length && `Diller: ${p.diller.join(', ')}`].filter(Boolean).join('\n')
+      : (owner ? OWNER_PROFILE : '(CV yüklenmemiş)');
+    const cvText = profile?.cvText ? `\n\nÖZGEÇMİŞ METNİ (form sorularını yanıtlarken buradan yararlan):\n${profile.cvText.slice(0, 5000)}` : '';
+    const link = j.applyLink || j.url;
+    const emailWay = j.applyEmail ? `
+Bu ilana E-POSTAYLA başvuruluyor: ${j.applyEmail}
+- Webmail hesabımı aç (Gmail ya da Outlook; hangisinde oturum açıksa), yeni e-posta oluştur.
+- Alıcı: ${j.applyEmail} · Konu ve metin: aşağıdaki ön yazı.
+- CV ekleme adımına gelince dur ve bana "CV'yi ekle" yaz; ben ekleyip "devam" yazınca sürdür.
+- Göndermeden önce bana son hâlini özetle ve onayımı al.` : '';
+    return `Benim adıma şu iş ilanına başvur. Adımları sırayla yap, her adımda kısaca ne yaptığını yaz.
+
+İLAN: ${j.title} — ${j.org} (${[j.city, countryOf(j)].filter(Boolean).join(', ')})
+İlan sayfası: ${j.url}${link !== j.url ? `\nBaşvuru bağlantısı: ${link}` : ''}${emailWay}
+
+ADIMLAR
+1. İlan sayfası bu sekmede açık değilse ${link} adresine git. "Başvur / Apply / Başvuru yap" düğmesini bul ve başvuru formunu aç.
+2. Site giriş ya da üyelik isterse dur, bana "Giriş yap" yaz. Ben giriş yapıp "devam" yazınca sürdür. Şifre yazma, hesap oluşturma.
+3. Formu aşağıdaki BİLGİLERİM ve ÖZGEÇMİŞ ile doldur. Emin olmadığın, bilgilerimde olmayan bir soru olursa (maaş beklentisi, başlama tarihi, referans vb.) uydurma; dur ve bana sor.
+4. Ön yazı / cover letter / motivasyon alanı varsa aşağıdaki ÖN YAZI'yı yapıştır.
+5. CV veya dosya yükleme alanına gelince dur ve bana "CV'yi yükle" yaz (dosya: ${contact.cvdosya || 'CV dosyam'}). Ben yükleyip "devam" yazınca sürdür.
+6. CAPTCHA, robot doğrulaması, e-posta/SMS kodu gibi adımlarda dur ve bana bırak.
+7. Göndermeden ÖNCE doldurduğun alanların kısa bir özetini göster ve "Gönder" için onayımı iste. Onay verirsem gönder.
+8. Gönderince sayfadaki onay mesajını bana bildir. Sonunda "Başvuru tamamlandı" yaz.
+
+BİLGİLERİM
+${me}${contact.not ? `\nEk bilgiler: ${contact.not}` : ''}
+
+ÖZGEÇMİŞ
+${cv}${cvText}
+
+ÖN YAZI
+Konu: ${$('#letter-subject')?.value || ''}
+${$('#letter-body')?.value || ''}`;
+  }
+  async function startAgent(j) {
+    const task = agentTask(j);
+    const ok = await copy(task);
+    const box = $('#agent-box'); if (!box) return;
+    box.hidden = false;
+    $('#agent-task').value = task;
+    $('#agent-copied').textContent = ok ? 'Görev panoya kopyalandı.' : 'Panoya kopyalanamadı; aşağıdaki görevi seçip kopyala.';
+    if (!ok) { const d = $('#agent-details'); d.open = true; $('#agent-task').select(); }
+    const c = $('#confirm'); if (c) c.hidden = false;
+  }
+  async function setApplied(j, val) {
+    applied[j.id] = val ? new Date().toISOString() : null;
+    let saved = await psave('basvurular', { map: applied });
+    if (owner && db && !j.personal) { try { await db.doc('ilanlar/' + j.id).update({ basvuruldu: !!val }); saved = true; } catch (e) {} }
+    closeDetail(render);
+    toast((val ? `"${j.title}" Başvurulanlar sekmesine taşındı.` : `"${j.title}" yeniden Başvurulmayanlar'da.`) + (saved ? '' : ' (Yalnızca bu tarayıcıda kaydedildi.)'));
+  }
+  grid.addEventListener('click', e => { const c = e.target.closest('.card'); if (c) openDetail(c.closest('.tile').dataset.id); });
+  stage.addEventListener('click', e => {
+    if (e.target.closest('[data-close]')) return closeDetail();
+    if (String(openId).startsWith('fon:')) return fundClick(e);
+    const j = jobs.find(x => x.id === openId); if (!j) return;
+    const cp = e.target.closest('[data-copy]'); if (cp) return copy(cp.dataset.copy, cp, 'Kopyala');
+    const cl = e.target.closest('[data-copy-letter]'); if (cl) return copy(letterText(), cl, 'Metni kopyala');
+    const qa = e.target.closest('[data-apply]'); if (qa) return quickApply(j, qa);
+    const lt = e.target.closest('[data-letter]'); if (lt) return writeLetter(j, lt);
+    const rv = e.target.closest('[data-revise]'); if (rv) return writeLetter(j, rv, 'revise');
+    const rw = e.target.closest('[data-rewrite]'); if (rw) return writeLetter(j, rw, 'rewrite');
+    if (e.target.closest('[data-undo]')) return undoLetter();
+    if (e.target.closest('[data-agent]')) { startAgent(j); return; }
+    const qb = e.target.closest('[data-queue]'); if (qb) return enqueue(j, qb);
+    const qc = e.target.closest('[data-unqueue]'); if (qc) return unqueue(j);
+    const ct = e.target.closest('[data-copy-task]'); if (ct) return copy($('#agent-task').value, ct, 'Görevi kopyala');
+    const sent = e.target.closest('[data-sent]'); if (sent) { copy(letterText()); const c = $('#confirm'); if (c) c.hidden = false; return; }
+    const cf = e.target.closest('[data-confirm]'); if (cf) return setApplied(j, true);
+    const ap = e.target.closest('[data-applied]'); if (ap) return setApplied(j, !isApplied(j));
+  });
+  stage.addEventListener('input', e => { if (e.target.id === 'letter-subject' || e.target.id === 'letter-body') updMail(); });
+  stage.addEventListener('keydown', e => { if (e.target.id === 'letter-brief' && e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); $('[data-revise]')?.click(); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && openId) closeDetail(); });
+
+  /* ---------- İlanlar: tablo görünümü ---------- */
+  let renderQ = false;
+  function render() { if (renderQ) return; renderQ = true; requestAnimationFrame(() => { renderQ = false; renderCards(); renderJobTable(); }); }
+  function renderJobTable() {
+    const tableMode = prefs.view === 'table';
+    document.querySelectorAll('#f-view button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === (prefs.view || 'cards'))));
+    const list = prefs.tab === 'done'
+      ? jobs.filter(isApplied).sort((a,b) => String(applied[b.id] || b.published || '').localeCompare(String(applied[a.id] || a.published || '')))
+      : jobs.filter(j => !isApplied(j) && matches(j)).sort((a,b) => (rank[fitOf(a)] ?? 3) - (rank[fitOf(b)] ?? 3) || (b.published||'').localeCompare(a.published||''));
+    $('#jt-wrap').hidden = !tableMode || !list.length;
+    grid.hidden = tableMode && !!list.length;
+    if (!tableMode || !list.length) return;
+    const fitCls = { 'Yüksek': 'ok', 'Orta': 'mid', 'Düşük': 'no' };
+    $('#jtable').innerHTML = `<thead><tr><th>İlan</th><th>Konum</th><th>Uyum</th><th>Yayın</th><th>Son başvuru</th><th>Durum</th><th>Kaynak</th></tr></thead><tbody>${list.map(j => {
+      const f = fitOf(j), n = daysLeft(j.deadline), q = queue[j.id];
+      const status = isApplied(j) ? '<span class="tchip ok"><i></i>Başvuruldu</span>' : q ? `<span class="tchip later"><i></i>${esc(Q_LABEL[q.durum] || q.durum)}</span>` : '<span style="color:var(--faint)">—</span>';
+      return `<tr data-jid="${esc(j.id)}">
+        <td class="t-main"><b>${esc(j.title)}</b><small>${esc(j.org)}</small></td>
+        <td>${esc([j.city, countryOf(j) !== 'Türkiye' ? countryOf(j) : ''].filter(Boolean).join(', ') || '—')}</td>
+        <td>${f ? `<span class="tchip ${fitCls[f] || ''}" title="${esc(whyOf(j))}"><i></i>${esc(f)}</span>` : '<span class="tchip"><i></i>—</span>'}</td>
+        <td class="t-date">${esc(fmt(j.published))}<em>${esc(ageLabel(age(j.published)))}</em></td>
+        <td class="t-date">${j.deadline ? `${esc(fmt(j.deadline))}<em class="${n != null && n <= 5 ? 'soon' : ''}">${esc(leftLabel(n))}</em>` : '<span style="color:var(--faint)">belirtilmemiş</span>'}</td>
+        <td>${status}</td>
+        <td>${esc(j.source || '')}</td></tr>`; }).join('')}</tbody>`;
+  }
+  $('#f-view').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; prefs.view = b.dataset.v; savePrefs(); render(); });
+  $('#jtable').addEventListener('click', e => { const tr = e.target.closest('tr[data-jid]'); if (tr) openDetail(tr.dataset.jid); });
+
+  /* ---------- Sayfa ayraçları: İş ilanları / Fon ve teşvik ---------- */
+  const scrollMem = {};
+  function showSheet(s, keepScroll) {
+    if (s !== 'is' && s !== 'fon') s = 'is';
+    if (prefs.sheet && !keepScroll) scrollMem[prefs.sheet] = scrollY;
+    prefs.sheet = s; savePrefs();
+    document.querySelectorAll('.sheet').forEach(el => { el.hidden = el.dataset.sheet !== s; });
+    document.querySelectorAll('.rail button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.sheet === s)));
+    $('#brand-sub').textContent = s === 'fon' ? "PITCH DECK'İNE GÖRE FON VE TEŞVİK" : "CV'NE GÖRE İŞ İLANLARI";
+    renderRole(); renderStatus();
+    if (!keepScroll) scrollTo({ top: scrollMem[s] || 0 });
+    try { history.replaceState(null, '', '#' + s); } catch (e) {}
+  }
+  $('#rail').addEventListener('click', e => { const b = e.target.closest('button[data-sheet]'); if (b && b.dataset.sheet !== prefs.sheet) showSheet(b.dataset.sheet); });
+  $('#rail').addEventListener('keydown', e => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault(); const next = prefs.sheet === 'is' ? 'fon' : 'is'; showSheet(next); $('#tab-' + next).focus();
+  });
+  /* =========================================================
+     GÖKYÜZÜ: güneşin gerçek konumu + (varsa) hava durumu
+     ========================================================= */
+  const SKY_CITIES = { 'istanbul': [41.01, 28.98], 'ankara': [39.93, 32.86], 'izmir': [38.42, 27.14], 'bursa': [40.19, 29.06], 'antalya': [36.9, 30.7], 'adana': [37.0, 35.32], 'gaziantep': [37.07, 37.38], 'hatay': [36.2, 36.16], 'trabzon': [41.0, 39.72], 'mersin': [36.8, 34.63], 'diyarbakir': [37.91, 40.24], 'kocaeli': [40.77, 29.94], 'eskisehir': [39.78, 30.52], 'konya': [37.87, 32.48], 'samsun': [41.29, 36.33], 'van': [38.5, 43.38],
+    'berlin': [52.52, 13.4], 'munih': [48.14, 11.58], 'hamburg': [53.55, 9.99], 'brussels': [50.85, 4.35], 'bruksel': [50.85, 4.35], 'amsterdam': [52.37, 4.9], 'lahey': [52.07, 4.3], 'paris': [48.86, 2.35], 'londra': [51.51, -0.13], 'london': [51.51, -0.13], 'viyana': [48.21, 16.37], 'cenevre': [46.2, 6.14], 'zurih': [47.37, 8.54], 'roma': [41.9, 12.5], 'milano': [45.46, 9.19], 'madrid': [40.42, -3.7], 'barselona': [41.39, 2.17], 'lizbon': [38.72, -9.14], 'kopenhag': [55.68, 12.57], 'stockholm': [59.33, 18.07], 'oslo': [59.91, 10.75], 'helsinki': [60.17, 24.94], 'dublin': [53.35, -6.26], 'varsova': [52.23, 21.01], 'prag': [50.08, 14.44], 'budapeste': [47.5, 19.04], 'atina': [37.98, 23.73], 'bukres': [44.43, 26.1] };
+  const SKY_COUNTRY = { 'Türkiye': 'istanbul', 'Almanya': 'berlin', 'Belçika': 'brussels', 'Hollanda': 'amsterdam', 'Fransa': 'paris', 'Birleşik Krallık': 'london', 'Avusturya': 'viyana', 'İsviçre': 'zurih', 'İtalya': 'roma', 'İspanya': 'madrid', 'Portekiz': 'lizbon', 'Danimarka': 'kopenhag', 'İsveç': 'stockholm', 'Norveç': 'oslo', 'Finlandiya': 'helsinki', 'İrlanda': 'dublin', 'Polonya': 'varsova', 'Çekya': 'prag', 'Macaristan': 'budapeste', 'Yunanistan': 'atina', 'Romanya': 'bukres' };
+  const PALETTE = {
+    night:  ['#060a1c', '#0f1835', '#1b2852'],
+    dawn:   ['#26335f', '#8f5d86', '#f0a77f'],
+    golden: ['#2b5594', '#d9845c', '#f7c27d'],
+    day:    ['#1c64b8', '#3f8fd8', '#8cc2ee'],
+    dusk:   ['#151a45', '#5d3a76', '#d9706a']
+  };
+  const WX = { // hava durumu: hangi griye, ne kadar karışsın + parçacık
+    clear: { mix: null, k: 0, fx: null, ad: 'Açık' }, partly: { mix: '#7d8ca3', k: .22, fx: 'cloud', ad: 'Parçalı bulutlu' },
+    cloudy: { mix: '#6b7889', k: .5, fx: 'cloud', ad: 'Bulutlu' }, fog: { mix: '#9aa3ad', k: .55, fx: 'cloud', ad: 'Sisli' },
+    rain: { mix: '#3c4757', k: .6, fx: 'rain', ad: 'Yağmurlu' }, storm: { mix: '#232a3b', k: .72, fx: 'rain', ad: 'Fırtınalı' },
+    snow: { mix: '#b8c3d3', k: .45, fx: 'snow', ad: 'Karlı' }
+  };
+  let wx = null; // meta/hava: {kod, sicaklik, sehir, guncellendi}
+  const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mixHex = (a, b, k) => { const A = hex(a), B = hex(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * k).toString(16).padStart(2, '0')).join(''); };
+  function sunPos(lat, lon, d = new Date()) {
+    const rad = Math.PI / 180, doy = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 864e5);
+    const g = 2 * Math.PI / 365 * (doy - 1 + (d.getUTCHours() - 12) / 24);
+    const decl = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g);
+    const eq = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+    const tst = d.getUTCHours() * 60 + d.getUTCMinutes() + eq + 4 * lon;
+    const ha = (tst / 4 - 180) * rad, la = lat * rad;
+    const elev = Math.asin(Math.sin(la) * Math.sin(decl) + Math.cos(la) * Math.cos(decl) * Math.cos(ha)) / rad;
+    return { elev, morning: tst < 720 };
+  }
+  function skyPlace() {
+    const key = norm(prefs.city).trim();
+    const k = SKY_CITIES[key] ? key : (SKY_COUNTRY[prefs.country] || 'istanbul');
+    const label = SKY_CITIES[key] ? prefs.city.trim() : ({ istanbul: 'İstanbul' }[k] || (prefs.country !== 'all' && prefs.country !== 'EU' ? prefs.country : 'İstanbul'));
+    return { ll: SKY_CITIES[k], label };
+  }
+  let fxMode = null;
+  function paintSky() {
+    const { ll, label } = skyPlace();
+    const { elev, morning } = sunPos(ll[0], ll[1]);
+    const phase = elev < -7 ? 'night' : elev < 2 ? (morning ? 'dawn' : 'dusk') : elev < 12 ? 'golden' : 'day';
+    const fresh = wx && wx.guncellendi && (Date.now() - new Date(wx.guncellendi)) < 6 * 36e5 && norm(wx.sehir || '') === norm(label);
+    const w = fresh ? (WX[wx.kod] || WX.clear) : WX.clear;
+    let [a, b, c] = PALETTE[phase];
+    if (w.mix) { a = mixHex(a, phase === 'night' ? '#15181f' : w.mix, w.k); b = mixHex(b, phase === 'night' ? '#1c2029' : w.mix, w.k); c = mixHex(c, phase === 'night' ? '#272c36' : w.mix, w.k); }
+    const r = document.documentElement.style;
+    r.setProperty('--sky-a', a); r.setProperty('--sky-b', b); r.setProperty('--sky-c', c);
+    const sx = morning ? 22 : 78, sy = Math.max(-10, 60 - elev * 1.4);
+    r.setProperty('--sun-x', sx + '%'); r.setProperty('--sun-y', sy + '%');
+    r.setProperty('--sun-glow', phase === 'night' ? 'rgba(170,190,255,.08)' : phase === 'day' ? 'rgba(255,248,225,.22)' : 'rgba(255,190,140,.3)');
+    const phaseAd = { night: 'gece', dawn: 'şafak', golden: morning ? 'sabah' : 'ikindi', day: 'gündüz', dusk: 'gün batımı' }[phase];
+    $('#wx').innerHTML = `<b>${esc(label)}</b> · ${fresh ? `${wx.sicaklik != null ? Math.round(wx.sicaklik) + '° · ' : ''}${esc(w.ad.toLocaleLowerCase('tr'))}` : esc(phaseAd)}`;
+    $('#wx').title = fresh ? `Hava durumu ${new Date(wx.guncellendi).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })} itibarıyla` : 'Renkler güneşin bu şehirdeki konumuna göre değişiyor';
+    const nextFx = w.fx || (phase === 'night' ? 'stars' : null);
+    if (nextFx !== fxMode) { fxMode = nextFx; if (typeof kick === 'function') kick(); }
+  }
+  /* Parçacıklar: yıldız, yağmur, kar, bulut (hareket azaltılmışsa durağan) */
+  const cv = $('#sky-fx'), cx = cv.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let parts = [], lastMode = null, W = 0, H = 0;
+  function sizeFx() { const dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0); lastMode = null; }
+  function seed(m) {
+    const n = m === 'stars' ? 140 : m === 'rain' ? 160 : m === 'snow' ? 110 : m === 'cloud' ? 7 : 0;
+    parts = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, s: Math.random(), p: Math.random() * 6.28 }));
+  }
+  let fxRunning = false, lastT = 0;
+  const fxAnimated = () => (fxMode === 'rain' || fxMode === 'snow') && !still;
+  function kick() { if (!fxRunning) { fxRunning = true; requestAnimationFrame(frame); } }
+  function frame(t) {
+    if (fxAnimated() && t - lastT < 33 && lastMode === fxMode) { requestAnimationFrame(frame); return; }
+    lastT = t;
+    if (fxMode !== lastMode) { seed(fxMode); lastMode = fxMode; }
+    cx.clearRect(0, 0, W, H);
+    for (const q of parts) {
+      if (fxMode === 'stars') { cx.fillStyle = `rgba(255,255,255,${.2 + .6 * q.s * q.s})`; cx.fillRect(q.x, q.y * .7, 1 + q.s, 1 + q.s); }
+      else if (fxMode === 'rain') { if (!still) { q.y += 9 + 9 * q.s; q.x -= 1.5; if (q.y > H) { q.y = -20; q.x = Math.random() * W; } } cx.strokeStyle = `rgba(210,225,245,${.12 + .2 * q.s})`; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(q.x, q.y); cx.lineTo(q.x - 3, q.y + 14 + 8 * q.s); cx.stroke(); }
+      else if (fxMode === 'snow') { if (!still) { q.y += .5 + 1.2 * q.s; q.x += Math.sin(t / 1400 + q.p) * .5; if (q.y > H) { q.y = -6; q.x = Math.random() * W; } } cx.fillStyle = `rgba(255,255,255,${.35 + .4 * q.s})`; cx.beginPath(); cx.arc(q.x, q.y, 1 + 2.2 * q.s, 0, 6.28); cx.fill(); }
+      else if (fxMode === 'cloud') { if (!still) { q.x += .08 + .12 * q.s; if (q.x > W + 300) q.x = -300; } const g = cx.createRadialGradient(q.x, q.y * .5, 0, q.x, q.y * .5, 220 + 160 * q.s); g.addColorStop(0, 'rgba(255,255,255,.10)'); g.addColorStop(1, 'rgba(255,255,255,0)'); cx.fillStyle = g; cx.fillRect(q.x - 400, q.y * .5 - 400, 800, 800); }
+    }
+    if (fxAnimated() && !document.hidden) requestAnimationFrame(frame); else fxRunning = false;
+  }
+  let rzT = null;
+  sizeFx(); addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { sizeFx(); kick(); }, 200); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+  paintSky(); kick();
+  setInterval(paintSky, 5 * 60e3);
+  /* =========================================================
+     FON VE TEŞVİK
+     ========================================================= */
+  const F_DURUM = ['Takipte','Hazırlanıyor','Planlandı','Gönderildi','Sonuç bekleniyor','Çağrı bekleniyor','Kazanıldı','Reddedildi','Atlandı'];
+  const F_KAPANAN = new Set(['Atlandı','Reddedildi','Kazanıldı']);
+  const F_GONDERILDI = new Set(['Gönderildi','Sonuç bekleniyor']);
+  const F_HAZIRLIK_YOK = new Set([...F_KAPANAN, ...F_GONDERILDI]); // bu durumlarda "hazırlığa başla" anlamsız
+  const F_TUR = ['Hibe','Ödül','Hızlandırma','Yatırım','Kredi','Teşvik'];
+  const F_UYUM = { 'Uygun': 'ok', 'Ortakla': 'mid', 'Sonra': 'later', 'Uygun değil': 'no' };
+  const F_RANK = { 'Uygun': 0, 'Ortakla': 1, 'Sonra': 2, 'Uygun değil': 3 };
+  const NARCH_PROFILE = 'Narch: kentsel ısı adası azaltımı için yapay zekâ destekli, doğa tabanlı tasarım asistanı (SaaS), İstanbul. Kurucu: Mikail Kızıltoprak (kentsel tasarımcı, YTÜ Kentsel Tasarım YL). Aşama: prototip, TRL 4; LES mikroiklim doğrulaması (PALM-4U), ENVI-met. Henüz şirket yok: TÜBİTAK BİGG 1812 2. aşama sonucu bekleniyor, onaydan sonra AŞ kurulacak. Tek kurucu. Hedef müşteri: belediyeler, kamu ve tasarım sektörü; yerel iklim eylem planı raporları. Belediye ortaklık adayları: Mersin Yenişehir, Fatih, Sultanbeyli.';
+
+  let funds = [], myFunds = lsGet('fonlarim')?.list || [];
+  let startup = lsGet('girisim');
+  let fScores = lsGet('fonPuan')?.map || {};
+  let fState = lsGet('fonDurum')?.map || {};
+  let fPlans = lsGet('fonPlan')?.map || {};
+  let fScoring = false;
+  const fTried = {};
+  prefs.f = Object.assign({ durum: 'aktif', kapsam: 'all', tur: 'all', q: '', uygun: false }, prefs.f || {});
+
+  const allFunds = () => { const ids = new Set(funds.map(f => f.id)); return [...funds, ...myFunds.filter(f => !ids.has(f.id)).map(f => ({ ...f, personal: true }))]; };
+  const fStateOf = f => fState[f.id] || { durum: 'Takipte', adim: '' };
+  const fFitOf = f => fScores[f.id]?.u || null;
+  /* Kapanmış sayılır: atlandı/reddedildi/kazanıldı ya da son tarihi geçti ve başvuru gönderilmedi */
+  const fClosed = f => { const st = fStateOf(f).durum; if (F_KAPANAN.has(st)) return true; const n = daysLeft(f.sonBasvuru); return n != null && n < 0 && !F_GONDERILDI.has(st); };
+  /* Hazırlık gerekiyor: son tarihi bugün ya da ileride, henüz gönderilmemiş ve kapatılmamış */
+  const fNeedsPrep = f => { const n = daysLeft(f.sonBasvuru); return n != null && n >= 0 && !F_HAZIRLIK_YOK.has(fStateOf(f).durum); };
+  const leftTxt = n => n === 0 ? 'bugün son' : `${n} gün kaldı`;
+  const startDate = f => { const d = day(f.sonBasvuru); if (!d) return null; const s = new Date(d); s.setDate(s.getDate() - (Number(f.hazirlikGun) || 21)); return s; };
+  const dateIso = d => d ? isoOf(d) : '';
+  let fSaveT = null;
+  function setFState(id, patch) {
+    fState[id] = { ...(fState[id] || { durum: 'Takipte', adim: '' }), ...patch, guncellendi: new Date().toISOString() };
+    clearTimeout(fSaveT); fSaveT = setTimeout(() => psave('fonDurum', { map: fState }), 600);
+  }
+
+  function fMatches(f) {
+    const p = prefs.f, st = fStateOf(f).durum;
+    if (p.durum === 'aktif' && fClosed(f)) return false;
+    if (p.durum === 'bitti' && !fClosed(f)) return false;
+    if (p.kapsam !== 'all' && (f.kapsam || 'Küresel') !== p.kapsam) return false;
+    if (p.tur !== 'all' && f.tur !== p.tur) return false;
+    if (p.uygun) { const u = fFitOf(f); if (u !== 'Uygun' && u !== 'Ortakla') return false; }
+    const q = norm(p.q).trim();
+    if (q && !norm(`${f.ad} ${f.kurum} ${f.destek} ${f.gereklilikler}`).includes(q)) return false;
+    return true;
+  }
+  function fSort(a, b) {
+    const na = daysLeft(a.sonBasvuru), nb = daysLeft(b.sonBasvuru);
+    const key = (f, n) => fClosed(f) ? 3e6 : n == null ? 1e6 : n < 0 ? 2e6 : n;
+    const ka = key(a, na), kb = key(b, nb);
+    return ka - kb || (F_RANK[fFitOf(a)] ?? 4) - (F_RANK[fFitOf(b)] ?? 4) || String(a.ad).localeCompare(String(b.ad), 'tr');
+  }
+  function dateCell(f) {
+    const n = daysLeft(f.sonBasvuru);
+    if (!f.sonBasvuru) return `${esc(f.tarihNot || 'Açıklanmadı')}`;
+    const cls = n < 0 ? 'past' : n <= 14 ? 'soon' : '';
+    const st = fStateOf(f).durum;
+    return `${esc(fmtLong(f.sonBasvuru))}<em class="${cls}">${n < 0 ? (F_GONDERILDI.has(st) ? 'kapandı · başvuru gönderildi' : 'kapandı') : leftTxt(n)}${f.tarihNot ? ' · ' + esc(f.tarihNot) : ''}</em>`;
+  }
+  function fitChip(f) {
+    const u = fFitOf(f);
+    if (!u) return `<span class="tchip"><i></i>${!(startup || owner) ? 'Deck bekleniyor' : (fTried[f.id] || 0) >= 2 ? 'Belirlenemedi' : sample ? 'Değerlendiriliyor…' : '—'}</span>`;
+    return `<span class="tchip ${F_UYUM[u] || ''}" title="${esc(fScores[f.id]?.n || '')}"><i></i>${esc(u)}</span>`;
+  }
+
+  let fRenderQ = false;
+  function renderFunds() { if (fRenderQ) return; fRenderQ = true; requestAnimationFrame(() => { fRenderQ = false; renderFundsNow(); }); }
+  function renderFundsNow() {
+    const all = allFunds();
+    const list = all.filter(fMatches).sort(fSort);
+    // Özet: sıradaki son tarih + durum sayıları
+    const upcoming = all.filter(f => fNeedsPrep(f) && fFitOf(f) !== 'Uygun değil').sort(fSort)[0];
+    const count = s => all.filter(f => fStateOf(f).durum === s).length;
+    $('#fsum').innerHTML = (upcoming ? `<button type="button" class="stat next" data-fopen="${esc(upcoming.id)}" style="text-align:left;border:0;cursor:pointer;color:inherit"><small>Sıradaki son tarih</small><b>${esc(upcoming.ad)}</b><span class="hint" style="color:var(--muted)">${esc(fmtLong(upcoming.sonBasvuru))} · ${leftTxt(daysLeft(upcoming.sonBasvuru))}${startDate(upcoming) ? (startDate(upcoming) <= today() ? ' · hazırlığa hemen başla' : ` · hazırlığa ${esc(fmt(dateIso(startDate(upcoming))))} başla`) : ''}</span></button>` : '')
+      + ['Hazırlanıyor','Planlandı','Gönderildi','Sonuç bekleniyor','Çağrı bekleniyor'].map(s => `<div class="stat"><small>${esc(s)}</small><b>${count(s)}</b></div>`).join('');
+    $('#f-count').textContent = `${list.length} program · son tarihe göre sıralı`;
+    if (!all.length) { $('#ftable').innerHTML = `<tbody><tr><td class="empty" style="cursor:default">Henüz program yok. "Listeye program ekle" ile ilkini ekleyebilirsin.</td></tr></tbody>`; return; }
+    if (!list.length) { $('#ftable').innerHTML = `<tbody><tr><td style="cursor:default;color:var(--muted)">Bu filtrelere uyan program yok. Durum filtresini "Hepsi" yap ya da aramayı temizle.</td></tr></tbody>`; return; }
+    $('#ftable').innerHTML = `<thead><tr><th>Program</th><th>Son başvuru</th><th>Hazırlığa başla</th><th>Destek</th><th>Gereklilikler</th><th>Uygunluk</th><th>Durum</th><th>Sonraki adım</th></tr></thead><tbody>${list.map(f => {
+      const st = fStateOf(f), sd = startDate(f);
+      const sdl = sd ? Math.round((sd - today()) / 864e5) : null;
+      return `<tr data-fid="${esc(f.id)}">
+        <td class="t-main"><b>${f.url ? `<a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.ad)}</a>` : esc(f.ad)}</b><small>${esc([f.tur, f.kurum, f.kapsam].filter(Boolean).join(' · '))}</small></td>
+        <td class="t-date">${dateCell(f)}</td>
+        <td class="t-date">${!sd ? '—' : !fNeedsPrep(f) ? `<span style="color:var(--faint)">—</span><em>${F_GONDERILDI.has(st.durum) ? 'gönderildi' : F_KAPANAN.has(st.durum) ? esc(st.durum.toLocaleLowerCase('tr')) : 'kapandı'}</em>` : `${esc(fmt(dateIso(sd)))}<em class="${sdl <= 0 ? 'soon' : ''}">${sdl <= 0 ? 'şimdi başla' : `${sdl} gün sonra`}</em>`}</td>
+        <td style="min-width:150px">${esc(f.destek || '—')}</td>
+        <td class="t-req"><div>${esc(f.gereklilikler || '—')}</div></td>
+        <td>${fitChip(f)}</td>
+        <td><select data-fstate="${esc(f.id)}" aria-label="${esc(f.ad)} durumu">${F_DURUM.map(s => `<option${s === st.durum ? ' selected' : ''}>${s}</option>`).join('')}</select></td>
+        <td style="min-width:220px"><input data-fadim="${esc(f.id)}" value="${esc(st.adim || '')}" placeholder="Ne yapılacak?" aria-label="${esc(f.ad)} sonraki adım"></td>
+      </tr>`; }).join('')}</tbody>`;
+  }
+
+  /* Filtreler */
+  function syncFControls() {
+    for (const [id, key] of [['#ff-durum','durum'],['#ff-kapsam','kapsam']])
+      document.querySelectorAll(id + ' button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === prefs.f[key])));
+    $('#ff-tur').innerHTML = `<option value="all">Tüm destek türleri</option>` + F_TUR.map(t => `<option${t === prefs.f.tur ? ' selected' : ''}>${t}</option>`).join('');
+    $('#af-tur').innerHTML = F_TUR.map(t => `<option>${t}</option>`).join('');
+    $('#ff-q').value = prefs.f.q; $('#ff-uygun').checked = !!prefs.f.uygun;
+  }
+  for (const [id, key] of [['#ff-durum','durum'],['#ff-kapsam','kapsam']])
+    $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; prefs.f[key] = b.dataset.v; savePrefs(); syncFControls(); renderFunds(); });
+  $('#ff-tur').addEventListener('change', e => { prefs.f.tur = e.target.value; savePrefs(); renderFunds(); });
+  $('#ff-q').addEventListener('input', e => { prefs.f.q = e.target.value; savePrefs(); renderFunds(); });
+  $('#ff-uygun').addEventListener('change', e => { prefs.f.uygun = e.target.checked; savePrefs(); renderFunds(); });
+
+  /* Tablo: satıra tıkla → ayrıntı; durum ve adım tablodan düzenlenir */
+  $('#ftable').addEventListener('change', e => {
+    const s = e.target.closest('[data-fstate]'); if (s) { setFState(s.dataset.fstate, { durum: s.value }); renderFunds(); }
+  });
+  $('#ftable').addEventListener('input', e => {
+    const i = e.target.closest('[data-fadim]'); if (i) setFState(i.dataset.fadim, { adim: i.value });
+  });
+  $('#ftable').addEventListener('click', e => {
+    if (e.target.closest('a,select,input,button')) return;
+    const tr = e.target.closest('tr[data-fid]'); if (tr) openFund(tr.dataset.fid);
+  });
+  $('#fsum').addEventListener('click', e => { const b = e.target.closest('[data-fopen]'); if (b) openFund(b.dataset.fopen); });
+
+  /* Program ekle */
+  $('#addf').addEventListener('submit', async e => {
+    e.preventDefault();
+    const ad = $('#af-ad').value.trim(); if (!ad) return;
+    let url = $('#af-url').value.trim(); if (url && !/^https?:\/\//i.test(url)) url = 'https://' + url;
+    const f = { ad, url, kurum: '', tur: $('#af-tur').value, kapsam: $('#af-kapsam').value, sonBasvuru: $('#af-son').value || '', tarihNot: '', destek: $('#af-destek').value.trim(), gereklilikler: $('#af-gerek').value.trim(), hazirlikGun: 21, eklendi: new Date().toISOString() };
+    const id = ('f-' + slug(ad)).slice(0, 100);
+    if (allFunds().some(x => x.id === id)) { toast('Bu program zaten listede.'); return; }
+    let shared = false;
+    if (owner && db) { try { await db.doc('fonlar/' + id).set(f); shared = true; } catch (err) {} }
+    if (!shared) { myFunds = [{ ...f, id }, ...myFunds]; await psave('fonlarim', { list: myFunds }); renderFunds(); }
+    e.target.reset(); syncFControls();
+    toast(`${ad} listeye eklendi.`); scheduleFScore();
+  });
+
+  /* ---------- Pitch deck okuma ve analiz ---------- */
+  function fprogress(text, pct) { $('#st-progress').hidden = text == null; if (text != null) { $('#st-progress-text').textContent = text; $('#st-progress-bar').style.width = (pct ?? 0) + '%'; } }
+  async function pptxText(buf) {
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+    const zip = await window.JSZip.loadAsync(buf);
+    const slides = Object.keys(zip.files).filter(n => /^ppt\/slides\/slide\d+\.xml$/.test(n)).sort((a, b) => Number(a.match(/\d+/g).pop()) - Number(b.match(/\d+/g).pop()));
+    let out = '';
+    for (const [i, n] of slides.entries()) {
+      const xml = await zip.file(n).async('string');
+      const t = [...xml.matchAll(/<a:t>([^<]*)<\/a:t>/g)].map(m => m[1]).join(' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'");
+      if (t.trim()) out += `\n[Slayt ${i + 1}] ${t}`;
+    }
+    return out;
+  }
+  async function readDeck(f) {
+    const n = f.name.toLowerCase();
+    if (n.endsWith('.pptx')) return pptxText(await f.arrayBuffer());
+    return readFile(f);
+  }
+  async function analyzeDeck(text) {
+    text = String(text || '').replace(/\s+\n/g, '\n').trim();
+    if (text.length < 150) { toast('Sunumdan çok az metin okunabildi. Görsel ağırlıklı bir sunumsa metni "Metni yapıştır" ile ekle.'); fprogress(null); return; }
+    if (!sample) { toast('Yapay zekâ analizi için sayfayı claude.ai\'da oturum açıkken aç.'); fprogress(null); return; }
+    fprogress('Girişim analiz ediliyor…', 20);
+    try {
+      const p = await sample.json(
+`Aşağıdaki pitch deck / girişim metnini analiz et. Fon, hibe ve teşvik programlarına uygunluğu değerlendirmek için gereken profili çıkar. YALNIZCA şu biçimde tek bir JSON nesnesi döndür:
+{"ad":"girişimin adı","ozet":"2 cümlelik Türkçe özet","sektor":"…","alanlar":["iklim","kent",…],"asama":"fikir|prototip|pilot|gelir var|ölçekleniyor","trl":"varsa TRL düzeyi","sirket":"var|yok|kuruluyor","ulke":"…","sehir":"…","ekip":"kurucu sayısı ve rolleri","cekis":"müşteri, pilot, gelir, LOI gibi kanıtlar","ihtiyac":["hibe","yatırım","hızlandırma","ödül","ortaklık"],"tutar":"istenen fon miktarı varsa","eksikler":["sık istenen ama girişimde olmayan şartlar, ör. tüzel kişilik, 2 yıllık bilanço, AB ortağı"]}
+Metinde olmayan bilgiyi uydurma; bilinmiyorsa boş bırak.
+
+METİN:
+"""${text.slice(0, 24000)}"""`, { modelTier: 'default' });
+      if (!p || !p.ozet) throw { message: 'Profil çıkarılamadı' };
+      startup = { profil: p, metin: text.slice(0, 15000), updatedAt: new Date().toISOString() };
+      fScores = {}; for (const k in fTried) delete fTried[k];
+      const saved = await psave('girisim', startup);
+      await psave('fonPuan', { map: {} });
+      renderStartup(); renderFunds();
+      if (!saved) toast('Girişim profilin bu tarayıcıda saklandı (hesabına kaydedilemedi).');
+      await scoreFunds(true);
+    } catch (e) {
+      fprogress(null);
+      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi.' : 'Sunum analiz edilemedi: ' + (e?.message || 'bilinmeyen hata'));
+    }
+  }
+  function renderStartup() {
+    const box = $('#st-prof');
+    if (!startup) {
+      box.hidden = true;
+      $('#st-body').innerHTML = owner
+        ? `<h2>Programlar Narch'a göre değerlendiriliyor</h2><p>Güncel pitch deck'ini yüklersen uygunluklar ve başvuru planları sunumuna göre yeniden hazırlanır.</p>`
+        : `<h2>Pitch deck'ini yükle, programlar sana göre değerlendirilsin</h2><p>Yapay zekâ sunumundan aşamanı, şirket durumunu, ekibini ve ihtiyacını çıkarır; her programı Uygun, Ortakla, Sonra ya da Uygun değil diye işaretler ve nedenini yazar. Sunumun yalnızca sana görünür.</p>`;
+      return;
+    }
+    const p = startup.profil || {};
+    $('#st-body').innerHTML = `<h2>${esc(p.ad || 'Girişimin')}</h2><p>Sunum ${esc(fmtLong(startup.updatedAt))} tarihinde analiz edildi. Yeni bir dosya seçerek güncelleyebilirsin.</p>`;
+    box.hidden = false;
+    const tags = [p.asama && `Aşama: ${p.asama}`, p.trl && `TRL ${String(p.trl).replace(/^TRL\s*/i, '')}`, p.sirket && `Şirket: ${p.sirket}`, [p.sehir, p.ulke].filter(Boolean).join(', '), p.ekip].filter(Boolean);
+    box.innerHTML = `<p class="sum">${esc(p.ozet || '')}</p>
+      <div class="tags">${tags.map(t => `<span class="tag role">${esc(t)}</span>`).join('')}${(p.ihtiyac || []).map(t => `<span class="tag">${esc(t)}</span>`).join('')}</div>
+      ${p.eksikler?.length ? `<p class="hint">Sık istenip sende olmayanlar: ${esc(p.eksikler.join(', '))}</p>` : ''}`;
+  }
+
+  /* ---------- Uygunluk değerlendirmesi ---------- */
+  const startupText = () => startup ? JSON.stringify(startup.profil) + (startup.metin ? `\nSUNUMDAN: ${startup.metin.slice(0, 3000)}` : '') : (owner ? NARCH_PROFILE : null);
+  let fScoreT = null;
+  function scheduleFScore() { if (!sample || !startupText()) return; clearTimeout(fScoreT); fScoreT = setTimeout(() => scoreFunds(false), 1500); }
+  async function scoreFunds(force) {
+    const who = startupText(); if (!who || !sample || fScoring) return;
+    if (force) for (const k in fTried) delete fTried[k];
+    const todo = allFunds().filter(f => force || (!fScores[f.id] && (fTried[f.id] || 0) < 2));
+    if (!todo.length) { fprogress(null); return; }
+    fScoring = true;
+    try {
+      for (let i = 0; i < todo.length; i += 6) {
+        const b = todo.slice(i, i + 6); b.forEach(f => { fTried[f.id] = (fTried[f.id] || 0) + 1; });
+        fprogress(`Programlar girişimine göre değerlendiriliyor… ${Math.min(i + 6, todo.length)}/${todo.length}`, 25 + 70 * i / todo.length);
+        const res = await sample.json(
+`Bugün ${isoOf(new Date())}. Bir girişimin profili ve fon/hibe/teşvik programları aşağıda. Her program için girişimin uygunluğunu değerlendir:
+"Uygun" = şartları bugün karşılıyor, tek başına başvurabilir; "Ortakla" = bir ortakla (belediye, şirket, konsorsiyum) ya da bir ortağın alt yüklenicisi olarak başvurabilir; "Sonra" = şu an eksik bir şart var ama yakında karşılanabilir (ör. şirket kurulunca, TRL yükselince, sonraki çağrıda); "Uygun değil" = temel şartlar uymuyor.
+Her program için mutlaka bir satır döndür, id'yi aynen yaz. YALNIZCA JSON dizisi döndür: [{"id":"…","uyum":"Uygun|Ortakla|Sonra|Uygun değil","neden":"Türkçe, en çok 2 kısa cümle","eksik":"varsa eksik şart, kısa"}]
+
+GİRİŞİM: ${who}
+
+PROGRAMLAR:
+${b.map(f => JSON.stringify({ id: f.id, ad: f.ad, kurum: f.kurum, tur: f.tur, kapsam: f.kapsam, son: f.sonBasvuru || f.tarihNot, destek: f.destek, sartlar: String(f.gereklilikler || '').slice(0, 900) })).join('\n')}`, { modelTier: 'default' });
+        if (Array.isArray(res)) for (const r of res) if (r?.id && F_RANK[r.uyum] != null) fScores[r.id] = { u: r.uyum, n: String(r.neden || '').slice(0, 400), e: String(r.eksik || '').slice(0, 200) };
+        await psave('fonPuan', { map: fScores });
+        renderFunds();
+      }
+      fprogress('Değerlendirme bitti', 100); setTimeout(() => fprogress(null), 1500);
+    } catch (e) {
+      fprogress(null);
+      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi; programlar değerlendirilmedi.' : 'Değerlendirme yarıda kaldı. "Programları yeniden değerlendir" ile tekrar dene.');
+    } finally { fScoring = false; renderFunds(); }
+  }
+
+  /* Deck girişleri */
+  const stIn = $('#st-file'), stDrop = $('#st-drop');
+  async function takeDeck(f) { if (!f) return; fprogress('Sunum okunuyor…', 8); try { await analyzeDeck(await readDeck(f)); } catch (e) { fprogress(null); toast('Dosya okunamadı. PDF, .pptx, .docx ya da .txt seç veya metni yapıştır.'); } }
+  stIn.addEventListener('change', () => takeDeck(stIn.files[0]));
+  stDrop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); stIn.click(); } });
+  stDrop.addEventListener('dragover', e => { e.preventDefault(); stDrop.classList.add('over'); });
+  stDrop.addEventListener('dragleave', () => stDrop.classList.remove('over'));
+  stDrop.addEventListener('drop', e => { e.preventDefault(); stDrop.classList.remove('over'); takeDeck(e.dataTransfer.files[0]); });
+  $('#st-paste-toggle').addEventListener('click', () => { $('#st-paste').hidden = !$('#st-paste').hidden; if (!$('#st-paste').hidden) $('#st-text').focus(); });
+  $('#st-go').addEventListener('click', () => analyzeDeck($('#st-text').value));
+  $('#st-rescore').addEventListener('click', () => { if (!startupText()) { toast('Önce pitch deck\'ini yükle.'); return; } scoreFunds(true); });
+
+  /* ---------- Program ayrıntısı + başvuru planı ---------- */
+  function fundDetailHTML(f) {
+    const st = fStateOf(f), sc = fScores[f.id], sd = startDate(f), plan = fPlans[f.id];
+    const n = daysLeft(f.sonBasvuru);
+    return `<div class="d-shade"></div>
+      <button class="d-close" type="button" data-close aria-label="Kapat">✕</button>
+      <div class="d-scroll">
+        <div class="d-hero" style="grid-template-columns:1fr">
+          <div style="min-width:0"><p class="d-org">${esc([f.tur, f.kurum, f.kapsam].filter(Boolean).join(' · '))}</p><h2 class="d-title" id="d-title">${esc(f.ad)}</h2>
+            <div class="kunye"><span class="kchip">Son başvuru: ${f.sonBasvuru ? esc(fmtLong(f.sonBasvuru)) + (n != null && n >= 0 ? ` · ${leftTxt(n)}` : ' · kapandı') : esc(f.tarihNot || 'açıklanmadı')}</span>${sd && fNeedsPrep(f) ? `<span class="kchip">Hazırlığa başla: ${sd <= today() ? 'hemen' : esc(fmtLong(dateIso(sd)))}</span>` : ''}${f.destek ? `<span class="kchip">${esc(f.destek)}</span>` : ''}</div>
+          </div></div>
+        <div class="d-body">
+          <div style="display:grid;gap:18px;min-width:0">
+            ${sc ? `<div class="why"><h4>Uygunluk · ${esc(sc.u)}</h4><p>${esc(sc.n)}${sc.e ? ` <b>Eksik:</b> ${esc(sc.e)}` : ''}</p></div>` : ''}
+            <div class="box"><h4>Gereklilikler</h4><p class="syn" style="font-size:14.5px">${esc(f.gereklilikler || 'Program sayfasından doğrulanacak.')}</p>${f.tarihNot && f.sonBasvuru ? `<p>${esc(f.tarihNot)}</p>` : ''}</div>
+            <div class="box letter fdl">
+              <h4>Başvuru planı</h4>
+              <p>Girişimine ve son tarihe göre adım adım hazırlık planı, gereken belgeler ve dikkat edilecekler hazırlanır.</p>
+              <div class="brow"><button class="btn red sm" type="button" data-fplan>${plan ? 'Planı yeniden hazırla' : 'Planı hazırla'}</button></div>
+              <div id="fplan-out">${plan ? planHTML(f.id, plan) : ''}</div>
+            </div>
+          </div>
+          <aside class="side">
+            <div class="box">
+              <h4>Takip</h4>
+              <select class="field" id="fd-durum" aria-label="Durum">${F_DURUM.map(s => `<option${s === st.durum ? ' selected' : ''}>${s}</option>`).join('')}</select>
+              <textarea class="field" id="fd-adim" aria-label="Sonraki adım" placeholder="Sonraki adım" style="min-height:90px;padding:10px 14px;height:auto">${esc(st.adim || '')}</textarea>
+              ${st.not ? `<p>${esc(st.not)}</p>` : ''}
+            </div>
+            ${f.url ? `<a class="btn red" href="${esc(f.url)}" target="_blank" rel="noopener" style="height:48px">Program sayfasını aç ↗</a>` : ''}
+            ${(owner || f.personal) ? `<button class="btn ghost" type="button" data-fdel>Listeden kaldır</button>` : ''}
+            <p class="src">${f.kaynak ? `Kaynak: ${esc(f.kaynak)}${f.guncellendi ? ` · son kontrol ${esc(fmtTime(f.guncellendi))}` : ''}<br>` : ''}${f.personal ? 'Bu programı yalnızca sen görüyorsun.' : 'Liste herkesle paylaşılıyor; durum ve notların yalnızca sana görünür.'}</p>
+          </aside>
+        </div>
+      </div>`;
+  }
+  function planHTML(id, plan) {
+    return `${plan.ozet ? `<p>${esc(plan.ozet)}</p>` : ''}
+      <ul class="plan">${(plan.adimlar || []).map((a, i) => `<li class="${a.tamam ? 'done' : ''}"><input type="checkbox" data-fstep="${i}" ${a.tamam ? 'checked' : ''} aria-label="${esc(a.is)}"><div><b>${esc(a.is)}</b><small>${a.tarih ? esc(fmtLong(a.tarih)) + ' · ' : ''}${esc(a.not || '')}</small></div></li>`).join('')}</ul>
+      ${plan.belgeler?.length ? `<div><h4>Gerekecek belgeler</h4><div class="tags">${plan.belgeler.map(b => `<span class="tag">${esc(b)}</span>`).join('')}</div></div>` : ''}
+      ${plan.dikkat?.length ? `<p><b>Dikkat:</b> ${esc(plan.dikkat.join(' · '))}</p>` : ''}`;
+  }
+  function openFund(id) {
+    const f = allFunds().find(x => x.id === id); if (!f) return;
+    lastFocus = document.activeElement; openId = 'fon:' + id;
+    detail.innerHTML = fundDetailHTML(f);
+    stage.hidden = false; document.documentElement.classList.add('locked');
+    requestAnimationFrame(() => stage.classList.add('on'));
+    detail.focus({ preventScroll: true });
+  }
+  async function makePlan(f, btn) {
+    const who = startupText();
+    if (!sample) { toast('Plan için sayfayı claude.ai\'da oturum açıkken aç.'); return; }
+    if (!who) { toast('Önce pitch deck\'ini yükle; plan girişimine göre hazırlanıyor.'); return; }
+    const label = btn.textContent; busy(btn, true); btn.textContent = 'Hazırlanıyor…';
+    try {
+      const r = await sample.json(
+`Bugün ${isoOf(new Date())}. Aşağıdaki girişim bu programa başvuracak. Son tarihe göre geriye doğru, gerçekçi bir hazırlık planı yap. Programın bilinen şartlarına dayan; bilinmeyen şartı "program rehberinden doğrula" diye belirt, uydurma.
+YALNIZCA şu JSON'u döndür: {"ozet":"1-2 cümle: başvurunun en kritik noktası","adimlar":[{"is":"kısa iş adı","tarih":"YYYY-AA-GG (bugünden sonra, son tarihten önce)","not":"1 cümle"}],"belgeler":["…"],"dikkat":["…"]}
+En çok 8 adım, tarih sırasıyla.
+
+GİRİŞİM: ${who}
+
+PROGRAM: ${JSON.stringify({ ad: f.ad, kurum: f.kurum, tur: f.tur, son: f.sonBasvuru || f.tarihNot, destek: f.destek, sartlar: f.gereklilikler, url: f.url })}`, { modelTier: 'default' });
+      if (!r?.adimlar?.length) throw { message: 'plan boş geldi' };
+      fPlans[f.id] = { ...r, olusturuldu: new Date().toISOString() };
+      await psave('fonPlan', { map: fPlans });
+      if (openId === 'fon:' + f.id) $('#fplan-out').innerHTML = planHTML(f.id, fPlans[f.id]);
+      if (fStateOf(f).durum === 'Takipte') { setFState(f.id, { durum: 'Planlandı' }); const s = $('#fd-durum'); if (s) s.value = 'Planlandı'; renderFunds(); }
+    } catch (e) { toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi.' : 'Plan hazırlanamadı: ' + (e?.message || 'bilinmeyen hata')); }
+    finally { busy(btn, false); btn.textContent = fPlans[f.id] ? 'Planı yeniden hazırla' : label; }
+  }
+  function fundClick(e) {
+    const id = String(openId).slice(4); const f = allFunds().find(x => x.id === id); if (!f) return;
+    const pb = e.target.closest('[data-fplan]'); if (pb) return makePlan(f, pb);
+    const step = e.target.closest('[data-fstep]');
+    if (step) { const p = fPlans[id]; if (p?.adimlar?.[step.dataset.fstep]) { p.adimlar[step.dataset.fstep].tamam = step.checked; step.closest('li').classList.toggle('done', step.checked); psave('fonPlan', { map: fPlans }); } return; }
+    if (e.target.closest('[data-fdel]')) return deleteFund(f);
+  }
+  async function deleteFund(f) {
+    if (f.personal) { myFunds = myFunds.filter(x => x.id !== f.id); await psave('fonlarim', { list: myFunds }); }
+    else if (owner && db) { try { await db.doc('fonlar/' + f.id).delete(); } catch (e) { toast('Program kaldırılamadı.'); return; } }
+    closeDetail(renderFunds); toast(`${f.ad} listeden kaldırıldı.`);
+  }
+  stage.addEventListener('change', e => {
+    if (!String(openId).startsWith('fon:')) return;
+    const id = String(openId).slice(4);
+    if (e.target.id === 'fd-durum') { setFState(id, { durum: e.target.value }); renderFunds(); }
+  });
+  stage.addEventListener('input', e => {
+    if (!String(openId).startsWith('fon:')) return;
+    if (e.target.id === 'fd-adim') { setFState(String(openId).slice(4), { adim: e.target.value }); renderFunds(); }
+  });
+  /* Fon kaynakları */
+  let fSources = [];
+  function renderFSources() {
+    const all = [...fSources].sort((a, b) => (SRC_ORDER[a.durum] ?? 2) - (SRC_ORDER[b.durum] ?? 2) || String(a.ad).localeCompare(String(b.ad), 'tr'));
+    $('#fsrc-list').innerHTML = srcHTML(all, fMeta, s => owner && s.tur === 'eklenen') || '<li class="hint">Henüz kaynak listesi yok.</li>';
+    $('#fsrc-last').innerHTML = srcLastText(all, fMeta, 'kaynaklara');
+    const c = k => all.filter(s => s.durum === k).length;
+    $('#fsrc-sum').textContent = `${all.length} kaynak · ${c('ok') + c('kismi')} çalışıyor${c('erisilemiyor') ? ` · ${c('erisilemiyor')} erişilemiyor` : ''}${c('bekliyor') ? ` · ${c('bekliyor')} bekliyor` : ''}`;
+    $('#fsrc-help').textContent = owner
+      ? '"Fonları tara" bu kaynakların hepsine bakar; yeni çağrıları listeye ekler, var olanların tarih ve şartlarını günceller. Senin durum ve notlarına dokunmaz. LinkedIn gönderileri yalnızca tarayıcı açıkken okunabilir.'
+      : 'Kaynak listesini sayfa sahibi yönetiyor.';
+  }
+  $('#fsrc-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!owner || !db) { toast('Kaynak eklemek yalnızca sayfa sahibine açık.'); return; }
+    let raw = $('#fsrc-url').value.trim(); if (!raw) return;
+    if (!/^https?:\/\//i.test(raw)) raw = 'https://' + raw;
+    let u; try { u = new URL(raw); } catch (err) { toast('Bu bir site adresine benzemiyor. Ör. https://www.istka.org.tr/duyurular'); return; }
+    const host = u.hostname.replace(/^www\./, '');
+    const id = ('fk-' + slug(host + (u.pathname.length > 1 ? u.pathname : ''))).slice(0, 100);
+    if (fSources.some(s => s.url === u.href || s.id === id)) { toast('Bu kaynak zaten listede.'); return; }
+    try { await db.doc('fonKaynaklar/' + id).set({ ad: host, url: u.href, tur: 'eklenen', durum: 'bekliyor', not: $('#fsrc-note').value.trim().slice(0, 200), eklendi: new Date().toISOString() }); }
+    catch (err) { toast('Kaynak eklenemedi.'); return; }
+    $('#fsrc-url').value = ''; $('#fsrc-note').value = '';
+    toast(`${host} eklendi. Bir sonraki "Fonları tara"da Claude bu kaynağa da bakacak.`);
+  });
+  $('#fsrc-list').addEventListener('click', async e => {
+    const b = e.target.closest('[data-del-src]'); if (!b || !owner || !db) return;
+    try { await db.doc('fonKaynaklar/' + b.dataset.delSrc).delete(); } catch (err) { toast('Kaynak kaldırılamadı.'); }
+  });
+  syncFControls(); renderStartup(); renderFunds(); renderFSources();
+  /* ---------- Tara: sahip için Claude taraması, diğerleri için canlı arama ---------- */
+  $('#refresh').addEventListener('click', async () => {
+    const btn = $('#refresh');
+    const fon = prefs.sheet === 'fon';
+    if (fon && !owner) { if (!startupText()) { toast('Önce pitch deck\'ini yükle.'); return; } return scoreFunds(true); }
+    if (!owner) return liveSearch(btn);
+    const trig = meta.triggerId;
+    mcp = mcp || await claude.use('mcp');
+    if (!db || !mcp || !trig) { toast(fon ? 'Otomatik tarama bu görünümde başlatılamıyor. Claude\'a "fonları güncelle" yazabilirsin.' : 'Otomatik tarama bu görünümde başlatılamıyor. "Bu konumda canlı ara"yı kullanabilir ya da Claude\'a "ilanları güncelle" yazabilirsin.'); return; }
+    busy(btn, true);
+    if (fon) {
+      const sp = startup?.profil;
+      const ftext = `Tarama türü: fon
+Bu tarama için parametreler (sayfadan gönderildi):
+- Girişim profili: ${sp ? JSON.stringify({ ad: sp.ad, ozet: sp.ozet, asama: sp.asama, trl: sp.trl, sirket: sp.sirket, sehir: sp.sehir, ulke: sp.ulke, ekip: sp.ekip, ihtiyac: sp.ihtiyac, eksikler: sp.eksikler }).slice(0, 2500) : 'görev metnindeki varsayılan Narch profili'}
+- Taranacak fon kaynakları (sayfadaki liste; "eklenen" olanları mutlaka dene; tarama sonunda her kaynağın durumunu \`fonKaynaklar\` koleksiyonunda "ok", "kismi" ya da "erisilemiyor" olarak, kısa bir notla ve sonKontrol tarihiyle güncelle): ${fSources.map(s => `${s.ad} (${s.url})${s.tur === 'eklenen' ? ' [eklenen]' : ''}`).join('; ')}
+- Listede zaten olan programlar: ${allFunds().filter(f => !f.personal).map(f => `${f.id} = ${f.ad}`).join('; ')}`;
+      try {
+        await mcp.callTool('Claude Code Remote', 'fire_trigger', { trigger_id: trig, text: ftext }, { cache: false });
+        await db.doc('meta/fonTarama').update({ durum: 'calisiyor', istendi: new Date().toISOString() });
+        toast('Fon taraması başladı. Yeni çağrılar ve hangi kaynaklara bakıldığı birkaç dakika içinde burada görünür.');
+      } catch (e) {
+        busy(btn, false);
+        toast(e?.code === 'not_granted' || e?.code === 'not_in_manifest' ? 'Claude Code Remote bağlantısına izin verilmedi. İzin verince tekrar dene.' : 'Fon taraması başlatılamadı. Claude\'a "fonları güncelle" yazabilirsin.');
+      }
+      return;
+    }
+    const p = profile?.profil;
+    const C = countryInfo(prefs.country);
+    const text = `Bu tarama için parametreler (sayfadan gönderildi):
+- Ülke: ${prefs.country === 'all' ? 'tümü' : prefs.country === 'EU' ? 'Avrupa (tüm Avrupa ülkeleri)' : `${prefs.country}${C ? ` (${C.c})` : ''}`}
+- Şehir/bölge: ${prefs.city || 'tümü'}${prefs.remote ? ' (uzaktan/hibrit ilanlar da dahil)' : ''}
+- Yayın tarihi: son ${prefs.days} gün
+- Kurum türü: ${prefs.sec === 'all' ? 'hepsi (özellikle STK)' : prefs.sec}
+- Taranacak siteler (sayfadaki liste; "eklenen" olanları mutlaka dene; tarama sonunda her sitenin durumunu \`kaynaklar\` koleksiyonunda "ok", "kismi" ya da "erisilemiyor" olarak, kısa bir notla ve sonKontrol tarihiyle güncelle): ${allSources().map(s => `${s.ad} (${s.url})${s.tur === 'eklenen' || s.mine ? ' [eklenen]' : ''}${s.not ? ` – ${s.not}` : ''}`).join('; ')}
+${p ? `- Aday profili (sayfaya yüklenen CV'den): ${JSON.stringify({ ozet: p.ozet, hedefRoller: p.hedefRoller, beceriler: p.beceriler, diller: p.diller, eksikler: p.eksikler }).slice(0, 3000)}` : '- Aday profili: görev metnindeki varsayılan profil'}`;
+    try {
+      await mcp.callTool('Claude Code Remote', 'fire_trigger', { trigger_id: trig, text }, { cache: false });
+      await db.doc('meta/durum').update({ durum: 'calisiyor', istendi: new Date().toISOString() });
+      toast('Tarama başladı. Yeni ilanlar birkaç dakika içinde burada belirir.');
+    } catch (e) {
+      busy(btn, false);
+      toast(e?.code === 'not_granted' || e?.code === 'not_in_manifest' ? 'Claude Code Remote bağlantısına izin verilmedi. İzin verince tekrar dene.' : 'Tarama başlatılamadı. "Bu konumda canlı ara"yı deneyebilir ya da Claude\'a "ilanları güncelle" yazabilirsin.');
+    }
+  });
+
+  /* ---------- Veriler ---------- */
+  mergeJobs(); syncControls(); renderRole(); render(); renderProfile();
+  showSheet(location.hash === '#fon' ? 'fon' : location.hash === '#is' ? 'is' : prefs.sheet, true);
+  (async () => {
+    [db, sample, user] = await Promise.all([claude.use('db'), claude.use('sample'), claude.use('user')]);
+    if (!db) { $('#status-text').textContent = 'İlanları görmek için claude.ai\'da oturum aç.'; return; }
+    try { owner = !!(await user?.isOwner()); uid = await user?.id(); } catch (e) {}
+    renderRole(); renderProfile(); renderSources(); render(); renderStartup(); renderFunds(); scheduleFScore();
+    db.collection('ilanlar').onSnapshot(snap => {
+      sharedJobs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      mergeJobs(); fillCountries(); render(); renderStatus();
+      if (openId && !jobs.some(j => j.id === openId)) closeDetail();
+      if (profile && jobs.length) scheduleScore();
+    }, () => { $('#status-text').textContent = 'İlanlar şu an okunamıyor. Sayfayı yenile.'; });
+    db.collection('basvuruKuyrugu').onSnapshot(snap => {
+      queue = {}; snap.docs.forEach(d => { queue[d.id] = d.data(); });
+      render(); const j = jobs.find(x => x.id === openId); if (j && $('#qstatus')) $('#qstatus').innerHTML = qStatusHTML(j);
+    }, () => {});
+    db.collection('kaynaklar').onSnapshot(snap => { sources = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderSources(); }, () => {});
+    db.collection('fonlar').onSnapshot(snap => { funds = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderFunds(); scheduleFScore(); }, () => {});
+    db.collection('fonKaynaklar').onSnapshot(snap => { fSources = snap.docs.map(d => ({ id: d.id, ...d.data() })); renderFSources(); }, () => {});
+    db.doc('meta/fonTarama').onSnapshot(s => { fMeta = s.exists ? s.data() : {}; renderStatus(); renderFSources(); }, () => {});
+    db.doc('meta/hava').onSnapshot(s => { wx = s.exists ? s.data() : null; paintSky(); }, () => {});
+    db.doc('meta/durum').onSnapshot(s => { meta = s.exists ? s.data() : {}; renderStatus(); render(); });
+    if (uid) {
+      const sub = (k, fn) => db.doc(`data/users/${uid}/${k}`).onSnapshot(s => { if (s.exists) { lsSet(k, s.data()); fn(s.data()); } }, () => {});
+      sub('profil', d => { profile = d; renderProfile(); render(); if (jobs.length) scheduleScore(); });
+      sub('puanlar', d => { if (!scoring) { scores = d.map || {}; render(); } });
+      sub('basvurular', d => { applied = d.map || {}; render(); });
+      sub('kaynaklarim', d => { mySources = d.list || []; renderSources(); });
+      sub('iletisim', d => { contact = d || {}; renderContact(); });
+      sub('girisim', d => { startup = d; renderStartup(); renderFunds(); scheduleFScore(); });
+      sub('fonPuan', d => { if (!fScoring) { fScores = d.map || {}; renderFunds(); } });
+      sub('fonDurum', d => { fState = d.map || {}; renderFunds(); });
+      sub('fonlarim', d => { myFunds = d.list || []; renderFunds(); });
+      sub('fonPlan', d => { fPlans = d.map || {}; });
+      sub('ilanlarim', d => { personalJobs = (d.jobs || []).map(j => ({ ...j, personal: true })); mergeJobs(); fillCountries(); render(); });
+    }
+  })();
+})();
+</script>
+
+
+
+
+<script>
+(() => {
+  /* Günün ilhamı: tarihe göre döner. [kişi, başlık, hikâye, sana yansıması, hedef] */
+  const S = [
+    ["Leonardo da Vinci", "Önce işverenin derdini çöz", "Yaklaşık 1482'de Milano'nın yöneticisi Ludovico Sforza'ya yazılan, Leonardo'ya ait mektup taslağı önce köprü, kuşatma makinesi ve top gibi askerî mühendislik becerilerini sıralar. Ressamlık ve heykeltıraşlık ancak sonlara doğru gelir.", "Başvurunda önce karşındakinin ihtiyacını çöz, kendini sonra anlat.", "is"],
+    ["Leonardo da Vinci", "Defterden başla", "Leonardo hayatı boyunca not defterleri tuttu. Günümüze kalanların 7.000 sayfa civarında olduğu tahmin edilir; çizimler, deneyler ve yapılacaklar listesi iç içedir.", "Başvuru malzemeni tek yerde topla: pitch deck, bütçe, ekip. Her çağrıda yeniden kullan.", "fon"],
+    ["Leonardo da Vinci", "Acele etmeden bitir", "Mona Lisa'ya 1503 civarında başladı, yıllarca üzerinde çalıştı ve 1519'da ölene dek yanında taşıdı.", "Son güne bırakılmış başvuru nadiren iyidir. Göndermeden önce bir gün ara verip yeniden oku.", "fon"],
+    ["Leonardo da Vinci", "Yenilik risk getirir", "Son Akşam Yemeği'ni (1495-1498) Sforza'nın siparişiyle bir manastır duvarına yaptı. Kuru sıva üzerinde denediği yeni yöntem yüzünden eser birkaç on yıl içinde bozulmaya başladı.", "Yeni yöntem fark yaratır ama riskini saklama. Fon başvurusunda risk ve yedek planı dürüstçe yaz.", "fon"],
+    ["Leonardo da Vinci", "Doğru ortamı bul", "1516 dolaylarında Fransa Kralı I. François onu davet etti. Leonardo, Amboise yakınlarındaki Clos Lucé'ye yerleşti ve 1519'daki ölümüne kadar orada çalıştı.", "Destekçi para kadar çalışma özgürlüğü de verir. Fon seçerken yalnızca tutara bakma.", "fon"],
+    ["Michelangelo", "Başkalarının bıraktığı fırsat", "1501'de Floransa'da, başka heykeltıraşların yıllar önce başlayıp bıraktığı dev bir mermer blok ona verildi. 1504'te David'i tamamladı.", "Süresi uzayan ya da gözden kaçan çağrılar sana uygun olabilir. Listenin altına da bak.", "fon"],
+    ["Michelangelo", "Alanın tam olmasa da", "1508'de Papa II. Julius, Sistina Şapeli'nin tavanını boyamasını istedi. Kendini daha çok heykeltıraş sayıyordu; işi yine de aldı ve yaklaşık dört yılda bitirdi.", "Her ilan sana birebir uymayacak. Öğrenmeye açıksan komşu alanlardaki ilanlara da başvur.", "is"],
+    ["Filippo Brunelleschi", "Açık çağrı", "Floransa Katedrali'nin kubbesi için 1418'de açık bir yarışma düzenlendi. Brunelleschi'nin önerisi seçildi; kubbe 1436'da tamamlandı.", "Bugünün fon çağrıları da aynı mantıkla çalışır: şartnameyi oku, kendi önerini net yaz.", "fon"],
+    ["Raffaello", "Tek başına yetişemezsin", "1508'de Roma'ya çağrıldı. Çok sayıda siparişi büyük bir atölyeyle karşıladı. 1520'de 37 yaşında öldüğünde geride tamamlanmış çok iş kalmıştı.", "Ekibini başvuruda göster. Fon verenler fikirden çok onu yapacak insanlara bakar.", "fon"],
+    ["Albrecht Dürer", "Adını koru", "Dürer baskılarına AD monogramını koyardı. Vasari'ye göre, kopyacı Marcantonio Raimondi'yi Venedik'te şikâyet etti; karar kopyalamayı değil, monogramın kullanımını yasakladı.", "Markanı ve fikrinde sana ait olanı belgele. Başvurularda bu güven verir.", "fon"],
+    ["Pablo Picasso", "Net amaç, net tarih", "1937'de İspanya Cumhuriyet hükümeti ondan Paris Dünya Fuarı için bir eser istedi. Guernica bombardımanının ardından yaklaşık bir ayda dev tuvali bitirdi; öncesinde çok sayıda hazırlık çizimi yapmıştı.", "Bir çağrının son tarihini geri sayım olarak kullan ve hazırlığı önceden yap.", "fon"],
+    ["Pablo Picasso", "Çok dene", "Picasso'nun hayatı boyunca yaklaşık 50.000 eser ürettiği tahmin edilir. Hepsi başyapıt değil; çok üretmek iyisini bulmanın yoluydu.", "Tek başvuruya bel bağlama. Uygun görünen birkaç çağrıya birden başvur.", "fon"],
+    ["Vincent van Gogh", "Karşılık gelmese de sürdür", "Yaklaşık on yılda 2.100 civarında eser bıraktı. Yaşarken çok az eser sattı; kardeşi Theo uzun yıllar onu maddi olarak destekledi.", "Red cevapları sürecin parçası say. Ve destek alabileceğin insanları ara.", "is"]
+  ];
+  const F = "https://commons.wikimedia.org/wiki/Special:FilePath/";
+  const W = {
+    "Leonardo da Vinci": [["Mona Lisa", "1503–1519", "Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg"], ["Son Akşam Yemeği", "1495–1498", "The_Last_Supper_-_Leonardo_Da_Vinci_-_High_Resolution_32x16.jpg"], ["Vitruvius Adamı", "1490 dolayı", "Da_Vinci_Vitruve_Luc_Viatour.jpg"]],
+    "Michelangelo": [["David", "1501–1504", "Michelangelo's_David_2015.jpg"], ["Adem'in Yaratılışı", "1511 dolayı", "Michelangelo_-_Creation_of_Adam_(cropped).jpg"], ["Pietà", "1498–1499", "Michelangelo's_Pieta_5450_cropncleaned_edit.jpg"]],
+    "Filippo Brunelleschi": [["Santa Maria del Fiore Kubbesi", "1420–1436", ""], ["Pazzi Şapeli", "1429'dan", ""], ["Yetimhane Binası", "1419'dan", ""]],
+    "Raffaello": [["Atina Okulu", "1509–1511", ""], ["Sistina Madonnası", "1512 dolayı", ""], ["Galatea'nın Zaferi", "1512", ""]],
+    "Albrecht Dürer": [["Melencolia I", "1514", ""], ["Otoportre", "1500", ""], ["Genç Tavşan", "1502", ""]],
+    "Pablo Picasso": [["Les Demoiselles d'Avignon", "1907", ""], ["Yaşlı Gitarcı", "1903–1904", ""], ["Guernica", "1937", ""]],
+    "Vincent van Gogh": [["Yıldızlı Gece", "1889", "Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"], ["Ayçiçekleri", "1888", ""], ["Başak Tarlası ve Kargalar", "1890", ""]]
+  };
+  const P = ["#2d3b6b", "#3a3f75", "#45407a", "#4a3f73", "#35487a", "#3f3a6b", "#2f4470"];
+  const q = id => document.getElementById(id), d = new Date();
+  const base = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+  document.documentElement.style.setProperty('--bg', P[base % P.length]);
+  q('gi-d').textContent = d.toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  let off = 0;
+  function show() {
+    const i = ((base + off) % S.length + S.length) % S.length, [k, b, h, de, g] = S[i];
+    q('gi-k').textContent = k; q('gi-b').textContent = b; q('gi-h2').textContent = h; q('gi-s').textContent = de;
+    q('gi-go').textContent = (g === 'fon' ? 'Fonlara bak' : 'İlanlara bak'); q('gi-go').dataset.go = g;
+    q('gi-no').textContent = (i + 1) + ' / ' + S.length;
+    q('gi-n').textContent = k === 'Pablo Picasso' ? 'Telif koruması sürdüğü için bu sanatçının eserleri görsel olarak gösterilmiyor.' : '';
+    const w = q('gi-w'); w.textContent = '';
+    (W[k] || []).forEach(([t, y, f]) => {
+      const fig = document.createElement('figure'), fr = document.createElement('div'), cap = document.createElement('figcaption');
+      fr.className = 'fr'; fr.dataset.t = t;
+      if (f) { const im = new Image(); im.alt = t + ', ' + k; im.loading = 'lazy'; im.referrerPolicy = 'no-referrer'; im.onerror = () => im.remove(); im.src = F + f + '?width=700'; fr.appendChild(im); }
+      const bt = document.createElement('b'), sp = document.createElement('span'); bt.textContent = t; sp.textContent = y;
+      cap.append(bt, sp); fig.append(fr, cap); w.appendChild(fig);
+    });
+  }
+  q('gi-p').onclick = () => { off--; show(); }; q('gi-nx').onclick = () => { off++; show(); };
+  show();
+})();
+</script>
+</body></html>
