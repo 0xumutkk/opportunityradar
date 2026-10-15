@@ -24,23 +24,27 @@
     <div class="nav"><button class="btn red sm" type="button" id="gi-go"></button><button class="btn ghost sm" type="button" id="gi-p">Önceki</button><button class="btn ghost sm" type="button" id="gi-nx">Sonraki</button><span class="no" id="gi-no"></span></div>
   </section>
   <ol>
-    <li><b>Anahtarını ekle</b>Profil ve ayarlar'dan kendi API anahtarını gir. Maliyet senin hesabına yazılır.</li>
     <li><b>Dosyanı yükle</b>Pitch deck (PDF, PPTX) ya da CV (PDF, DOCX, metin). Dosya sunucuya gitmez.</li>
-    <li><b>Tara ve başvur</b>Sağ üstteki tara düğmesi güncel programları ve ilanları web'den getirir.</li>
+    <li><b>Otomatik tara ve eşleştir</b>Yapay zekâ sana uyan hibe, destek ve iş ilanlarını doğrudan web'den bulur.</li>
+    <li><b>Hazırlan ve başvur</b>Hazırlık takvimini planla, başvuru mektubunu yazdır ve süreci yönet.</li>
   </ol>
-  <p class="fine">Veriler yalnızca bu tarayıcıda saklanır. Yapay zekâ istekleri doğrudan senin anahtarınla sağlayıcıya gider; aracı sunucu yoktur.</p>
+  <p class="fine">Veriler yalnızca bu tarayıcıda saklanır. Yapay zekâ arka planda Google AI Studio (Gemini) altyapısıyla çalışır.</p>
 </section>
 <dialog id="aiset" aria-labelledby="ai-h">
   <h3 id="ai-h">Profil ve ayarlar</h3>
-  <p>Anahtar yalnızca bu tarayıcıda durur. claude.ai Pro aboneliği API anahtarı vermez; anahtarı console.anthropic.com adresinden ayrıca alırsın.</p>
+  <p>Varsayılan olarak Google AI Studio Gemini altyapısı aktiftir; anahtar girmeden doğrudan kullanabilirsiniz. Dilerseniz kendi özel API anahtarınızı da kaydedebilirsiniz.</p>
   <label for="ai-prov">Sağlayıcı</label>
-  <select class="field" id="ai-prov"><option value="anthropic">Anthropic (Claude, web taraması dahil)</option><option value="openai">OpenAI uyumlu (OpenAI, OpenRouter, Ollama…)</option></select>
-  <label for="ai-key">API anahtarı</label><input class="field" id="ai-key" type="password" autocomplete="off" placeholder="sk-...">
-  <label for="ai-model">Model</label><input class="field" id="ai-model" placeholder="claude-sonnet-5-5">
+  <select class="field" id="ai-prov">
+    <option value="gemini">Google Gemini (Google AI Studio - Ücretsiz, Web Aramalı)</option>
+    <option value="anthropic">Anthropic (Claude)</option>
+    <option value="openai">OpenAI uyumlu (OpenAI, OpenRouter, Ollama…)</option>
+  </select>
+  <label for="ai-key">API anahtarı (İsteğe bağlı)</label><input class="field" id="ai-key" type="password" autocomplete="off" placeholder="Varsayılan anahtar aktif">
+  <label for="ai-model">Model</label><input class="field" id="ai-model" placeholder="gemini-2.5-flash">
   <div id="ai-base-w" hidden><label for="ai-base">Adres</label><input class="field" id="ai-base" placeholder="https://openrouter.ai/api/v1"></div>
   <div class="row"><button class="btn red sm" type="button" id="ai-save">Kaydet ve dene</button><button class="btn ghost sm" type="button" id="ai-export">Yedeği indir</button><button class="btn ghost sm" type="button" id="ai-import">Yedeği yükle</button><button class="btn ghost sm" type="button" id="ai-close">Kapat</button></div>
   <input type="file" id="ai-file" accept=".json" hidden><p id="aimsg" role="status"></p>
-  <p>Fon ve iş taraması için web araması gerekir; bu özellik şu an yalnızca Anthropic anahtarıyla çalışır.</p>
+  <p>Google Gemini (AI Studio) ve Anthropic web araması destekler.</p>
 </dialog>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Onest:wght@400;500;600;700&display=swap">
 <style>
@@ -679,23 +683,83 @@ html,body{background:var(--sky-b)}
   const CFG = 'radar-ai', DBK = 'radar-db';
   const cfg = () => { try { return JSON.parse(localStorage.getItem(CFG) || '{}'); } catch (e) { return {}; } };
   const hasRuntime = typeof claude !== 'undefined' && claude && typeof claude.use === 'function';
-  const chip = () => { const c = cfg(), ok = hasRuntime || !!c.key; $('#aichip').classList.toggle('ok', ok); $('#aichip-t').textContent = hasRuntime ? 'claude.ai hesabın' : ok ? 'Anahtar hazır' : 'Anahtar yok'; };
-  /* ---------- Yapay zekâ: sağlayıcı katmanı ---------- */
-  const need = () => { const e = new Error('Önce Profil ve ayarlar bölümünden API anahtarını ekle.'); e.code = 'no_key'; setTimeout(openSet, 50); return e; };
+  /* ---------- Yapay zekâ: sağlayıcı katmanı (Google AI Studio / Gemini varsayılan) ---------- */
+  // Google AI Studio'dan alınan ücretsiz Gemini API anahtarı:
+  // Ziyaretçilerin anahtar girmeden doğrudan kullanması için buraya tanımlanır.
+  const DEFAULT_GEMINI_KEY = '';
+
+  const hasKey = () => { const c = cfg(); return !!((c.key && c.key.trim()) || DEFAULT_GEMINI_KEY); };
+  const getKey = () => { const c = cfg(); return (c.key && c.key.trim()) || DEFAULT_GEMINI_KEY; };
+  const getProvider = () => { const c = cfg(); return c.provider || (getKey() ? 'gemini' : 'gemini'); };
+
+  const chip = () => {
+    const ok = hasRuntime || hasKey();
+    $('#aichip').classList.toggle('ok', ok);
+    $('#aichip-t').textContent = hasRuntime ? 'claude.ai hesabın' : ok ? 'Yapay zekâ hazır' : 'Anahtar bekleniyor';
+  };
+
+  const need = () => {
+    const e = new Error('Yapay zekâ anahtarı bulunamadı. Lütfen Profil ve Ayarlar bölümünden Google AI Studio API anahtarınızı girin.');
+    e.code = 'no_key';
+    setTimeout(openSet, 50);
+    return e;
+  };
+
+  async function callGemini(prompt, opts, key, model) {
+    const targetModel = model || 'gemini-2.5-flash';
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${encodeURIComponent(key)}`;
+    const body = {
+      contents: [{ parts: [{ text: prompt }] }]
+    };
+    if (opts.web) {
+      body.tools = [{ google_search: {} }];
+    }
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const d = await r.json();
+    if (!r.ok) {
+      if (targetModel !== 'gemini-2.0-flash' && (r.status === 404 || d?.error?.message?.includes('not found'))) {
+        return callGemini(prompt, opts, key, 'gemini-2.0-flash');
+      }
+      throw new Error(d?.error?.message || 'Gemini API hatası (' + r.status + ')');
+    }
+    const parts = d.candidates?.[0]?.content?.parts || [];
+    return parts.map(p => p.text).filter(Boolean).join('\n');
+  }
+
   async function llm(prompt, opts = {}) {
-    const c = cfg(); if (!c.key) throw need();
-    if (c.provider === 'openai') {
-      const r = await fetch((c.base || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + c.key }, body: JSON.stringify({ model: c.model, messages: [{ role: 'user', content: prompt }] }) });
+    const provider = getProvider();
+    const key = getKey();
+    if (!key) throw need();
+
+    if (provider === 'gemini') {
+      const c = cfg();
+      return await callGemini(prompt, opts, key, c.model || 'gemini-2.5-flash');
+    }
+    if (provider === 'openai') {
+      const c = cfg();
+      const r = await fetch((c.base || 'https://api.openai.com/v1').replace(/\/$/, '') + '/chat/completions', { method: 'POST', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + key }, body: JSON.stringify({ model: c.model || 'gpt-4o-mini', messages: [{ role: 'user', content: prompt }] }) });
       const d = await r.json(); if (!r.ok) throw new Error(d?.error?.message || 'İstek başarısız (' + r.status + ')');
       return d.choices?.[0]?.message?.content || '';
     }
+    const c = cfg();
     const body = { model: c.model || 'claude-sonnet-5-5', max_tokens: opts.web ? 8000 : 6000, messages: [{ role: 'user', content: prompt }] };
     if (opts.web) body.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 6 }];
-    const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': c.key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify(body) });
+    const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify(body) });
     const d = await r.json(); if (!r.ok) throw new Error(d?.error?.message || 'İstek başarısız (' + r.status + ')');
     return (d.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
   }
-  const parse = t => { const m = String(t).match(/[\[{][\s\S]*[\]}]/); if (!m) throw new Error('Yanıt okunamadı'); return JSON.parse(m[0]); };
+
+  const parse = t => {
+    let clean = String(t).replace(/```json/gi, '').replace(/```/g, '').trim();
+    const m = clean.match(/[\[{][\s\S]*[\]}]/);
+    if (!m) throw new Error('Yanıt okunamadı: ' + t.slice(0, 100));
+    return JSON.parse(m[0]);
+  };
+
   /* ---------- Yerel veritabanı (claude.ai db yerine localStorage) ---------- */
   const store = (() => { try { return JSON.parse(localStorage.getItem(DBK) || '{}'); } catch (e) { return {}; } })();
   const subs = [];
@@ -714,7 +778,6 @@ html,body{background:var(--sky-b)}
   };
   /* ---------- Web taraması (Indeed bağlayıcısı yerine) ---------- */
   const mcp = { callTool: async (server, tool, a) => {
-    if (cfg().provider === 'openai') { const e = new Error('Web taraması için Anthropic anahtarı gerekir.'); e.code = 'not_granted'; throw e; }
     if (tool === 'get_job_details') return { content: [{ type: 'text', text: '' }] };
     const where = a.location === 'remote' ? 'uzaktan çalışma' : a.location;
     const t = await llm(`Bugün ${new Date().toISOString().slice(0, 10)}. Web araması yap ve "${a.search}" için ${where} konumunda yayında olan güncel iş ilanlarını bul. LinkedIn, Indeed, Kariyer.net, Glassdoor, ReliefWeb, Impactpool, Devex ve kurumların kariyer sayfalarına bak. En çok 10 gerçek ilan ver; adres uydurma. Her ilanı tam şu biçimde yaz, başka metin ekleme:\n**Job Title:** başlık\n**Job Id:** kısa kimlik\n**Company:** kurum\n**Location:** şehir, ülke\n**Posted on:** YYYY-MM-DD\n**View Job URL:** tam adres\n`, { web: true });
@@ -738,21 +801,52 @@ html,body{background:var(--sky-b)}
   if (!hasRuntime) {
     window.claude = { use: async n => n === 'db' ? db : n === 'mcp' ? mcp : n === 'user' ? { isOwner: async () => true, id: async () => 'local' } : n === 'sample' ? { json: async (p, o) => parse(await llm(p, o)), text: async (p, o) => llm(p, o) } : null };
     $('#refresh').addEventListener('click', e => {
-      const b = e.currentTarget; if (!cfg().key) { e.stopImmediatePropagation(); return openSet(); }
+      const b = e.currentTarget; if (!hasKey()) { e.stopImmediatePropagation(); return openSet(); }
       if (location.hash === '#fon') { e.stopImmediatePropagation(); scanFunds(b); }
       else { e.stopImmediatePropagation(); $('#live').click(); }
     }, true);
   }
   /* ---------- Menü, landing, ayarlar ---------- */
   const dlg = $('#aiset'), prov = $('#ai-prov');
-  const syncProv = () => { $('#ai-base-w').hidden = prov.value !== 'openai'; };
-  function openSet() { const c = cfg(); prov.value = c.provider || 'anthropic'; $('#ai-key').value = c.key || ''; $('#ai-model').value = c.model || ''; $('#ai-base').value = c.base || ''; syncProv(); $('#aimsg').textContent = hasRuntime ? 'claude.ai içinde açık: yapay zekâ hesabından çalışır, anahtar gerekmez.' : ''; if (!dlg.open) dlg.showModal(); }
+  const syncProv = () => {
+    const isGemini = prov.value === 'gemini';
+    const isOai = prov.value === 'openai';
+    $('#ai-base-w').hidden = !isOai;
+    if (isGemini) {
+      $('#ai-key').placeholder = DEFAULT_GEMINI_KEY ? 'Varsayılan anahtar aktif' : 'AIzaSy... (Google AI Studio)';
+      $('#ai-model').placeholder = 'gemini-2.5-flash';
+    } else if (isOai) {
+      $('#ai-key').placeholder = 'sk-...';
+      $('#ai-model').placeholder = 'gpt-4o-mini';
+    } else {
+      $('#ai-key').placeholder = 'sk-ant-...';
+      $('#ai-model').placeholder = 'claude-sonnet-5-5';
+    }
+  };
+  function openSet() {
+    const c = cfg();
+    prov.value = c.provider || 'gemini';
+    $('#ai-key').value = c.key || '';
+    $('#ai-model').value = c.model || '';
+    $('#ai-base').value = c.base || '';
+    syncProv();
+    $('#aimsg').textContent = hasRuntime ? 'claude.ai içinde açık: yapay zekâ hesabından çalışır, anahtar gerekmez.' : DEFAULT_GEMINI_KEY ? 'Entegre Google AI Studio anahtarı devrededir, anahtar girmeniz gerekmez.' : '';
+    if (!dlg.open) dlg.showModal();
+  }
   prov.addEventListener('change', syncProv);
   $('#ai-close').onclick = () => dlg.close();
   $('#ai-save').onclick = async () => {
-    const c = { provider: prov.value, key: $('#ai-key').value.trim(), model: $('#ai-model').value.trim() || (prov.value === 'anthropic' ? 'claude-sonnet-5-5' : 'gpt-4o-mini'), base: $('#ai-base').value.trim() };
-    localStorage.setItem(CFG, JSON.stringify(c)); chip(); $('#aimsg').textContent = 'Deneniyor…';
-    try { await llm('Yalnızca "tamam" yaz.'); $('#aimsg').textContent = 'Bağlantı çalışıyor.'; } catch (e) { $('#aimsg').textContent = 'Hata: ' + e.message; }
+    const defaultModel = prov.value === 'gemini' ? 'gemini-2.5-flash' : prov.value === 'anthropic' ? 'claude-sonnet-5-5' : 'gpt-4o-mini';
+    const c = { provider: prov.value, key: $('#ai-key').value.trim(), model: $('#ai-model').value.trim() || defaultModel, base: $('#ai-base').value.trim() };
+    localStorage.setItem(CFG, JSON.stringify(c));
+    chip();
+    $('#aimsg').textContent = 'Deneniyor…';
+    try {
+      await llm('Yalnızca "tamam" yaz.');
+      $('#aimsg').textContent = 'Bağlantı başarılı!';
+    } catch (e) {
+      $('#aimsg').textContent = 'Hata: ' + e.message;
+    }
   };
   $('#ai-export').onclick = () => { const o = {}; Object.keys(localStorage).filter(k => k.startsWith('radar-') && k !== CFG).forEach(k => o[k] = localStorage.getItem(k)); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(o)], { type: 'application/json' })); a.download = 'firsat-radari-yedek.json'; a.click(); };
   $('#ai-import').onclick = () => $('#ai-file').click();
