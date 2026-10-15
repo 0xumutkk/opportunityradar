@@ -1119,12 +1119,28 @@ html,body{background:var(--sky-b)}
   const loadScript = src => new Promise((res, rej) => { if (document.querySelector(`script[src="${src}"]`)) return res(); const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Kütüphane yüklenemedi')); document.head.appendChild(s); });
   async function pdfText(buf) {
     await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js');
     const lib = window.pdfjsLib;
-    lib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const doc = await lib.getDocument({ data: buf }).promise;
+    if (!lib) throw new Error('PDF okuma kütüphanesi yüklenemedi');
+    try {
+      const workerUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const workerBlob = new Blob([`importScripts("${workerUrl}");`], { type: 'application/javascript' });
+      lib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(workerBlob);
+    } catch (e) {
+      console.warn('Worker blob oluşturulamadı:', e);
+    }
+    const loadingTask = lib.getDocument({
+      data: new Uint8Array(buf),
+      cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+      cMapPacked: true
+    });
+    const doc = await loadingTask.promise;
     let out = '';
-    for (let p = 1; p <= Math.min(doc.numPages, 8); p++) { const c = await (await doc.getPage(p)).getTextContent(); out += c.items.map(i => i.str + (i.hasEOL ? '\n' : ' ')).join('') + '\n'; }
+    const maxPages = Math.min(doc.numPages, 12);
+    for (let p = 1; p <= maxPages; p++) {
+      const page = await doc.getPage(p);
+      const c = await page.getTextContent();
+      out += c.items.map(i => i.str + (i.hasEOL ? '\n' : ' ')).join('') + '\n';
+    }
     return out;
   }
   async function docxText(buf) {
@@ -1141,11 +1157,11 @@ html,body{background:var(--sky-b)}
 
   async function analyze(text) {
     text = String(text || '').replace(/\s+\n/g, '\n').trim();
-    if (text.length < 200) { toast('CV metni çok kısa okundu. Taranmış (görsel) bir PDF olabilir; metni "Metni yapıştır" ile ekle.'); return; }
-    if (!sample) { toast('Yapay zekâ analizi bu görünümde kullanılamıyor. claude.ai\'da oturum açıp sayfayı orada aç.'); return; }
-    progress('CV analiz ediliyor…', 15);
+    if (text.length < 50) { toast('CV metni çok kısa okundu. Taranmış (görsel) bir PDF olabilir; metni "Metni yapıştır" ile ekleyebilirsiniz.'); return; }
+    progress('CV analiz ediliyor…', 20);
     try {
-      const p = await sample.json(
+      const ai = sample || { json: async (p, o) => parse(await llm(p, o)), text: async (p, o) => llm(p, o) };
+      const p = await ai.json(
 `Aşağıdaki özgeçmişi (CV) analiz et. Kişinin iş arama profilini çıkar. YALNIZCA şu biçimde tek bir JSON nesnesi döndür:
 {"ad":"Ad Soyad","ozet":"2 cümlelik Türkçe profil özeti","egitim":["..."],"deneyimYili":5,"beceriler":["en önemli 12 beceri"],"hedefRoller":["uygun 8 iş unvanı (Türkçe)"],"alanlar":["iklim","kentsel planlama", "..."],"diller":["Türkçe (anadil)","İngilizce (B2)"],"eksikler":["sahip OLMADIĞI ve sık aranan şartlar, ör. mühendislik lisansı, Arapça"]}
 
@@ -1157,11 +1173,14 @@ CV:
       const saved = await psave('profil', profile);
       await psave('puanlar', { map: {}, profilTarihi: profile.updatedAt });
       renderProfile(); render();
-      if (!saved) toast('CV profilin bu tarayıcıda saklandı (hesabına kaydedilemedi). Başka cihazda tekrar yüklemen gerekir.');
+      progress('CV başarıyla incelendi!', 100);
+      setTimeout(() => progress(null), 1200);
+      if (!saved) toast('CV profilin bu tarayıcıda saklandı.');
       await scoreJobs(true);
     } catch (e) {
+      console.error('CV analiz hatası:', e);
       progress(null);
-      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi. İzin verirsen CV\'n analiz edilir.' : e?.code === 'rate_limited' ? 'Çok sık istek gönderildi. Bir dakika sonra tekrar dene.' : 'CV analiz edilemedi: ' + (e?.message || 'bilinmeyen hata'));
+      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi.' : 'CV analiz edilemedi: ' + (e?.message || 'Bilinmeyen hata'));
     }
   }
 
@@ -1226,10 +1245,17 @@ ${batch.map(j => JSON.stringify({ id: j.id, baslik: j.title, kurum: j.org, sehir
   const fileIn = $('#cv-file'), drop = $('#drop');
   async function takeFile(f) {
     if (!f) return;
-    progress('CV okunuyor…', 6);
-    try { await analyze(await readFile(f)); } catch (e) { progress(null); toast('Dosya okunamadı. PDF, .docx ya da .txt seç veya metni yapıştır.'); }
+    progress('CV okunuyor…', 8);
+    try {
+      const text = await readFile(f);
+      await analyze(text);
+    } catch (e) {
+      console.error('CV okuma hatası:', e);
+      progress(null);
+      toast('Dosya okunamadı (' + (e?.message || 'Bilinmeyen hata') + '). PDF, .docx ya da .txt seçebilir veya metni doğrudan yapıştırabilirsiniz.');
+    }
   }
-  fileIn.addEventListener('change', () => takeFile(fileIn.files[0]));
+  fileIn.addEventListener('change', () => { takeFile(fileIn.files[0]); fileIn.value = ''; });
   drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
   drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
   drop.addEventListener('dragleave', () => drop.classList.remove('over'));
@@ -2006,11 +2032,11 @@ ${$('#letter-body')?.value || ''}`;
   }
   async function analyzeDeck(text) {
     text = String(text || '').replace(/\s+\n/g, '\n').trim();
-    if (text.length < 150) { toast('Sunumdan çok az metin okunabildi. Görsel ağırlıklı bir sunumsa metni "Metni yapıştır" ile ekle.'); fprogress(null); return; }
-    if (!sample) { toast('Yapay zekâ analizi için sayfayı claude.ai\'da oturum açıkken aç.'); fprogress(null); return; }
+    if (text.length < 50) { toast('Sunumdan çok az metin okunabildi. Görsel ağırlıklı bir sunumsa metni "Metni yapıştır" ile ekleyebilirsiniz.'); fprogress(null); return; }
     fprogress('Girişim analiz ediliyor…', 20);
     try {
-      const p = await sample.json(
+      const ai = sample || { json: async (p, o) => parse(await llm(p, o)), text: async (p, o) => llm(p, o) };
+      const p = await ai.json(
 `Aşağıdaki pitch deck / girişim metnini analiz et. Fon, hibe ve teşvik programlarına uygunluğu değerlendirmek için gereken profili çıkar. YALNIZCA şu biçimde tek bir JSON nesnesi döndür:
 {"ad":"girişimin adı","ozet":"2 cümlelik Türkçe özet","sektor":"…","alanlar":["iklim","kent",…],"asama":"fikir|prototip|pilot|gelir var|ölçekleniyor","trl":"varsa TRL düzeyi","sirket":"var|yok|kuruluyor","ulke":"…","sehir":"…","ekip":"kurucu sayısı ve rolleri","cekis":"müşteri, pilot, gelir, LOI gibi kanıtlar","ihtiyac":["hibe","yatırım","hızlandırma","ödül","ortaklık"],"tutar":"istenen fon miktarı varsa","eksikler":["sık istenen ama girişimde olmayan şartlar, ör. tüzel kişilik, 2 yıllık bilanço, AB ortağı"]}
 Metinde olmayan bilgiyi uydurma; bilinmiyorsa boş bırak.
@@ -2023,11 +2049,14 @@ METİN:
       const saved = await psave('girisim', startup);
       await psave('fonPuan', { map: {} });
       renderStartup(); renderFunds();
-      if (!saved) toast('Girişim profilin bu tarayıcıda saklandı (hesabına kaydedilemedi).');
+      fprogress('Sunum başarıyla incelendi!', 100);
+      setTimeout(() => fprogress(null), 1200);
+      if (!saved) toast('Girişim profilin bu tarayıcıda saklandı.');
       await scoreFunds(true);
     } catch (e) {
+      console.error('Deck analiz hatası:', e);
       fprogress(null);
-      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi.' : 'Sunum analiz edilemedi: ' + (e?.message || 'bilinmeyen hata'));
+      toast(e?.code === 'not_granted' ? 'Yapay zekâ izni verilmedi.' : 'Sunum analiz edilemedi: ' + (e?.message || 'Bilinmeyen hata'));
     }
   }
   function renderStartup() {
@@ -2051,9 +2080,9 @@ METİN:
   /* ---------- Uygunluk değerlendirmesi ---------- */
   const startupText = () => startup ? JSON.stringify(startup.profil) + (startup.metin ? `\nSUNUMDAN: ${startup.metin.slice(0, 3000)}` : '') : (owner ? NARCH_PROFILE : null);
   let fScoreT = null;
-  function scheduleFScore() { if (!sample || !startupText()) return; clearTimeout(fScoreT); fScoreT = setTimeout(() => scoreFunds(false), 1500); }
+  function scheduleFScore() { const ai = sample || { json: async (p, o) => parse(await llm(p, o)) }; if (!startupText()) return; clearTimeout(fScoreT); fScoreT = setTimeout(() => scoreFunds(false), 1500); }
   async function scoreFunds(force) {
-    const who = startupText(); if (!who || !sample || fScoring) return;
+    const who = startupText(); const ai = sample || { json: async (p, o) => parse(await llm(p, o)) }; if (!who || fScoring) return;
     if (force) for (const k in fTried) delete fTried[k];
     const todo = allFunds().filter(f => force || (!fScores[f.id] && (fTried[f.id] || 0) < 2));
     if (!todo.length) { fprogress(null); return; }
@@ -2062,7 +2091,7 @@ METİN:
       for (let i = 0; i < todo.length; i += 6) {
         const b = todo.slice(i, i + 6); b.forEach(f => { fTried[f.id] = (fTried[f.id] || 0) + 1; });
         fprogress(`Programlar girişimine göre değerlendiriliyor… ${Math.min(i + 6, todo.length)}/${todo.length}`, 25 + 70 * i / todo.length);
-        const res = await sample.json(
+        const res = await ai.json(
 `Bugün ${isoOf(new Date())}. Bir girişimin profili ve fon/hibe/teşvik programları aşağıda. Her program için girişimin uygunluğunu değerlendir:
 "Uygun" = şartları bugün karşılıyor, tek başına başvurabilir; "Ortakla" = bir ortakla (belediye, şirket, konsorsiyum) ya da bir ortağın alt yüklenicisi olarak başvurabilir; "Sonra" = şu an eksik bir şart var ama yakında karşılanabilir (ör. şirket kurulunca, TRL yükselince, sonraki çağrıda); "Uygun değil" = temel şartlar uymuyor.
 Her program için mutlaka bir satır döndür, id'yi aynen yaz. YALNIZCA JSON dizisi döndür: [{"id":"…","uyum":"Uygun|Ortakla|Sonra|Uygun değil","neden":"Türkçe, en çok 2 kısa cümle","eksik":"varsa eksik şart, kısa"}]
@@ -2084,8 +2113,18 @@ ${b.map(f => JSON.stringify({ id: f.id, ad: f.ad, kurum: f.kurum, tur: f.tur, ka
 
   /* Deck girişleri */
   const stIn = $('#st-file'), stDrop = $('#st-drop');
-  async function takeDeck(f) { if (!f) return; fprogress('Sunum okunuyor…', 8); try { await analyzeDeck(await readDeck(f)); } catch (e) { fprogress(null); toast('Dosya okunamadı. PDF, .pptx, .docx ya da .txt seç veya metni yapıştır.'); } }
-  stIn.addEventListener('change', () => takeDeck(stIn.files[0]));
+  async function takeDeck(f) {
+    if (!f) return;
+    fprogress('Sunum okunuyor…', 8);
+    try {
+      await analyzeDeck(await readDeck(f));
+    } catch (e) {
+      console.error('Deck okuma hatası:', e);
+      fprogress(null);
+      toast('Dosya okunamadı (' + (e?.message || 'Bilinmeyen hata') + '). PDF, .pptx, .docx ya da .txt seçebilir veya metni doğrudan yapıştırabilirsiniz.');
+    }
+  }
+  stIn.addEventListener('change', () => { takeDeck(stIn.files[0]); stIn.value = ''; });
   stDrop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); stIn.click(); } });
   stDrop.addEventListener('dragover', e => { e.preventDefault(); stDrop.classList.add('over'); });
   stDrop.addEventListener('dragleave', () => stDrop.classList.remove('over'));
