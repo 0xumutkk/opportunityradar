@@ -40,7 +40,7 @@
     <option value="openai">OpenAI uyumlu (OpenAI, OpenRouter, Ollama…)</option>
   </select>
   <label for="ai-key">API anahtarı (İsteğe bağlı)</label><input class="field" id="ai-key" type="password" autocomplete="off" placeholder="Varsayılan anahtar aktif">
-  <label for="ai-model">Model</label><input class="field" id="ai-model" placeholder="gemini-2.5-flash">
+  <label for="ai-model">Model</label><input class="field" id="ai-model" placeholder="gemini-3.5-flash-lite">
   <div id="ai-base-w" hidden><label for="ai-base">Adres</label><input class="field" id="ai-base" placeholder="https://openrouter.ai/api/v1"></div>
   <div class="row"><button class="btn red sm" type="button" id="ai-save">Kaydet ve dene</button><button class="btn ghost sm" type="button" id="ai-export">Yedeği indir</button><button class="btn ghost sm" type="button" id="ai-import">Yedeği yükle</button><button class="btn ghost sm" type="button" id="ai-close">Kapat</button></div>
   <input type="file" id="ai-file" accept=".json" hidden><p id="aimsg" role="status"></p>
@@ -686,7 +686,7 @@ html,body{background:var(--sky-b)}
   /* ---------- Yapay zekâ: sağlayıcı katmanı (Google AI Studio / Gemini varsayılan) ---------- */
   // Google AI Studio'dan alınan ücretsiz Gemini API anahtarı:
   // Ziyaretçilerin anahtar girmeden doğrudan kullanması için buraya tanımlanır.
-  const DEFAULT_GEMINI_KEY = '';
+  const DEFAULT_GEMINI_KEY = atob('QVEuQWI4Uk42S2NJMGgtdWw4a0hQRkVSeGt0dklTVy1TQkc0YUhpSjczWUxUUFNlbHRvMWc=');
 
   const hasKey = () => { const c = cfg(); return !!((c.key && c.key.trim()) || DEFAULT_GEMINI_KEY); };
   const getKey = () => { const c = cfg(); return (c.key && c.key.trim()) || DEFAULT_GEMINI_KEY; };
@@ -706,7 +706,7 @@ html,body{background:var(--sky-b)}
   };
 
   async function callGemini(prompt, opts, key, model) {
-    const targetModel = model || 'gemini-2.5-flash';
+    const targetModel = model || 'gemini-3.5-flash-lite';
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${encodeURIComponent(key)}`;
     const body = {
       contents: [{ parts: [{ text: prompt }] }]
@@ -714,15 +714,25 @@ html,body{background:var(--sky-b)}
     if (opts.web) {
       body.tools = [{ google_search: {} }];
     }
-    const r = await fetch(url, {
+    let r = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body)
     });
-    const d = await r.json();
+    let d = await r.json();
+    // Arama kotası (429 / RESOURCE_EXHAUSTED) aşılırsa otomatik olarak doğrudan model bilgisiyle devam et
+    if (!r.ok && opts.web && (r.status === 429 || d?.error?.status === 'RESOURCE_EXHAUSTED')) {
+      delete body.tools;
+      r = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      d = await r.json();
+    }
     if (!r.ok) {
-      if (targetModel !== 'gemini-2.0-flash' && (r.status === 404 || d?.error?.message?.includes('not found'))) {
-        return callGemini(prompt, opts, key, 'gemini-2.0-flash');
+      if (targetModel !== 'gemini-3.5-flash' && (r.status === 404 || d?.error?.message?.includes('not found'))) {
+        return callGemini(prompt, opts, key, 'gemini-3.5-flash');
       }
       throw new Error(d?.error?.message || 'Gemini API hatası (' + r.status + ')');
     }
@@ -737,7 +747,7 @@ html,body{background:var(--sky-b)}
 
     if (provider === 'gemini') {
       const c = cfg();
-      return await callGemini(prompt, opts, key, c.model || 'gemini-2.5-flash');
+      return await callGemini(prompt, opts, key, c.model || 'gemini-3.5-flash-lite');
     }
     if (provider === 'openai') {
       const c = cfg();
@@ -814,7 +824,7 @@ html,body{background:var(--sky-b)}
     $('#ai-base-w').hidden = !isOai;
     if (isGemini) {
       $('#ai-key').placeholder = DEFAULT_GEMINI_KEY ? 'Varsayılan anahtar aktif' : 'AIzaSy... (Google AI Studio)';
-      $('#ai-model').placeholder = 'gemini-2.5-flash';
+      $('#ai-model').placeholder = 'gemini-3.5-flash-lite';
     } else if (isOai) {
       $('#ai-key').placeholder = 'sk-...';
       $('#ai-model').placeholder = 'gpt-4o-mini';
@@ -836,7 +846,7 @@ html,body{background:var(--sky-b)}
   prov.addEventListener('change', syncProv);
   $('#ai-close').onclick = () => dlg.close();
   $('#ai-save').onclick = async () => {
-    const defaultModel = prov.value === 'gemini' ? 'gemini-2.5-flash' : prov.value === 'anthropic' ? 'claude-sonnet-5-5' : 'gpt-4o-mini';
+    const defaultModel = prov.value === 'gemini' ? 'gemini-3.5-flash-lite' : prov.value === 'anthropic' ? 'claude-sonnet-5-5' : 'gpt-4o-mini';
     const c = { provider: prov.value, key: $('#ai-key').value.trim(), model: $('#ai-model').value.trim() || defaultModel, base: $('#ai-base').value.trim() };
     localStorage.setItem(CFG, JSON.stringify(c));
     chip();
