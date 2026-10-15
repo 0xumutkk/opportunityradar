@@ -1274,7 +1274,14 @@ ${batch.map(j => JSON.stringify({ id: j.id, baslik: j.title, kurum: j.org, sehir
     return (r?.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n');
   };
   function parseIndeed(md) {
-    return String(md || '').split(/\*\*Job Title:\*\*/).slice(1).map(b => {
+    const raw = String(md || '').replace(/```(?:json)?/gi, '').trim();
+    try {
+      const json = raw.match(/\[[\s\S]*\]/)?.[0];
+      const list = json ? JSON.parse(json) : null;
+      if (Array.isArray(list)) return list.map(x => ({ title: x.title || x.jobTitle || x['Job Title'], jid: x.jid || x.jobId || x['Job Id'] || '', org: x.org || x.company || x.Company || '', city: x.city || x.location || x.Location || '', posted: x.posted || x.postedOn || x['Posted on'] || '', url: x.url || x.jobUrl || x['View Job URL'] || '' })).filter(x => x.title && x.url);
+    } catch (e) {}
+    const normalized = raw.replace(/(?:^|\n)\s*(?:[-*]\s*)?\*{0,2}\s*(Job Title|Job Id|Company|Location|Posted on|View Job URL)\s*:\s*\*{0,2}/gi, (_, k) => `**${k}:**`);
+    return normalized.split(/\*\*Job Title:\*\*/i).slice(1).map(b => {
       const f = k => ((b.match(new RegExp('\\*\\*' + k + ':\\*\\*\\s*([^\\n]+)')) || [])[1] || '').trim();
       return { title: b.split('\n')[0].trim(), jid: f('Job Id'), org: f('Company'), city: f('Location'), posted: f('Posted on'), url: f('View Job URL') };
     }).filter(x => x.title && x.url);
@@ -1321,7 +1328,7 @@ ${batch.map(j => JSON.stringify({ id: j.id, baslik: j.title, kurum: j.org, sehir
         } catch (e) { if (MCP_MSG[e?.code]) throw e; }
       }
       const fresh = [...found.values()].filter(x => { const a = age(isoOf(x.posted)); return a == null || a <= Math.max(30, Number(prefs.days)); }).slice(0, 12);
-      if (!fresh.length) { progress(null); toast(`Indeed'de ${placeLabel()} için yeni ilan bulunamadı. Şehri boşaltıp bütün ülkede deneyebilirsin.`); return; }
+      if (!fresh.length) { progress(null); toast(`Web kaynaklarında ${placeLabel()} için yeni ilan bulunamadı. Şehri boşaltıp bütün ülkede deneyebilirsin.`); return; }
       for (let i = 0; i < fresh.length; i++) {
         progress(`İlan ayrıntıları okunuyor… ${i + 1}/${fresh.length}`, 40 + 30 * i / fresh.length);
         try { fresh[i].desc = textOf(await mcp.callTool('Indeed', 'get_job_details', { job_id: fresh[i].jid }, { cache: false })).slice(0, 6000); } catch (e) { fresh[i].desc = ''; }
