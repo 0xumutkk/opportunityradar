@@ -40,7 +40,7 @@
     <option value="openai">OpenAI uyumlu (OpenAI, OpenRouter, Ollama…)</option>
   </select>
   <label for="ai-key">API anahtarı (İsteğe bağlı)</label><input class="field" id="ai-key" type="password" autocomplete="off" placeholder="Varsayılan anahtar aktif">
-  <label for="ai-model">Model</label><input class="field" id="ai-model" placeholder="gemini-3.5-flash-lite">
+  <label for="ai-model">Model</label><input class="field" id="ai-model" placeholder="gemini-2.5-flash-lite">
   <div id="ai-base-w" hidden><label for="ai-base">Adres</label><input class="field" id="ai-base" placeholder="https://openrouter.ai/api/v1"></div>
   <div class="row"><button class="btn red sm" type="button" id="ai-save">Kaydet ve dene</button><button class="btn ghost sm" type="button" id="ai-export">Yedeği indir</button><button class="btn ghost sm" type="button" id="ai-import">Yedeği yükle</button><button class="btn ghost sm" type="button" id="ai-close">Kapat</button></div>
   <input type="file" id="ai-file" accept=".json" hidden><p id="aimsg" role="status"></p>
@@ -706,7 +706,7 @@ html,body{background:var(--sky-b)}
   };
 
   async function callGemini(prompt, opts, key, model) {
-    const targetModel = model || 'gemini-3.5-flash-lite';
+    const targetModel = model || 'gemini-2.5-flash-lite';
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${encodeURIComponent(key)}`;
     const body = {
       contents: [{ parts: [{ text: prompt }] }]
@@ -731,8 +731,8 @@ html,body{background:var(--sky-b)}
       d = await r.json();
     }
     if (!r.ok) {
-      if (targetModel !== 'gemini-3.5-flash' && (r.status === 404 || d?.error?.message?.includes('not found'))) {
-        return callGemini(prompt, opts, key, 'gemini-3.5-flash');
+      if (targetModel !== 'gemini-2.5-flash' && (r.status === 404 || d?.error?.message?.includes('not found'))) {
+        return callGemini(prompt, opts, key, 'gemini-2.5-flash');
       }
       throw new Error(d?.error?.message || 'Gemini API hatası (' + r.status + ')');
     }
@@ -747,7 +747,7 @@ html,body{background:var(--sky-b)}
 
     if (provider === 'gemini') {
       const c = cfg();
-      return await callGemini(prompt, opts, key, c.model || 'gemini-3.5-flash-lite');
+      return await callGemini(prompt, opts, key, c.model || 'gemini-2.5-flash-lite');
     }
     if (provider === 'openai') {
       const c = cfg();
@@ -790,9 +790,11 @@ html,body{background:var(--sky-b)}
   const mcp = { callTool: async (server, tool, a) => {
     if (tool === 'get_job_details') return { content: [{ type: 'text', text: '' }] };
     const where = a.location === 'remote' ? 'uzaktan çalışma' : a.location;
+    const requestedSources = window.radarWebMcpSources?.length ? ` Kullanıcının eklediği öncelikli kaynaklar: ${window.radarWebMcpSources.join('; ')}.` : '';
     const t = await llm(`Bugün ${new Date().toISOString().slice(0, 10)}. Web araması yap ve "${a.search}" için ${where} konumunda yayında olan güncel iş ilanlarını bul. LinkedIn, Indeed, Kariyer.net, Glassdoor, ReliefWeb, Impactpool, Devex ve kurumların kariyer sayfalarına bak. En çok 10 gerçek ilan ver; adres uydurma. Her ilanı tam şu biçimde yaz, başka metin ekleme:\n**Job Title:** başlık\n**Job Id:** kısa kimlik\n**Company:** kurum\n**Location:** şehir, ülke\n**Posted on:** YYYY-MM-DD\n**View Job URL:** tam adres\n`, { web: true });
     return { content: [{ type: 'text', text: t }] };
   } };
+  window.radarWebMcp = mcp;
   /* ---------- Fon taraması ---------- */
   async function scanFunds(btn) {
     let st = null; try { st = db && store['data/users/local/girisim']; } catch (e) {}
@@ -824,7 +826,7 @@ html,body{background:var(--sky-b)}
     $('#ai-base-w').hidden = !isOai;
     if (isGemini) {
       $('#ai-key').placeholder = DEFAULT_GEMINI_KEY ? 'Varsayılan anahtar aktif' : 'AIzaSy... (Google AI Studio)';
-      $('#ai-model').placeholder = 'gemini-3.5-flash-lite';
+      $('#ai-model').placeholder = 'gemini-2.5-flash-lite';
     } else if (isOai) {
       $('#ai-key').placeholder = 'sk-...';
       $('#ai-model').placeholder = 'gpt-4o-mini';
@@ -846,7 +848,7 @@ html,body{background:var(--sky-b)}
   prov.addEventListener('change', syncProv);
   $('#ai-close').onclick = () => dlg.close();
   $('#ai-save').onclick = async () => {
-    const defaultModel = prov.value === 'gemini' ? 'gemini-3.5-flash-lite' : prov.value === 'anthropic' ? 'claude-sonnet-5-5' : 'gpt-4o-mini';
+    const defaultModel = prov.value === 'gemini' ? 'gemini-2.5-flash-lite' : prov.value === 'anthropic' ? 'claude-sonnet-5-5' : 'gpt-4o-mini';
     const c = { provider: prov.value, key: $('#ai-key').value.trim(), model: $('#ai-model').value.trim() || defaultModel, base: $('#ai-base').value.trim() };
     localStorage.setItem(CFG, JSON.stringify(c));
     chip();
@@ -916,7 +918,7 @@ html,body{background:var(--sky-b)}
   const slug = s => norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
   let sharedJobs = [], personalJobs = [], jobs = [];
-  let meta = {}, fMeta = {}, db = null, sample = null, user = null, mcp = null, uid = null, owner = false;
+  let meta = {}, fMeta = {}, db = null, sample = null, user = null, mcp = window.radarWebMcp || null, uid = null, owner = false;
   let profile = null;          // {cvText, profil, updatedAt}
   let scores = {};             // {jobId: {u, n}}
   let applied = {};            // {jobId: iso | null}
@@ -1100,7 +1102,7 @@ html,body{background:var(--sky-b)}
     const lock = owner && run;
     $('#refresh').disabled = lock; $('#refresh').classList.toggle('busy', lock);
     const t = $('#status-text');
-    if (live && !fonSheet) t.textContent = 'Indeed\'de canlı aranıyor…';
+    if (live && !fonSheet) t.textContent = 'Web kaynaklarında canlı aranıyor…';
     else if (run) t.textContent = fonSheet ? 'Claude fon ve teşvik kaynaklarını tarıyor…' : 'Claude ilan sitelerini tarıyor…';
     else if (m.durum === 'hata') t.textContent = m.mesaj || 'Son tarama tamamlanamadı.';
     else if (m.sonGuncelleme) t.textContent = `Son ${fonSheet ? 'fon ' : ''}taraması ${fmtTime(m.sonGuncelleme)}` + (m.mesaj ? ` · ${m.mesaj}` : '');
@@ -1111,8 +1113,8 @@ html,body{background:var(--sky-b)}
   function renderRole() {
     $('#refresh .t').textContent = prefs.sheet === 'fon' ? (owner ? 'Fonları tara' : 'Yeniden değerlendir') : owner ? 'İlanları tara' : 'Canlı ara';
     $('#src-hint').textContent = owner
-      ? '"İlanları tara" seçtiğin ülke ve şehir için aşağıdaki sitelerin hepsinde Claude taraması başlatır. "Bu konumda canlı ara" Indeed\'de hemen arar.'
-      : '"Canlı ara" seçtiğin ülke ve şehirde Indeed\'de arar ve sonuçları CV\'ne göre puanlar. claude.ai hesabında Indeed bağlayıcısı bağlı olmalı; bulduğun ilanları yalnızca sen görürsün.';
+      ? '"İlanları tara" seçtiğin ülke ve şehir için aşağıdaki sitelerde doğrudan web araması yapar; sonuçları listeye ekler.'
+      : '"Canlı ara" seçtiğin ülke ve şehirde web kaynaklarını arar ve sonuçları CV\'ne göre puanlar.';
   }
 
   /* ---------- CV: okuma ---------- */
@@ -1304,11 +1306,12 @@ ${batch.map(j => JSON.stringify({ id: j.id, baslik: j.title, kurum: j.org, sehir
       }
       const city = prefs.city.trim();
       const loc = city && !/^uzaktan$/i.test(city) ? city : (C.a?.[0] || C.n);
+      window.radarWebMcpSources = allSources().map(s => `${s.ad} (${s.url})`).slice(0, 30);
       const searches = kws.map(k => ({ search: k, location: loc }));
       if (prefs.remote) searches.push({ search: kws[0], location: 'remote' });
       const found = new Map(), known = new Set(jobs.map(j => j.id));
       for (let i = 0; i < searches.length; i++) {
-        progress(`Indeed: "${searches[i].search}" · ${searches[i].location} (${i + 1}/${searches.length})`, 8 + 30 * i / searches.length);
+        progress(`Web: "${searches[i].search}" · ${searches[i].location} (${i + 1}/${searches.length})`, 8 + 30 * i / searches.length);
         try {
           const r = await mcp.callTool('Indeed', 'search_jobs', { ...searches[i], country_code: C.c }, { cache: false });
           for (const x of parseIndeed(textOf(r))) {
@@ -1343,7 +1346,7 @@ ${b.map(x => JSON.stringify({ id: x.id, baslik: x.title, kurum: x.org, konum: x.
           const uyum = rank[r.uyum] != null ? r.uyum : '';
           if (uyum === 'Düşük') continue;
           out.push({
-            id: x.id, source: 'Indeed', title: x.title, org: x.org || '—',
+            id: x.id, source: 'Web araması', title: x.title, org: x.org || '—',
             city: x.remote ? `${x.city || ''} (uzaktan)`.trim() : (x.city || ''), country: C.n,
             sector: ['STK','Özel','Kamu'].includes(r.sektor) ? r.sektor : 'Özel',
             published: isoOf(x.posted) || isoOf(new Date()),
@@ -1369,7 +1372,7 @@ ${b.map(x => JSON.stringify({ id: x.id, baslik: x.title, kurum: x.org, konum: x.
       mergeJobs(); fillCountries(); render();
       progress(null);
       const shown = out.filter(j => matches(j)).length;
-      toast(`${out.length} yeni ilan eklendi (Indeed · ${placeLabel()}).` + (shown < out.length ? ` ${out.length - shown} tanesi şu anki filtrelerin dışında (ör. yakın şehirler); görmek için şehir alanını boşalt.` : ''), 9000);
+      toast(`${out.length} yeni ilan eklendi (web araması · ${placeLabel()}).` + (shown < out.length ? ` ${out.length - shown} tanesi şu anki filtrelerin dışında (ör. yakın şehirler); görmek için şehir alanını boşalt.` : ''), 9000);
     } catch (e) {
       progress(null);
       toast(MCP_MSG[e?.code] || (e?.code === 'rate_limited' ? 'Çok sık istek gönderildi. Bir dakika sonra tekrar dene.' : e?.code === 'cancelled' ? 'Arama durduruldu.' : 'Canlı arama tamamlanamadı: ' + (e?.message || 'bilinmeyen hata')));
@@ -1593,7 +1596,7 @@ ADAY: ${who}
     const c = k => all.filter(s => s.durum === k).length;
     $('#src-sum').textContent = `${all.length} site · ${c('ok') + c('kismi')} çalışıyor${c('erisilemiyor') ? ` · ${c('erisilemiyor')} erişilemiyor` : ''}${c('bekliyor') ? ` · ${c('bekliyor')} bekliyor` : ''}`;
     $('#src-help').textContent = owner
-      ? 'Eklediğin siteler bir sonraki "İlanları tara"da Claude\'a iletilir. Yeşil: tarandı, sarı: kısmen, kırmızı: erişilemedi; soluk görünenlere son taramada bakılmadı. Bir sitenin üstüne gelince notunu ve son kontrol saatini görürsün.'
+      ? 'Eklediğin siteler bu listede görünür. Yeşil: tarandı, sarı: kısmen, kırmızı: erişilemedi; soluk görünenlere son taramada bakılmadı. Bir sitenin üstüne gelince notunu ve son kontrol saatini görürsün.'
       : 'Önerdiğin siteler bu tarayıcıda saklanır. Claude taramasını sayfa sahibi başlattığı için onlara da iletmek istersen sahibine haber ver.';
   }
   $('#src-form').addEventListener('submit', async e => {
@@ -2262,7 +2265,7 @@ PROGRAM: ${JSON.stringify({ ad: f.ad, kurum: f.kurum, tur: f.tur, son: f.sonBasv
     const btn = $('#refresh');
     const fon = prefs.sheet === 'fon';
     if (fon && !owner) { if (!startupText()) { toast('Önce pitch deck\'ini yükle.'); return; } return scoreFunds(true); }
-    if (!owner) return liveSearch(btn);
+    return liveSearch(btn);
     const trig = meta.triggerId;
     mcp = mcp || await claude.use('mcp');
     if (!db || !mcp || !trig) { toast(fon ? 'Otomatik tarama bu görünümde başlatılamıyor. Claude\'a "fonları güncelle" yazabilirsin.' : 'Otomatik tarama bu görünümde başlatılamıyor. "Bu konumda canlı ara"yı kullanabilir ya da Claude\'a "ilanları güncelle" yazabilirsin.'); return; }
